@@ -14,7 +14,7 @@ height = size(the_image,1);
 %   assumption: projected quadrilateral is smaller in
 %       every dimension (or pixels are missing)
 a_x = 1;
-a_y = 100;
+a_y = 150;
 b_x = 50;
 b_y = 30;
 c_x = 200;
@@ -38,7 +38,7 @@ destination_y = b_y;
 theta_aprime = atan((a_x - d_x) / (a_y - d_y)); % angle of AD
 % fix matlab's definition of atan
 if (theta_aprime < 0)
-    theta_aprime = theat_aprime + pi;
+    theta_aprime = theta_aprime + pi;
 end
 
 theta_bprime = atan((b_x - c_x) / (b_y - c_y)); % angle of BC
