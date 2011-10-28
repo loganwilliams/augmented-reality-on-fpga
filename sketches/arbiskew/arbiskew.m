@@ -54,8 +54,7 @@ dist_bc = sqrt((b_x - c_x)^2 + (b_y - c_y)^2);
 % iterate through every y pixel of the original image
 while (int_y < height)
     % find the current distance between our point on AD and our destination
-    %   point on BC (currently does not work, linear interpolation is not
-    %   correct
+    %   point on BC
     dist_cur = sqrt((main_loop_pos_x - destination_x)^2 + ...
         (main_loop_pos_y - destination_y)^2);
     
