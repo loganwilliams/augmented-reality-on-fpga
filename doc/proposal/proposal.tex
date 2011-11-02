@@ -36,6 +36,9 @@
 
 \subsection{ArbiLPF}
 % Jose
+The inputs to ArbiLPF are (1) the previously displayed image and (2) the four coordinates of the dotted frame as detected from the NTSC output of the camera in the Object Recognition module. AbiLPF calculates the maximal amount by which the skewing algorithm will shrink the image, which will be referred to as M. ArbiLPF then applies a two-dimensional low-pass filter to the image, with a radial cutoff frequency of \( \frac{\pi}{M} \), in order to avoid aliasing in the ArbiSkew module.
+
+Based on the downsampling factor M, the filter will select a set of coefficients from a lookup table and convolve the image values with these coefficients. This table of coefficients will correspond to the coefficients of two-dimensional extrapolations of one-dimensional FIR Parks-McClellan filters with cutoff frequencies of \( \frac{\pi}{M} \). Due to the limited number of multipliers on the FPGA, these two-dimensional filters will be constrained to have at most 144 coefficients, which constrains the one-dimensional filters to have at most 12 coefficients. Due to these constraints, the ripple and transition width specifications of the 1D filters will have to be lax. The radial symmetry of these 2D filters will be exploited to reduce the number of required multiplications by a factor of 4, to at most 36 multiplications per color per pixel.
 
 \subsection{ArbiSkew}
 % Logan
