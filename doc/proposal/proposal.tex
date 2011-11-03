@@ -95,11 +95,12 @@ Mathematically, the algorithm works as follows:
 
 This is feasible on the FPGA by using lookup tables to calculate $\sin$, $\cos$, and $\arctan$ for angle calculations. Besides that, it needs a relatively small number of multiplications, just two per pixel in the original image, and four per line in the original image. There is also a square root that is needed once per line, this can be implemented with either a look up table, or by using an iterative method of calculation.
 
-\subsection{VGA Write}
+\subsection{VGA Write (Jos\'{e})}
 % Jose
+The VGA Write section is straightforward and will basically be a clone of the VGA code used in Lab 2 (Pong). Essentially, the output will be refreshed at a rate of 60Hz and output at a resolution of 640x480 pixels. This module will read the pixel values from displayed image and assign it based on the hcount and vcount variables, which will be incremented accordingly. This module will be tested by loading a standardized image to memory and verifying whether VGA Write displays this image properly on the monitor.
 
 \section{External Components}
-% Jose
+% Logan
 
 \section{List of Goals}
 % A calendar-like view of what deadlines we'll set ourselves, when everything should be operational, etc. Maybe this could be collapsed into the submodules section
