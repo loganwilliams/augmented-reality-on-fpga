@@ -13,6 +13,7 @@
 \maketitle
 
 \section{Abstract}
+% should be revised, this is what we originally turned in 
 In our project, we will implement an augmented reality system that can overlay a digital image on video of a real world environment. We begin by reading NTSC video from a video camera and storing it in ZBT SRAM. A picture frame with colored markers on the corners is held in front of the camera. We then perform chroma-based object recognition to locate the co-ordinates of the corners. Using these co-ordinates, we apply appropriate translation, scaling, rotation, and anti-aliasing FIR filters to fit the image to the boundary of the frame. If time allows, we will use a non-linear projective transformation to correct for perspective. We then output VGA video of the original captured image, with the processed image overlayed on top of the frame. The overlayed image (the ``augmentation'') can be arbitrary. When this image is the frame of video that was previously displayed, we call the system ``recursive'', as we obtain the same image contained within itself.
 \newpage
 \section{Top-Level Block Diagram}
@@ -21,7 +22,7 @@ In our project, we will implement an augmented reality system that can overlay a
 \includegraphics[width=1.0\textwidth]{block_diagram.png}
 \caption{The block diagram of the augmented reality system}
 \end{figure}
-\section{Submodules \& Division of Labor}
+\section{Submodules}
 % 1) inputs & outputs
 % 2) some indication of its complexity and level of performance
 %	a) number and type of arithmetic operations
@@ -30,14 +31,16 @@ In our project, we will implement an augmented reality system that can overlay a
 %	etc.
 % 3) how the module will be tested
 % 4) who will be writing the module
-\subsection{NTSC Capture}
-% Logan
+\subsection{NTSC Capture (Logan)}
+The NTSC capture module is almost unmodified from the code provided by 6.111. It takes as input an NTSC video signal, and writes pixels into ZBT Memory.
+
+There are two modifications. The first allows the module to capture and store color data, converting it from Y/Cr/Cb to H/S/V. The second modification is added to support object recognition. When the Capture module sees a pixel of a hue that matches the target (blue, green, red, and yellow), it sends information (the color and its X/Y location) to the Object Recognition module.
 
 \subsection{ZBT Memory}
 % Jose
 
-\subsection{Object Recognition}
-% Logan
+\subsection{Object Recognition (Logan)}
+The Object Recognition module collects ``interesting'' pixels located by the NTSC Capture module, and calculates the center of mass of each color, to find the location of the corners of the picture frame.
 
 \subsection{ArbiLPF (Jos\`{e})}
 % Jose
@@ -47,7 +50,7 @@ Based on the downsampling factor M, the filter will select a set of coefficients
 
 \subsection{ArbiSkew (Logan)}
 % Logan
-The inputs to ArbiSkew are (1) a reference pointer to the location in ZBT memory where the low-passed image begins, and (2) the four coordinates of the corners of the frame provided by the Object Recognition module.
+The inputs to ArbiSkew are (1) the hue, saturation, and value of the last pixel produced by ArbiLPF, (2) a ready signal held high for one clock signal when ArbiLPF has processed a new pixel, and (3) the four coordinates of the corners of the frame provided by the Object Recognition module.
 
 This function maps the original rectangular image to any convex quadrilateral, provided that all sides of the destination quadrilateral are shorter than the original, which is inherent in the overall system. A graphic representation of the transformation is shown in the figure below:
 
