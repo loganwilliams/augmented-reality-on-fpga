@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2010.7.21)  2 NOV 2011 21:20
+This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2010.7.21)  2 NOV 2011 21:45
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -18,8 +18,8 @@ nian, russian, sanskrit, serbian, slovak, slovenian, spanish, swedish, turkish,
  turkmen, ukrainian, uppersorbian, welsh, loaded.
 (/usr/local/texlive/2010/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/local/texlive/2010/texmf-dist/tex/latex/base/size11.clo
-File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+(/usr/local/texlive/2010/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
 \c@section=\count80
@@ -223,31 +223,35 @@ e
 [1
 
 {/usr/local/texlive/2010/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-<arbiskew_graphic.png, id=11, 1028.29886pt x 459.43071pt>
+<block_diagram.png, id=10, 573.8238pt x 390.258pt>
+File: block_diagram.png Graphic file (type png)
+ <use block_diagram.png>
+[2 <./block_diagram.png>]
+<arbiskew_graphic.png, id=17, 1028.29886pt x 459.43071pt>
 File: arbiskew_graphic.png Graphic file (type png)
 
-<use arbiskew_graphic.png> [2 <./arbiskew_graphic.png>] [3] (./proposal.aux) ) 
+<use arbiskew_graphic.png> [3 <./arbiskew_graphic.png>] [4] (./proposal.aux) ) 
 Here is how much of TeX's memory you used:
- 2401 strings out of 493747
- 33609 string characters out of 3143546
- 93678 words of memory out of 3000000
- 5672 multiletter control sequences out of 15000+200000
- 9401 words of font info for 34 fonts, out of 3000000 for 9000
+ 2405 strings out of 493747
+ 33678 string characters out of 3143546
+ 92656 words of memory out of 3000000
+ 5675 multiletter control sequences out of 15000+200000
+ 8715 words of font info for 32 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 38i,7n,23p,866b,221s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,7n,23p,982b,223s stack positions out of 5000i,500n,10000p,200000b,50000s
 <
 /usr/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></
 usr/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></u
-sr/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr
-/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/l
+sr/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr
+/local/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/l
 ocal/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loc
 al/texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local
 /texlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/t
 exlive/2010/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on proposal.pdf (3 pages, 145155 bytes).
+Output written on proposal.pdf (4 pages, 217816 bytes).
 PDF statistics:
- 49 PDF objects out of 1000 (max. 8388607)
- 33 compressed objects within 1 object stream
+ 54 PDF objects out of 1000 (max. 8388607)
+ 35 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

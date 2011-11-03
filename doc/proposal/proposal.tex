@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+\documentclass[10pt]{article}
 
 \usepackage{fullpage}
 \usepackage{graphicx}
@@ -13,11 +13,14 @@
 \maketitle
 
 \section{Abstract}
-% Summary of what our project will do; could be called "Introduction", "Summary of Operation", etc.
-
+In our project, we will implement an augmented reality system that can overlay a digital image on video of a real world environment. We begin by reading NTSC video from a video camera and storing it in ZBT SRAM. A picture frame with colored markers on the corners is held in front of the camera. We then perform chroma-based object recognition to locate the co-ordinates of the corners. Using these co-ordinates, we apply appropriate translation, scaling, rotation, and anti-aliasing FIR filters to fit the image to the boundary of the frame. If time allows, we will use a non-linear projective transformation to correct for perspective. We then output VGA video of the original captured image, with the processed image overlayed on top of the frame. The overlayed image (the ``augmentation'') can be arbitrary. When this image is the frame of video that was previously displayed, we call the system ``recursive'', as we obtain the same image contained within itself.
+\newpage
 \section{Top-Level Block Diagram}
-% simply the image of our block diagram; let's wrap it with a \begin{figure}\end{figure} and a \centering to make it look nice
-
+\begin{figure}[h!]
+\centering
+\includegraphics[width=1.0\textwidth]{block_diagram.png}
+\caption{The block diagram of the augmented reality system}
+\end{figure}
 \section{Submodules \& Division of Labor}
 % 1) inputs & outputs
 % 2) some indication of its complexity and level of performance
@@ -36,13 +39,13 @@
 \subsection{Object Recognition}
 % Logan
 
-\subsection{ArbiLPF}
+\subsection{ArbiLPF (Jos\`{e})}
 % Jose
 The inputs to ArbiLPF are (1) the previously displayed image and (2) the four coordinates of the dotted frame as detected from the NTSC output of the camera in the Object Recognition module. AbiLPF calculates the maximal amount by which the skewing algorithm will shrink the image, which will be referred to as M. ArbiLPF then applies a two-dimensional low-pass filter to the image, with a radial cutoff frequency of \( \frac{\pi}{M} \), in order to avoid aliasing in the ArbiSkew module.
 
 Based on the downsampling factor M, the filter will select a set of coefficients from a lookup table and convolve the image values with these coefficients. This table of coefficients will correspond to the coefficients of two-dimensional extrapolations of one-dimensional FIR Parks-McClellan filters with cutoff frequencies of \( \frac{\pi}{M} \). Due to the limited number of multipliers on the FPGA, these two-dimensional filters will be constrained to have at most 144 coefficients, which constrains the one-dimensional filters to have at most 12 coefficients. Due to these constraints, the ripple and transition width specifications of the 1D filters will have to be lax. The radial symmetry of these 2D filters will be exploited to reduce the number of required multiplications by a factor of 4, to at most 36 multiplications per color per pixel.
 
-\subsection{ArbiSkew}
+\subsection{ArbiSkew (Logan)}
 % Logan
 The inputs to ArbiSkew are (1) a reference pointer to the location in ZBT memory where the low-passed image begins, and (2) the four coordinates of the corners of the frame provided by the Object Recognition module.
 
@@ -67,8 +70,8 @@ Mathematically, the algorithm works as follows:
 \item Move $I_C$ along line $\overline{I_A I_B}$ by an amount $= \frac{d_i}{width_{original}}$.
 \item Increment $o_x$.
 \item Repeat steps 7--9 until $I_C = I_B$.
-\item Move $I_A$ along line $\overline{A\prime D\prime}$ by an amount $= \frac{d_ad}{height_{original}}$.
-\item Move $I_B$ along line $\overline{B\prime C\prime}$ by an amount $= \frac{d_bc}{height_{original}}$.
+\item Move $I_A$ along line $\overline{A\prime D\prime}$ by an amount $= \frac{d_{ad}}{height_{original}}$.
+\item Move $I_B$ along line $\overline{B\prime C\prime}$ by an amount $= \frac{d_{bc}}{height_{original}}$.
 \item Increment $o_y$.
 \item Repeat steps 5--13 until $I_A = D\prime$ and $I_B = C\prime$.
 \end{enumerate}
