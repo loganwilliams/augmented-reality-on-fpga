@@ -115,4 +115,5 @@ while (int_y < height)
 end
 
 % show the result
+figure;
 imshow(projected_image);

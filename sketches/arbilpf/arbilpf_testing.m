@@ -1,6 +1,6 @@
 % simply testing arbilpf
 
-img_orig = imread('../arbiskew/IMG_5046.jpg', 'jpg');
+img_orig = imread('IMG_5046.jpg', 'jpg');
 img_orig_d = im2double(img_orig);
 M = 4; % downsampling factor
 P = 0.02; % maximum passband ripple
