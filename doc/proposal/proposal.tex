@@ -4,6 +4,7 @@
 \usepackage{graphicx}
 \usepackage{mathtools}
 \usepackage{setspace}
+\usepackage{mdwlist}
 \onehalfspacing
 
 \begin{document}
@@ -19,7 +20,7 @@ In our project, we will implement an augmented reality system that can overlay a
 \section{Top-Level Block Diagram}
 \begin{figure}[h!]
 \centering
-\includegraphics[width=1.0\textwidth]{block_diagram.png}
+\includegraphics[width=0.7\textwidth]{block_diagram.png}
 \caption{The block diagram of the augmented reality system}
 \end{figure}
 \section{Submodules}
@@ -36,11 +37,13 @@ The NTSC capture module is almost unmodified from the code provided by 6.111. It
 
 There are two modifications. The first allows the module to capture and store color data, converting it from Y/Cr/Cb to H/S/V. The second modification is added to support object recognition. When the Capture module sees a pixel of a hue that matches the target (blue, green, red, and yellow), it sends information (the color and its X/Y location) to the Object Recognition module.
 
-\subsection{ZBT Memory}
+\subsection{ZBT Memory (Jos\`{e})}
 % Jose
 
 \subsection{Object Recognition (Logan)}
-The Object Recognition module collects ``interesting'' pixels located by the NTSC Capture module, and calculates the center of mass of each color, to find the location of the corners of the picture frame.
+The Object Recognition module collects ``interesting'' pixels located by the NTSC Capture module, and calculates the center of mass of each color, to find the location of the corners of the picture frame. It takes as input (1) the color of a detected pixel, (2) a flag that goes high for one clock cycle when a pixel is detected, (3) the X/Y coordinates of the pixel, and (4) a flag that goes high when the entire frame has been captured. It produces as output four sets of X/Y coordinates, one of the center of mass of each color.
+
+The center of mass will be calculating with a simple linear weighting scheme, averaging the X and the Y coordinate for each pixel independently to find the center X/Y location, which are used by the ArbiLPF and the ArbiSkew module.
 
 \subsection{ArbiLPF (Jos\`{e})}
 % Jose
@@ -56,13 +59,12 @@ This function maps the original rectangular image to any convex quadrilateral, p
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.8\textwidth]{arbiskew_graphic.png}
+\includegraphics[width=0.65\textwidth]{arbiskew_graphic.png}
 \caption{A visual representation of the result of the ArbiSkew module. Input is on the left, a possible output, for four coordinates $A\prime$, $B\prime$, $C\prime$, and $D\prime$ is on the right.}
 \end{figure}
 
 Mathematically, the algorithm works as follows:
-\singlespacing
-\begin{enumerate}
+\begin{enumerate*}
 \item Calculate the distance of line $\overline{A\prime D\prime}$ and assign it to $d_{ad}$.
 \item Do the same for $\overline{B\prime C\prime}$ and assign it to $d_{bc}$.
 \item Create two ``iterator points," point $I_A$ and $I_B$ initially located at $A\prime$ and $B\prime$.
@@ -77,7 +79,8 @@ Mathematically, the algorithm works as follows:
 \item Move $I_B$ along line $\overline{B\prime C\prime}$ by an amount $= \frac{d_{bc}}{height_{original}}$.
 \item Increment $o_y$.
 \item Repeat steps 5--13 until $I_A = D\prime$ and $I_B = C\prime$.
-\end{enumerate}
+\end{enumerate*}
+
 
 This is feasible on the FPGA by using lookup tables to calculate $\sin$, $\cos$, and $\arctan$ for angle calculations. Besides that, it needs a relatively small number of multiplications, just two per pixel in the original image, and four per line in the original image. There is also a square root that is needed once per line, this can be implemented with either a look up table, or by using an iterative method of calculation.
 
