@@ -20,7 +20,7 @@ In our project, we will implement an augmented reality system that can overlay a
 \section{Top-Level Block Diagram}
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.6\textwidth]{block_diagram.png}
+\includegraphics[width=0.62\textwidth]{block_diagram.png}
 \caption{\emph{The block diagram of the augmented reality system.}}
 \end{figure}
 \section{Submodules}
@@ -35,7 +35,7 @@ In our project, we will implement an augmented reality system that can overlay a
 \subsection{NTSC Capture (Logan)}
 The NTSC capture module is almost unmodified from the code provided by 6.111. It takes as input an NTSC video signal, and writes pixels into ZBT Memory.
 
-There are two modifications. The first allows the module to capture and store color data, converting it from Y/Cr/Cb to H/S/V. The second modification is added to support object recognition. When the Capture module sees a pixel of a hue that matches the target (blue, green, red, and yellow), it sends information (the color and its X/Y location) to the Object Recognition module.
+There are two modifications. The first allows the module to capture and store color data, converting it from Y/Cr/Cb to H/S/V. The second modification is added to support object recognition. When the Capture module sees a pixel of a hue that matches the target (blue, green, red, and yellow), it sends information (the color and its X/Y location) to the Object Recognition module. It also outputs a flag that goes high when the entire frame has been captured.
 
 This module can be tested by connecting it to the VGA output module and ensuring that the video output is the image seen by the video camera.
 
