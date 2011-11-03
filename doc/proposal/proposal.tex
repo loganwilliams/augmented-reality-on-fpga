@@ -56,7 +56,7 @@ The center of mass will be calculating with a simple linear weighting scheme, av
 
 \subsection{ArbiLPF (Jos\'{e})}
 % Jose
-The inputs to ArbiLPF are (1) the downsampling coefficient, (2) the index of the pixel in displayed image to be filtered given this downsampling factor, (3) the set of pixels around the filtered pixels required for filtering, and (4) the pulse from the memory module. ArbiLPF applies a two-dimensional low-pass filter to this pixel by using surrounding pixels to calculate the convolution sum. The radial cutoff frequency of this 2D filter is of \( \frac{\pi}{M} \), in order to avoid aliasing in the ArbiSkew module. The outputs of ArbiLPF are (1) the pixel values of the output of the lowpassed version of this image, sampled at the given index, and (2) the indices of the set of pixels that are needed for filtering.
+The inputs to ArbiLPF are (1) the downsampling coefficient (M), (2) the index of the pixel in displayed image to be filtered given this downsampling factor, (3) the set of pixels around the filtered pixels required for filtering, and (4) the pulse from the memory module. ArbiLPF applies a two-dimensional low-pass filter to this pixel by using surrounding pixels to calculate the convolution sum. The radial cutoff frequency of this 2D filter is of \( \frac{\pi}{M} \), in order to avoid aliasing in the ArbiSkew module. The outputs of ArbiLPF are (1) the pixel values of the output of the lowpassed version of this image, sampled at the given index, and (2) the indices of the set of pixels that are needed for filtering.
 
 Based on the downsampling factor M, the filter will select a set of coefficients from a lookup table and convolve the image values with these coefficients. This table of coefficients will correspond to the coefficients of 2D extrapolations of 1D FIR Parks-McClellan filters with cutoff frequencies of \( \frac{\pi}{M} \). Due to the limited number of multipliers on the FPGA and the single-input, single-output of the RAM module, these 2D filters will be constrained to have at most 16 coefficients, which constrains the one-dimensional filters to have at most 4 coefficients. Due to these constraints, the ripple and transition width specifications of the 1D filters will have to be lax. The radial symmetry of these 2D filters will be exploited to reduce the number of required multiplications by a factor of 4, to at most 4 multiplications per color per pixel or 12 multiplications per pixel.
 
@@ -105,7 +105,14 @@ The VGA Write section is straightforward and will basically be a clone of the VG
 \section{External Components}
 We will be using two standard external components: an video camera that provides NTSC composite video out, to be provided by the 6.111 staff, and a VGA display.
 
-\section{List of Goals}
+\section{Project Deadlines}
 % A calendar-like view of what deadlines we'll set ourselves, when everything should be operational, etc. Maybe this could be collapsed into the submodules section
+\begin{itemize}
+\item 11-11-2011 - Finalized Block Diagram
+\item 11-18-2011 - First draft of ArbiLPF, ArbiSkew, and ZBT Memory written
+\item 11-24-2011 - VGA Write and NTSC Capture first drafts written; ArbiLPF, ArbiSKEW, ZBT Memory fully tested
+\item 12-01-2011 - NTSC Capture and VGA Write fully tested; start of full integration
+\item 12-08-2011 - Full integration
+\end{itemize}
 
 \end{document}
