@@ -20,7 +20,7 @@ In our project, we will implement an augmented reality system that can overlay a
 \section{Top-Level Block Diagram}
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.7\textwidth]{block_diagram.png}
+\includegraphics[width=0.6\textwidth]{block_diagram.png}
 \caption{The block diagram of the augmented reality system}
 \end{figure}
 \section{Submodules}
@@ -54,7 +54,7 @@ The center of mass will be calculating with a simple linear weighting scheme, av
 
 \subsection{ArbiLPF (Jos\'{e})}
 % Jose
-The inputs to ArbiLPF are (1) the downsampling coefficient, (2) the index of the pixel in displayed image to be filtered given this downsampling factor, (3) the set of pixels around the filtered pixels required for filtering, and (4) the pulse from the memory module. ArbiLPF applies a two-dimensional low-pass filter to this pixel by using surrounding pixels to calculate the convolution sum. The radial cutoff frequency of this 2D filter is of \( \frac{\pi}{M} \), in order to avoid aliasing in the ArbiSkew module. The output of ArbiLPF is the pixel values of the output of the lowpassed version of this image, sampled at the given index.
+The inputs to ArbiLPF are (1) the downsampling coefficient, (2) the index of the pixel in displayed image to be filtered given this downsampling factor, (3) the set of pixels around the filtered pixels required for filtering, and (4) the pulse from the memory module. ArbiLPF applies a two-dimensional low-pass filter to this pixel by using surrounding pixels to calculate the convolution sum. The radial cutoff frequency of this 2D filter is of \( \frac{\pi}{M} \), in order to avoid aliasing in the ArbiSkew module. The outputs of ArbiLPF are (1) the pixel values of the output of the lowpassed version of this image, sampled at the given index, and (2) the indices of the set of pixels that are needed for filtering.
 
 Based on the downsampling factor M, the filter will select a set of coefficients from a lookup table and convolve the image values with these coefficients. This table of coefficients will correspond to the coefficients of 2D extrapolations of 1D FIR Parks-McClellan filters with cutoff frequencies of \( \frac{\pi}{M} \). Due to the limited number of multipliers on the FPGA and the single-input, single-output of the RAM module, these 2D filters will be constrained to have at most 16 coefficients, which constrains the one-dimensional filters to have at most 4 coefficients. Due to these constraints, the ripple and transition width specifications of the 1D filters will have to be lax. The radial symmetry of these 2D filters will be exploited to reduce the number of required multiplications by a factor of 4, to at most 4 multiplications per color per pixel or 12 multiplications per pixel.
 
