@@ -2,11 +2,10 @@
 
 img_orig = imread('IMG_5046.jpg', 'jpg');
 img_orig_d = im2double(img_orig);
-M = 4; % downsampling factor
-P = 0.02; % maximum passband ripple
-K = 5; % stopband ripple = K*passband ripple
-T = 0.2; % transition width = T/M*pi (in rads)
-img_lpf = arbilpf(img_orig, M, P, T, K);
+Mx = 10; % downsampling factor
+My = 2;
+N = 60; % 40 seems like a reasonable filter order
+img_lpf = arbilpf(img_orig_d, Mx, My, N);
 img_lpf_d = im2double(img_lpf);
 figure;
 subplot(1,2,1); imshow(img_orig); title('Original Image');
