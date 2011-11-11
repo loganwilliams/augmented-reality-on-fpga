@@ -35,7 +35,6 @@ c_x = 400;
 c_y = 1;
 d_x = 400;
 d_y = 400;
-
 % the new image
 projected_image = 0;
 
