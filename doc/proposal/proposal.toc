@@ -1,10 +1,10 @@
 \contentsline {section}{\numberline {1}Top-Level Block Diagram}{2}
 \contentsline {section}{\numberline {2}Submodules}{2}
-\contentsline {subsection}{\numberline {2.1}NTSC Capture (Logan)}{2}
-\contentsline {subsection}{\numberline {2.2}Memory Interface (Jos\'{e})}{2}
-\contentsline {subsection}{\numberline {2.3}Object Recognition (Logan)}{3}
-\contentsline {subsection}{\numberline {2.4}ArbiLPF (Jos\'{e})}{3}
+\contentsline {subsection}{\numberline {2.1}{\tt ntsc\_capture} (Logan)}{2}
+\contentsline {subsection}{\numberline {2.2}{\tt memory\_interface} (Jos\'{e})}{2}
+\contentsline {subsection}{\numberline {2.3}{\tt object\_recognition} (Logan)}{3}
+\contentsline {subsection}{\numberline {2.4}{\tt LPF} (Jos\'{e})}{3}
 \contentsline {subsection}{\numberline {2.5}Projective Transform (Logan)}{4}
 \contentsline {subsection}{\numberline {2.6}VGA Write (Jos\'{e})}{5}
-\contentsline {section}{\numberline {3}External Components}{5}
+\contentsline {section}{\numberline {3}External Components}{6}
 \contentsline {section}{\numberline {4}Project Deadlines}{6}

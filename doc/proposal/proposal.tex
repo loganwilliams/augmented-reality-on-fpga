@@ -39,7 +39,7 @@ We will implement an augmented reality system that can overlay a digital image o
 %	etc.
 % 3) how the module will be tested
 % 4) who will be writing the module
-\subsection{NTSC Capture (Logan)}
+\subsection{{\tt ntsc\_capture} (Logan)}
 The {\tt ntsc\_capture} module is almost unmodified from the code provided by 6.111. It takes as input an NTSC video signal, and gives pixels to {\tt memory\_interface} to write into ZBT memory.
 
 There are two modifications. The first allows the module to capture and store color data in Y/Cr/Cb format. The second modification is added to support object recognition. When the {\tt ntsc\_capture} module sees a pixel of a color that matches the target (blue, green, red, and yellow), it sends information (the color and its X/Y location) to the {\tt object\_recognition} module. It also outputs a flag that goes high when the entire frame has been captured, and a new one is beginning. A more precise definition of the inputs and outputs, their width, and their name can be seen in the block diagram above for every module described below.
@@ -56,12 +56,12 @@ The inputs to {\tt memory\_interface} are (1) frame\_flag, which signals when to
 
 {\tt memory\_interface} will be tested in stages. Initially, basic read and write functionality will be assessed in simulation and then on the FPGA. Once we have written and read information from the ZBT RAM successfully, we will attempt to write, read, and display an image. Finally, all of the logic pertaining to handling read and write requests from all the modules simulatenously will be written, tested using extensive testbenches, and finally tested on an FPGA with dummy modules. All of this testing should avoid help us avoid headaches during final integration.
 
-\subsection{Object Recognition (Logan)}
+\subsection{{\tt object\_recognition} (Logan)}
 The {\tt object\_recognition} module collects ``interesting'' pixels located by the NTSC Capture module, and calculates the center of mass of each color, to find the location of the corners of the picture frame.
 
 It takes as inputs (1) the color of a detected pixel, (2) a flag that goes high for one clock cycle when a pixel is detected, (3) the X/Y coordinates of the pixel, and (4) a flag that goes high when a new frame is beginning. It produces as output four sets of X/Y coordinates, one for the center of mass of each color.
 
-The center of mass will be calculating with a simple linear weighting scheme, averaging the X and the Y coordinate for each pixel independently to find the center X/Y location, which are used by the {\tt lpf} and the {\tt projective\_transfom} module. This module can be tested with a simple test bench that provides some sample pixel locations, and tests to see if the module computes the center of mass correctly.
+The center of mass will be calculating with a simple linear weighting scheme, averaging the X and the Y coordinate for each pixel independently to find the center X/Y location, which are used by the {\tt LPF} and the {\tt projective\_transfom} module. This will require a divide module, which can be created with coregen. {\tt object\_recognition} can be tested with a simple test bench that provides some sample pixel locations, and tests to see if the module computes the center of mass correctly.
 
 \subsection{{\tt LPF} (Jos\'{e})}
 The {\tt LPF} module's sole purpose is to apply a lowpass filter (LPF) to the "processing" image so as to avoid aliasing when {\tt projective\_transform} skews the image. The following steps detail the operation of {\tt LPF} every image refresh cycle (1/30 seconds): (1) Load the filter coefficients of a 1D LPF with cutoff frequency \( \frac{\pi}{M_y} \). (2) Apply this filter to each column of "processing" and store each row once again in "processing". (3) Load the filter coefficients of a 1D LPF with cutoff frequency \( \frac{\pi}{M_x} \). (4) Apply this filter to each row of "processing"  but instead feed the output pixels to {\tt projective\_transform}. (5) Wait for the next cycle. The image data will be buffered in BRAM, such that LPF accesses memory 1.5 times per pixel.
@@ -74,9 +74,9 @@ Because {\tt LPF} is used only to make the output look good, {\tt LPF} will be d
 
 \subsection{Projective Transform (Logan)}
 % Logan
-The inputs to {\tt projective\_transform} are (1) the pixel value last produced by {\tt lpf}, (2) a flag signal held high for one clock signal when {\tt lpf} has processed a new pixel, (3) the four coordinates of the corners of the frame provided by the {\tt object\_recognition} module, and (4) a signal when a new frame is beginning.
+The inputs to {\tt projective\_transform} are (1) the pixel value last produced by {\tt LPF}, (2) a flag signal held high for one clock signal when {\tt LPF} has processed a new pixel, (3) the four coordinates of the corners of the frame provided by the {\tt object\_recognition} module, and (4) a signal when a new frame is beginning.
 
-The outputs from {\tt projective\_transform} are (1) a request to {\tt lpf} for a new pixel, (2) the X/Y coordinates of the transformed pixel, (3) the transformed pixel value, and (4) a flag indicating that a new pixel is to be written.
+The outputs from {\tt projective\_transform} are (1) a request to {\tt LPF} for a new pixel, (2) the X/Y coordinates of the transformed pixel, (3) the transformed pixel value, and (4) a flag indicating that a new pixel is to be written.
 
 This function maps the original rectangular image to any convex quadrilateral, provided that all sides of the destination quadrilateral are shorter than the original, which is inherent in the overall system. A graphic representation of the transformation is shown in Figure 2, on the next page.
 
