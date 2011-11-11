@@ -1,4 +1,5 @@
 
+
 \documentclass[10pt]{article}
 
 \usepackage{fullpage}
@@ -24,9 +25,9 @@ We will implement an augmented reality system that can overlay a digital image o
 
 
 \section{Top-Level Block Diagram}
-\begin{figure}[h]
+\begin{figure}[h!]
 \centering
-\includegraphics[width=0.62\textwidth]{block_diagram.png}
+\includegraphics[width=\textwidth]{block_diagram_with_wires.png}
 \caption{\emph{The block diagram of the augmented reality system.}}
 \end{figure}
 \section{Submodules}
@@ -56,9 +57,11 @@ The inputs to Memory Interface are (1) frame\_flag, which signals when to shift;
 The Memory Interface module will be tested in stages. Initially, basic read and write functionality will be assessed in simulation and then on the FPGA. Once we have written and read information from the ZBT RAM successfully, we will attempt to write, read, and display an image. Finally, all of the logic pertaining to handling read and write requests from all the modules simulatenously will be written, tested using extensive testbenches, and finally tested on an FPGA with dummy modules. All of this testing should avoid help us avoid headaches during final integration.
 
 \subsection{Object Recognition (Logan)}
-The Object Recognition module collects ``interesting'' pixels located by the NTSC Capture module, and calculates the center of mass of each color, to find the location of the corners of the picture frame. It takes as input (1) the color of a detected pixel, (2) a flag that goes high for one clock cycle when a pixel is detected, (3) the X/Y coordinates of the pixel, and (4) a flag that goes high when the entire frame has been captured. It produces as output four sets of X/Y coordinates, one of the center of mass of each color.
+The {\tt object\_recognition} module collects ``interesting'' pixels located by the NTSC Capture module, and calculates the center of mass of each color, to find the location of the corners of the picture frame.
 
-The center of mass will be calculating with a simple linear weighting scheme, averaging the X and the Y coordinate for each pixel independently to find the center X/Y location, which are used by the ArbiLPF and the ArbiSkew module. This module can be tested with a simple test bench that provides some sample pixel locations, and tests to see if the module computes the center of mass correctly.
+It takes as inputs (1) the color of a detected pixel, (2) a flag that goes high for one clock cycle when a pixel is detected, (3) the X/Y coordinates of the pixel, and (4) a flag that goes high when a new frame is beginning. It produces as output four sets of X/Y coordinates, one for the center of mass of each color.
+
+The center of mass will be calculating with a simple linear weighting scheme, averaging the X and the Y coordinate for each pixel independently to find the center X/Y location, which are used by the {\tt lpf} and the {\tt projective\_transfom} module. This module can be tested with a simple test bench that provides some sample pixel locations, and tests to see if the module computes the center of mass correctly.
 
 \subsection{ArbiLPF (Jos\'{e})}
 % Jose
@@ -70,16 +73,18 @@ Due to the single-input, single-output nature of the RAM, the clock frequency of
 
 ArbiLPF will be tested by crafting a testbench module that accepts an arbitrary 640x480 image and outputs the output of the filter. Initially, an image with an impulse at the center will be used, which ideally should cause the filter to output the filter coefficients that are used. As basic functionality is tested, more complicated images will be used. Eventually, complex images will be processed both with the testbench and with MATLAB and will be compared using the 2D Fourier plots of these two outputs.
 
-\subsection{ArbiSkew (Logan)}
+\subsection{Projective Transform (Logan)}
 % Logan
-The inputs to ArbiSkew are (1) the hue, saturation, and value of the last pixel produced by ArbiLPF, (2) a ready signal held high for one clock signal when ArbiLPF has processed a new pixel, and (3) the four coordinates of the corners of the frame provided by the Object Recognition module.
+The inputs to {\tt projective\_transform} are (1) the pixel value last produced by {\tt lpf}, (2) a flag signal held high for one clock signal when {\tt lpf} has processed a new pixel, (3) the four coordinates of the corners of the frame provided by the {\tt object\_recognition} module, and (4) a signal when a new frame is beginning.
+
+The outputs from {\tt projective\_transform} are (1) a request to {\tt lpf} for a new pixel, (2) the X/Y coordinates of the transformed pixel, (3) the transformed pixel value, and (4) a flag indicating that a new pixel is to be written.
 
 This function maps the original rectangular image to any convex quadrilateral, provided that all sides of the destination quadrilateral are shorter than the original, which is inherent in the overall system. A graphic representation of the transformation is shown in Figure 2, on the next page.
 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.65\textwidth]{arbiskew_graphic.png}
-\caption{\emph{A visual representation of the result of the ArbiSkew module. Input is on the left, a possible output, for four coordinates $A\prime$, $B\prime$, $C\prime$, and $D\prime$ is on the right.}}
+\caption{\emph{A visual representation of the result of the {\tt projective\_transform} module. Input is on the left, a possible output, for four coordinates $A\prime$, $B\prime$, $C\prime$, and $D\prime$ is on the right.}}
 \end{figure}
 
 Mathematically, the algorithm works as follows:
@@ -100,9 +105,9 @@ Mathematically, the algorithm works as follows:
 \item Repeat steps 5--13 until $I_A = D\prime$ and $I_B = C\prime$.
 \end{enumerate*}
 
-This is feasible on the FPGA by using lookup tables to calculate $\sin$, $\cos$, and $\arctan$ for angle calculations. Besides that, it needs a relatively small number of multiplications, just two per pixel in the original image, and four per line in the original image. There is also a square root that is needed once per line, this can be implemented with either a look up table, or by using an iterative method of calculation.
+This algorithm needs a relatively small number of multiplications, just two per pixel in the original image, and four per line in the original image. There is also a square root that is needed once per line, which will be implemented with an iterative algorithm.
 
-The ArbiSkew module can be tested by creating a test bench that provides a series of test pixels as input. The output generated in ModelSim by ArbiSkew can then be compared with the output generated by a MATLAB implementation of ArbiSkew.
+The {\tt projective\_transform} module can be tested by creating a test bench that provides a series of test pixels as input. The output generated in ModelSim by {\tt projective\_transform} can then be compared with the output generated by a MATLAB implementation of the algorithm described above.
 
 \subsection{VGA Write (Jos\'{e})}
 % Jose
