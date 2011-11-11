@@ -7,4 +7,4 @@
 \contentsline {subsection}{\numberline {2.5}Projective Transform (Logan)}{4}
 \contentsline {subsection}{\numberline {2.6}VGA Write (Jos\'{e})}{5}
 \contentsline {section}{\numberline {3}External Components}{5}
-\contentsline {section}{\numberline {4}Project Deadlines}{5}
+\contentsline {section}{\numberline {4}Project Deadlines}{6}

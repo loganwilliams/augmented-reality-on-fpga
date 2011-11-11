@@ -40,11 +40,11 @@ We will implement an augmented reality system that can overlay a digital image o
 % 3) how the module will be tested
 % 4) who will be writing the module
 \subsection{NTSC Capture (Logan)}
-The NTSC capture module is almost unmodified from the code provided by 6.111. It takes as input an NTSC video signal, and writes pixels into ZBT Memory.
+The {\tt ntsc\_capture} module is almost unmodified from the code provided by 6.111. It takes as input an NTSC video signal, and gives pixels to {\tt memory\_interface} to write into ZBT memory.
 
-There are two modifications. The first allows the module to capture and store color data, converting it from Y/Cr/Cb to H/S/V. The second modification is added to support object recognition. When the Capture module sees a pixel of a hue that matches the target (blue, green, red, and yellow), it sends information (the color and its X/Y location) to the Object Recognition module. It also outputs a flag that goes high when the entire frame has been captured.
+There are two modifications. The first allows the module to capture and store color data in Y/Cr/Cb format. The second modification is added to support object recognition. When the {\tt ntsc\_capture} module sees a pixel of a color that matches the target (blue, green, red, and yellow), it sends information (the color and its X/Y location) to the {\tt object\_recognition} module. It also outputs a flag that goes high when the entire frame has been captured, and a new one is beginning. A more precise definition of the inputs and outputs, their width, and their name can be seen in the block diagram above for every module described below.
 
-This module can be tested by connecting it to the VGA output module and ensuring that the video output is the image seen by the video camera.
+This module can be tested by connecting it to the {\tt vga\_write} module and ensuring that the video output is the image seen by the video camera.
 
 \subsection{Memory Interface (Jos\'{e})}
 % Jose
@@ -114,7 +114,7 @@ The {\tt projective\_transform} module can be tested by creating a test bench th
 The VGA Write section is straightforward and will basically be a clone of the VGA code used in Lab 2 (Pong). Essentially, the output will be refreshed at a rate of 60Hz and output at a resolution of 640x480 pixels. This module will read the pixel values from displayed image and assign it based on the hcount and vcount variables, which will be incremented accordingly. This module will be tested by loading a standardized image to memory and verifying whether VGA Write displays this image properly on the monitor.
 
 \section{External Components}
-We will be using two standard external components: an video camera that provides NTSC composite video out, to be provided by the 6.111 staff, and a VGA display.
+We will be using two standard external components: an video camera that provides NTSC composite video out, to be provided by the 6.111 staff, and a VGA display, available in the 6.111 lab.
 
 \section{Project Deadlines}
 % A calendar-like view of what deadlines we'll set ourselves, when everything should be operational, etc. Maybe this could be collapsed into the submodules section
