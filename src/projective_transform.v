@@ -3,18 +3,28 @@ module projective_transform(input clk, frame_flag, [17:0] pixel, pixel_flag,
 		[9:0] dx, [8:0] dy, output reg [17:0] pixel_out, [9:0] pixel_x,
 		[8:0] pixel_y, pixel_out_flag);
 	
-	parameter WAITING_FOR_PIXEL = 0;
 
-	reg [?:0] state; // not sure how big this should be 
-	reg [9:0] i_a_x;
-	reg [8:0] i_a_y;
-	reg [9:0] i_b_x;
-	reg [8:0] i_b_y;
+	reg [?:0] state; // not sure how big this should be yet
 
+	// iterator coordinates
+	reg [19:0] i_a_x;
+	reg [18:0] i_a_y;
+	reg [19:0] i_b_x;
+	reg [18:0] i_b_y;
+	reg [19:0] i_c_x;
+	reg [18:0] i_c_y;
+
+	// distance stores
 	reg [9:0] d_ad;
 	reg [9:0] d_bc;
 	reg [9:0] d_iterators;
 
+	// temporary registers for calculating distances
+	reg [19:0] dcalc_temp1;
+	reg [19:0] dcalc_temp2;
+	reg [20:0] d_sqrt;
+
+	// coordinates of the untransformed images
 	reg [9:0] o_x;
 	reg [8:0] o_y;
 
@@ -25,82 +35,127 @@ module projective_transform(input clk, frame_flag, [17:0] pixel, pixel_flag,
 	always @(posedge clk) begin
 		if (frame_flag) begin
 			// initialize system parameters
-			state <= CALCULATING_DISTANCE_AD_X;
-			i_a_x <= ax;
-			i_a_y <= ay;
-			i_b_x <= bx;
-			i_b_y <= by;
+			state <= CALCULATING_DISTANCE_AD_1;
+			i_a_x <= ax << 10;
+			i_a_y <= ay << 10;
+			i_b_x <= bx << 10;
+			i_b_y <= by << 10;
 
 			d_ad <= 0;
 			d_bc <= 0;
 			d_iterators <= 0;
+
+			o_x <= 0;
+			o_y <= 0;
 		end
 
 		case(state)
 			// once per frame
-			CALCULATING_DISTANCE_AD_X: begin
-				d_ad <= (ax - dx) * (ax - dx);
-				state <= CALCULATING_DISTANCE_AD_Y;
+			CALCULATING_DISTANCE_AD_1: begin
+				dcalc_temp1 <= (ax - dx) * (ax - dx);
+				dcalc_temp2 <= (ay - dy) * (ay - dy);
+				state <= CALCULATING_DISTANCE_AD_2;
 			end
 
 			// once per frame
 			CALCULATING_DISTANCE_AD_Y: begin
-				d_ad <= d_ad + (ay - dy) * (ay - dy);
+				d_sqrt <= dcalc_temp1 + dcalc_temp2;
+				sqrt_start <= 1;
 				state <= CALCULATING_DISTANCE_AD_SQRT;
 			end
 
 			// once per frame
 			CALCULATING_DISTANCE_AD_SQRT: begin
-				d_ad <= sqrt_output_ad;
-				state <= CALCULATING_DISTANCE_BC_X;
+				sqrt_start <= 0;
+
+				if (sqrt_done) begin
+					d_ad <= answer;
+					state <= CALCULATING_DISTANCE_BC_1;
+				end
 			end
 
 			// once per frame
-			CALCULATING_DISTANCE_BC_X: begin
-				d_bc <= (bx - cx) * (bx - cx);
-				state <= CALCULATING_DISTANCE_BC_Y;
+			CALCULATING_DISTANCE_BC_1: begin
+				dcalc_temp1 <= (bx - cx) * (bx - cx);
+				dcalc_temp2 <= (by - cy) * (by - cy);
+				state <= CALCULATING_DISTANCE_BC_2;
 			end
 
 			// once per frame
-			CALCULATING_DISTANCE_BC_Y: begin
-				d_bc <= d_bc + (by - cy) * (by - cdy);
+			CALCULATING_DISTANCE_BC_2: begin
+				dsqrt <= dcalc_temp1 + dcalc_temp2;
+				sqrt_start <= 1;
 				state <= CALCULATING_DISTANCE_BC_SQRT;
 			end
 
 			// once per frame
 			CALCULATING_DISTANCE_BC_SQRT: begin
-				d_bc <= sqrt_output_bc;
-				state <= CALCULATING_DISTANCE_ITERATORS_X;
+				sqrt_start <= 0;
+
+				if (sqrt_done) begin
+					d_bc <= answer;
+					state <= CALCULATING_DISTANCE_ITERATORS_1;
+				end
 			end
 
 			// once per LINE
-			CALCULATING_DISTANCE_ITERATORS_X: begin
-				d_iterators <= (i_a_x - i_b_x) * (i_a_x - i_b_x);
-				state <= CALCULATING_DISTANCE_ITERATORS_Y: begin
+			CALCULATING_DISTANCE_ITERATORS_1: begin
+				dcalc_temp1 <= (i_a_x - i_b_x) * (i_a_x - i_b_x);
+				dcalc_temp2 <= (i_a_y - i_b_y) * (i_a_y - i_b_y);
+				state <= CALCULATING_DISTANCE_ITERATORS_2;
 			end
 
 			// once per LINE
-			CALCULATING_DISTANCE_ITERATORS_Y: begin
-				d_iterators <= d_iterators + (i_a_y - i_b_y) * (i_a_x - i_b_x);
-				state <= CALCULATE_DISTANCE_ITERATORS_SQRT;
+			CALCULATING_DISTANCE_ITERATORS_2: begin
+				dsqrt <= dcalc_temp1 + dcalc_temp2;
+				sqrt_start <= 1;
+				state <= CALCULATING_DISTANCE_ITERATORS_SQRT
 			end
 
 			// once per LINE
 			CALCULATE_DISTANCE_ITERATORS_SQRT: begin
-				d_iterators <= sqrt_output_iterators;
-				state <= WRITE_PIXEL;
+				sqrt_start <= 0;
+
+				if (sqrt_done) begin
+					d_iterators <= answer;
+					state <= WRITE_PIXEL;
+				end
 			end
 
 
 			// ONCE PER PIXEL
 			WRITE PIXEL: begin
-				// ???
-				state <= ITERATE_IC;
+				
 			end
-
-
-
 
 		endcase
 	end
+endmodule
+
+
+// takes integer square root iteratively
+module sqrt #(parameter NBITS = 8,  // max 32
+                        MBITS = (NBITS+1)/2)
+            (input wire clk,start,
+             input wire [NBITS-1:0] data,
+             output reg [MBITS-1:0] answer,
+             output wire done);
+   
+   reg 			 busy;
+   reg [4:0] 		 bit;
+   // compute answer bit-by-bit, starting at MSB
+   wire [MBITS-1:0] 	 trial = answer | (1 << bit);
+   always @(posedge clk) begin
+      if (busy) begin
+	 if (bit == 0) busy <= 0;
+	 else bit <= bit - 1;
+	 if (trial*trial <= data) answer <= trial;
+      end
+      else if (start) begin
+	 busy <= 1;
+	 answer <= 0;
+	 bit <= MBITS - 1;
+      end
+   end
+   assign done = ~busy;
 endmodule
