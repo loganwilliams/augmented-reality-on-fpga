@@ -1,3 +1,4 @@
+
 \documentclass[10pt]{article}
 
 \usepackage{fullpage}
@@ -14,11 +15,16 @@
 \date{November 03, 2011}
 \maketitle
 
-\section{Abstract}
-% should be revised, this is what we originally turned in 
-In our project, we will implement an augmented reality system that can overlay a digital image on video of a real world environment. We begin by reading NTSC video from a video camera and storing it in ZBT SRAM. A picture frame with colored markers on the corners is held in front of the camera. We then perform chroma-based object recognition to locate the co-ordinates of the corners. Using these co-ordinates, we apply a low-pass filter (ArbiLPF) and a projective transformation (ArbiSkew) to project an image onto the dimensions of the picture frame. We then output VGA video of the original captured image, with the processed image overlayed on top of the frame. The overlayed image (the ``augmentation'') can be arbitrary. When this image is the frame of video that was previously displayed, we call the system ``recursive'', as we obtain the same image contained within itself.
+
+
+\section*{Abstract}
+We will implement an augmented reality system that can overlay a digital image on video of a real world environment. We begin by reading NTSC video from a video camera and storing it in ZBT SRAM. A picture frame with colored markers on the corners is held in front of the camera. We then perform chroma-based object recognition to locate the co-ordinates of the corners. Using these co-ordinates, we apply a low-pass filter and a projective transformation to project an image onto the dimensions of the picture frame. We then output VGA video of the original captured image, with the processed image overlayed on top of the frame. The overlayed image (the ``augmentation'') can be arbitrary. When this image is the frame of video that was previously displayed, we call the system ``recursive'', as we obtain the same image contained within itself.
+
+\tableofcontents
+
+
 \section{Top-Level Block Diagram}
-\begin{figure}[h!]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.62\textwidth]{block_diagram.png}
 \caption{\emph{The block diagram of the augmented reality system.}}
@@ -110,9 +116,10 @@ We will be using two standard external components: an video camera that provides
 \begin{itemize}
 \item 11-11-2011 - Finalized Block Diagram
 \item 11-18-2011 - First draft of ArbiLPF, ArbiSkew, and ZBT Memory written
-\item 11-24-2011 - VGA Write and NTSC Capture first drafts written; ArbiLPF, ArbiSKEW, ZBT Memory fully tested
-\item 12-01-2011 - NTSC Capture and VGA Write fully tested; start of full integration
-\item 12-08-2011 - Full integration
+\item 11-22-2011 - VGA Write and NTSC Capture first drafts written; ArbiLPF, ArbiSKEW, ZBT Memory fully tested
+\item 11-30-2011 - NTSC Capture and VGA Write fully tested; start of full integration
+\item 12-05-2011 - Full integration
+\item 12-12-2011 - Final report due
 \end{itemize}
 
 \end{document}
