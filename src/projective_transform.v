@@ -78,6 +78,7 @@ module projective_transform(input clk, frame_flag, [17:0] pixel, pixel_flag,
 	   if (sqrt_done) begin
 	      d_ad <= answer;
 
+	      // will need two coregen divider modules
 	      delta_a_x = ((d_x - a_x) << 10) / answer;
 	      delta_a_y = ((d_y - a_y) << 10) / answer;
 	    	      
@@ -106,6 +107,7 @@ module projective_transform(input clk, frame_flag, [17:0] pixel, pixel_flag,
 	   if (sqrt_done) begin
 	      d_bc <= answer;
 
+	      // will need two coregen divider modules
 	      delta_b_x = ((c_x - b_x) << 10) / answer;
 	      delta_b_y = ((c_y - b_y) << 10) / answer;
 	      
