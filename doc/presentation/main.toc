@@ -1,11 +1,11 @@
 \beamer@endinputifotherversion {3.10pt}
 \select@language {english}
 \beamer@sectionintoc {1}{Introduction}{2}{0}{1}
-\beamer@sectionintoc {2}{Top-Level Overview}{4}{0}{2}
-\beamer@sectionintoc {3}{Individual Module Specifications}{5}{0}{3}
-\beamer@subsectionintoc {3}{1}{projective\_transform}{5}{0}{3}
-\beamer@subsectionintoc {3}{2}{object\_recognition}{6}{0}{3}
-\beamer@subsectionintoc {3}{3}{LPF}{7}{0}{3}
-\beamer@subsectionintoc {3}{4}{memory\_interface}{23}{0}{3}
-\beamer@subsectionintoc {3}{5}{system io}{31}{0}{3}
-\beamer@subsectionintoc {3}{6}{timeline}{33}{0}{3}
+\beamer@sectionintoc {2}{Top-Level Overview}{6}{0}{2}
+\beamer@sectionintoc {3}{Individual Module Specifications}{7}{0}{3}
+\beamer@subsectionintoc {3}{1}{projective\_transform}{7}{0}{3}
+\beamer@subsectionintoc {3}{2}{object\_recognition}{18}{0}{3}
+\beamer@subsectionintoc {3}{3}{LPF}{19}{0}{3}
+\beamer@subsectionintoc {3}{4}{memory\_interface}{35}{0}{3}
+\beamer@subsectionintoc {3}{5}{system io}{43}{0}{3}
+\beamer@subsectionintoc {3}{6}{timeline}{45}{0}{3}

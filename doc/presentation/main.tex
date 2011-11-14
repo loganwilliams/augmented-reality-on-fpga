@@ -39,16 +39,37 @@
 % Logan
 \begin{frame}
 	\frametitle{Introduction}
-	Overlay a digital image on a physical object in realtime.
+	\begin{itemize}
+		\item Overlay a digital image on a physical object in realtime.
+		\item In this case, we want to identify a picture frame in captured video, and output video with another image distorted to fit on top of the picture frame.
+	\end{itemize}
 \end{frame}
 
 % Logan
 \begin{frame}
 % example output image
-	\frametitle{example image}
+	\frametitle{Example Image}
 	\begin{figure}
 		\centering
-		% \includegraphics[width=\textwidth]{example.png}
+		\includegraphics[width=0.9\textwidth]{example1.png}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+% example output image
+	\frametitle{Example Image}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.9\textwidth]{example2.jpg}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+% example output image
+	\frametitle{Example Image}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.9\textwidth]{example3.jpg}
 	\end{figure}
 \end{frame}
 
@@ -56,7 +77,7 @@
 \section{Top-Level Overview}
 \begin{frame}
 % big block diagram slide
-	\frametitle{top-level overview}
+	\frametitle{Top-Level Overview}
 	\begin{figure}
 		\centering
 		\includegraphics[width=\textwidth]{../proposal/simplified_block_diagram.png}
@@ -67,13 +88,141 @@
 % Logan
 \subsection{projective\_transform}
 \begin{frame}
-	\frametitle{projective\_transform}
+	\frametitle{{\tt projective\_transform}: Purpose}
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../proposal/arbiskew_graphic.png}
+	\end{figure}
+	\begin{itemize}
+		\item Skew to any arbitrary convex quadrilateral
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: How the algorithm works}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\textwidth]{../proposal/arbiskew_graphic.png}
+	\end{figure}
+	\begin{enumerate}
+		\item[1] Calculate the distance of line $\overline{A\prime D\prime}$ and assign it to $d_{ad}$.
+		\item[2] Do the same for $\overline{B\prime C\prime}$ and assign it to $d_{bc}$.
+		\item[3] Create two ``iterator points,'' point $I_A$ and $I_B$ initially located at $A\prime$ and $B\prime$.
+		\item[4] Let $o_x = 0$ and $o_y = 0$
+		\item[5] Calculate the distance between the iterator points, assign it to $d_i$.
+		\item[6] Create a third iterator point, $I_C$ at the location $I_A$.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: How the algorithm works}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\textwidth]{../proposal/arbiskew_graphic.png}
+	\end{figure}
+	\begin{enumerate}
+		\item[7] Assign the pixel value of $I_C$ to pixel $(o_x, o_y)$ in the original image.
+		\item[8] Move $I_C$ along line $\overline{I_A I_B}$ by an amount $= \frac{d_i}{width_{original}}$.
+		\item[9] Increment $o_x$.
+		\item[10] Repeat steps 7--9 until $I_C = I_B$.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: How the algorithm works}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\textwidth]{../proposal/arbiskew_graphic.png}
+	\end{figure}
+	\begin{enumerate}
+	\item[11] Move $I_A$ along line $\overline{A\prime D\prime}$ by an amount $= \frac{d_{ad}}{height_{original}}$.
+	\item[12] Move $I_B$ along line $\overline{B\prime C\prime}$ by an amount $= \frac{d_{bc}}{height_{original}}$.
+	\item[13] Increment $o_y$.
+	\item[14] Repeat steps 5--13 until $I_A = D\prime$ and $I_B = C\prime$.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: Example}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{../../sketches/arbiskew/IMG_5046.jpg}
+		\caption{The original image}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: Example}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{skew_rectangle.png}
+		\caption{We want it skewed to this quadrilateral}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: Example}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{projected_halfway_line.jpg}
+		\caption{Halfway along line $A\prime B\prime$}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: Example}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{projected_halfway.jpg}
+		\caption{Halfway through skewing the image}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: Example}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.8\textwidth]{projected_final.jpg}
+		\caption{The final image (processed with MATLAB)}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: FPGA implementation}
+	\begin{itemize}
+	\item Straightfoward implementation of the above algorithm
+	\item Uses coregen Divider modules for the divisions
+	\item Requires only 2*640*480 + 4*480 multiplications per clock cycle
+	\item Uses an iterative algorithm for finding distances (pipelined at the end of each line of the image)
+	\item Processes pixels ``on-the-fly'' from {\tt LPF}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: How it Interfaces}
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../proposal/block_diagram_with_wires.png}
+	\end{figure}
 \end{frame}
 
 % Logan
 \subsection{object\_recognition}
+
+
 \begin{frame}
-	\frametitle{object\_recognition}
+	\frametitle{{\tt object\_recognition}}
+
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.6\textwidth]{../proposal/simplified_block_diagram.png}
+	\end{figure}
+	
+		\begin{itemize}
+		\item Mark corners of frame with colored dots.
+		\item Recognition begins in the {\tt ntsc\_capture} module, which detects these colors and sends the pixel info to the {\tt object\_recognition} module.
+	\end{itemize}
 \end{frame}
 
 % Jose

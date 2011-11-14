@@ -6,19 +6,9 @@
 
 img_orig = imread('IMG_5046.jpg', 'jpg');
 img_orig_d = im2double(img_orig);
-M = 3.2; % downsampling factor
-P = 0.02; % maximum passband ripple
-K = 5; % stopband ripple = K*passband ripple
-T = 0.2; % transition width = T/M*pi (in rads)
-img_lpf = arbilpf(img_orig, M, P, T, K);
-img_lpf_d = im2double(img_lpf);
 
 
-% plot fft of original image
-fft_orig = fftshift(fft2(rgb2gray(img_orig_d)));
-fft_lpf = fftshift(fft2(rgb2gray(img_lpf_d))); 
-
-the_image = img_lpf_d;
+the_image = img_orig_d;
 
 width = size(the_image,2);
 height = size(the_image,1);
@@ -86,6 +76,15 @@ while (int_y < height)
             the_image(int_y, int_x, 2);
         projected_image(int16(sub_loop_pos_y), int16(sub_loop_pos_x), 3) = ...
             the_image(int_y, int_x, 3);
+        
+        if (int_y > 2 || int_x > 800)
+             projected_image(int16(sub_loop_pos_y), int16(sub_loop_pos_x), 1) = ...
+            0;
+        projected_image(int16(sub_loop_pos_y), int16(sub_loop_pos_x), 2) = ...
+            0;
+        projected_image(int16(sub_loop_pos_y), int16(sub_loop_pos_x), 3) = ...
+            0;;
+        end
 
         int_x = int_x + 1; %increment int_x
         
