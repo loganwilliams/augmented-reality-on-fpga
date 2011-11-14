@@ -5,7 +5,7 @@
 \beamer@sectionintoc {3}{Individual Module Specifications}{7}{0}{3}
 \beamer@subsectionintoc {3}{1}{projective\_transform}{7}{0}{3}
 \beamer@subsectionintoc {3}{2}{object\_recognition}{18}{0}{3}
-\beamer@subsectionintoc {3}{3}{LPF}{19}{0}{3}
-\beamer@subsectionintoc {3}{4}{memory\_interface}{35}{0}{3}
-\beamer@subsectionintoc {3}{5}{system io}{43}{0}{3}
-\beamer@subsectionintoc {3}{6}{timeline}{45}{0}{3}
+\beamer@subsectionintoc {3}{3}{LPF}{20}{0}{3}
+\beamer@subsectionintoc {3}{4}{memory\_interface}{36}{0}{3}
+\beamer@subsectionintoc {3}{5}{system io}{44}{0}{3}
+\beamer@subsectionintoc {3}{6}{timeline}{46}{0}{3}

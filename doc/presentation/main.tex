@@ -195,6 +195,7 @@
 	\item Requires only 2*640*480 + 4*480 multiplications per clock cycle
 	\item Uses an iterative algorithm for finding distances (pipelined at the end of each line of the image)
 	\item Processes pixels ``on-the-fly'' from {\tt LPF}
+	\item Negligible memory requirements (a handful of registers)
 	\end{itemize}
 \end{frame}
 
@@ -216,12 +217,25 @@
 
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.6\textwidth]{../proposal/simplified_block_diagram.png}
+		\includegraphics[width=0.8\textwidth]{../proposal/simplified_block_diagram.png}
 	\end{figure}
 	
-		\begin{itemize}
-		\item Mark corners of frame with colored dots.
-		\item Recognition begins in the {\tt ntsc\_capture} module, which detects these colors and sends the pixel info to the {\tt object\_recognition} module.
+	\begin{itemize}
+		\item Mark corners of frame with four differently colored dots.
+		\item Recognition begins in the {\tt ntsc\_capture} module, which detects these colors as it is capturing data and sends the pixel info to the {\tt object\_recognition} module.
+		
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt object\_recognition}}
+
+	\begin{itemize}
+		\item Take linear weighted center of mass for each image
+		\item Sums the (x,y) coordinates for each color as it receives them. (8 running sums, 2 for each color)
+		\item When the frame is done, divide each sum by the number of summed items
+		\item The resulting 4 (x,y) pairs are the corners of the frame
+		\item By looking for pixels in {\tt ntsc\_capture} we significantly reduce the amount of time spent in {\tt object\_recognition}
 	\end{itemize}
 \end{frame}
 
