@@ -1,4 +1,5 @@
 % $Header: /cvsroot/latex-beamer/latex-beamer/solutions/generic-talks/generic-ornate-15min-45min.en.tex,v 1.5 2007/01/28 20:48:23 tantau Exp $
+
 \documentclass{beamer}
 
 \mode<presentation>
@@ -22,8 +23,11 @@
 
 \title[Augmented Reality on FPGA]{Augmented Reality on FPGA}
 \subtitle{Realtime Object Recognition and Image Processing}
-\author{Logan Williams \and Jos\'{e} E. Cruz Serrall\'{e}s}
+\author[Logan Williams \and Jos\'{e} Cruz Serrall\'{e}s]{Logan Williams \and Jos\'{e} E. Cruz Serrall\'{e}s}
+
 \date{15 November 2011}
+\institute[6.111]{6.111 Fall 2011}
+
 
 %\AtBeginSubsection[]
 %{
@@ -33,7 +37,9 @@
 %}
 
 %\beamerdefaultoverlayspecification{<+->}
+
 \begin{document}
+
 
 \begin{frame}
 	\titlepage
@@ -106,7 +112,7 @@
 	\frametitle{{\tt projective\_transform}: How the algorithm works}
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.7\textwidth]{../proposal/arbiskew_graphic.png}
+		\includegraphics[width=0.7\textwidth]{images/arbiskew_graphic_with_iterators0.png}
 	\end{figure}
 	\begin{enumerate}
 		\item[1] Calculate the distance of line $\overline{A\prime D\prime}$ and assign it to $d_{ad}$.
@@ -122,7 +128,7 @@
 	\frametitle{{\tt projective\_transform}: How the algorithm works}
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.7\textwidth]{../proposal/arbiskew_graphic.png}
+		\includegraphics[width=0.7\textwidth]{images/arbiskew_graphic_with_iterators1.png}
 	\end{figure}
 	\begin{enumerate}
 		\item[7] Assign the pixel value of $I_C$ to pixel $(o_x, o_y)$ in the original image.
@@ -136,7 +142,21 @@
 	\frametitle{{\tt projective\_transform}: How the algorithm works}
 	\begin{figure}
 		\centering
-		\includegraphics[width=0.7\textwidth]{../proposal/arbiskew_graphic.png}
+		\includegraphics[width=0.7\textwidth]{images/arbiskew_graphic_with_iterators2.png}
+	\end{figure}
+	\begin{enumerate}
+	\item[11] Move $I_A$ along line $\overline{A\prime D\prime}$ by an amount $= \frac{d_{ad}}{height_{original}}$.
+	\item[12] Move $I_B$ along line $\overline{B\prime C\prime}$ by an amount $= \frac{d_{bc}}{height_{original}}$.
+	\item[13] Increment $o_y$.
+	\item[14] Repeat steps 5--13 until $I_A = D\prime$ and $I_B = C\prime$.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{{\tt projective\_transform}: How the algorithm works}
+	\begin{figure}
+		\centering
+		\includegraphics[width=0.7\textwidth]{images/arbiskew_graphic_with_iterators3.png}
 	\end{figure}
 	\begin{enumerate}
 	\item[11] Move $I_A$ along line $\overline{A\prime D\prime}$ by an amount $= \frac{d_{ad}}{height_{original}}$.
