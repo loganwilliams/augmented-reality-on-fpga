@@ -325,15 +325,34 @@
 
 \begin{frame}
 	\frametitle{{\tt memory\_interface}: operation}
-	\begin{enumerate}
-		\item
-	\end{enumerate}
+	\begin{columns}[t]
+		\column{.6\textwidth}
+		\begin{itemize}
+			\item<1-> During a cycle
+			\begin{itemize}
+				\item<2-> Store pixels from {\tt ntsc\_capture} in {\it capturing}
+				\item<3-> Output pixels from {\it display} to {\tt vga\_display}
+				\item<4-> Read and write pixels to {\it processing} from {\tt LPF}
+				\item<5-> Store pixels from {\tt projective\_transform} in {\it next\_display}
+			\end{itemize}
+			\item<6-> Every cycle refresh
+			\begin{itemize}
+				\item<7-> Load image data to {\it processing} (could be previous {\it displaying}
+				\item<8-> Previous {\it next\_display} location $\rightarrow$ Next {\it display} location
+				\item<9-> Previous {\it ntsc\_capture} location $\rightarrow$ Next {\it next\_display} location
+				\item<10-> Previous {\it processing} location $\rightarrow$ Next {\it ntsc\_capture} location
+			\end{itemize}
+		\end{itemize}
+
+		\column{.4\textwidth}
+	\end{columns}
 \end{frame}	
 
 % Jose
 \subsection{system io}
 \begin{frame}
 	\frametitle{system io: {\tt ntsc\_capture}}
+	
 \end{frame}
 
 \begin{frame}
