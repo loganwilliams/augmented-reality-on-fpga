@@ -362,10 +362,10 @@
 \subsection{system io}
 \begin{frame}
 	\frametitle{system io: {\tt ntsc\_capture} \& {\tt vga\_write}}
-	\begin{columns}
-		\column{.5\textwidth}
+	%\begin{columns}
+		%\column{.5\textwidth}
 		\begin{block}
-		\uncover<1->{{\tt ntsc\_capture}}
+		\only<1->{{\tt ntsc\_capture}}
 			\begin{itemize}
 				\item<2-> Image data streaming from camera
 				\item<3-> New image every \(\frac{1}{30}\) seconds
@@ -376,7 +376,7 @@
 		\end{block}
 
 		\begin{block}
-		\uncover<7->{{\tt vga\_write}}
+		\only<7->{{\tt vga\_write}}
 			\begin{itemize}
 				\item<8-> Image data streamed to monitor
 				\item<9-> New image every \(\frac{1}{60}\) seconds
@@ -385,14 +385,23 @@
 				\item<12-> {\tt memory\_interface} will feed properly formatted pixels
 			\end{itemize}
 		\end{block}
-		\column{.5\textwidth}
-	\end{columns}
+		%\column{.5\textwidth}
+	%\end{columns}
 \end{frame}
 
 % Jose
 \subsection{timeline}
 \begin{frame}
 	\frametitle{timeline}
+	\begin{description}
+	\item[11-11-2011] Finalized block diagram
+	\item[11-18-2011] First drafts of {\tt projective\_transform} and {\tt memory\_interface} written
+	\item[11-22-2011] First drafts of {\tt object\_recognition}, {\tt LPF}, {\tt vga\_write}, and {\tt ntsc\_capture} first drafts written; {\tt projective\_transform} and {\tt memory\_interface} fully tested
+	\item[11-28-2011] {\tt ntsc\_capture} and {vga\_write} fully tested; start of basic integration
+	\item[11-31-2011] {\tt object\_recognition} and {\tt LPF} fully tested; start of full integration
+	\item[12-05-2011] Full integration complete
+	\item[12-12-2011] Final report due
+	\end{description}
 \end{frame}
 
 \end{document}
