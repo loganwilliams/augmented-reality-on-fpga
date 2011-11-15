@@ -1,6 +1,6 @@
 % simply testing arbilpf
 
-img_orig = imread('IMG_5046.jpg', 'jpg');
+img_orig = imread('../../presentation/images/lpf-purpose/original.jpg', 'jpg');
 img_orig_d = im2double(img_orig);
 Mx = 10; % downsampling factor
 My = 2;
