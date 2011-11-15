@@ -1,0 +1,42 @@
+;; RefTeX parse info file
+;; File: /Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex
+;; User: loganw (Logan Williams)
+
+(set reftex-docstruct-symbol '(
+
+
+(xr nil "\\\\\\\\\\\\")
+
+(index-tags)
+
+(is-multi nil)
+
+(bibview-cache)
+
+(master-dir . "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/")
+
+(label-numbers)
+
+(bof "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex")
+
+(toc "toc" "    1 Introduction" "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex" nil 2 "1" "\\section{Introduction}" 810)
+
+(toc "toc" "    2 Top-Level Overview" "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex" nil 2 "2" "\\section{Top-Level Overview}" 1696)
+
+(toc "toc" "    3 Individual Module Specifications" "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex" nil 2 "3" "\\section{Individual Module Specifications}" 1933)
+
+(toc "toc" "      3.1 projective\\_transform" "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex" nil 3 "3.1" "\\subsection{projective\\_transform}" 1984)
+
+(toc "toc" "      3.2 object\\_recognition" "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex" nil 3 "3.2" "\\subsection{object\\_recognition}" 6617)
+
+(toc "toc" "      3.3 LPF" "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex" nil 3 "3.3" "\\subsection{LPF}" 7673)
+
+(toc "toc" "      3.4 memory\\_interface" "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex" nil 3 "3.4" "\\subsection{memory\\_interface}" 9972)
+
+(toc "toc" "      3.5 system io" "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex" nil 3 "3.5" "\\subsection{system io}" 10779)
+
+(toc "toc" "      3.6 timeline" "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex" nil 3 "3.6" "\\subsection{timeline}" 10944)
+
+(eof "/Users/loganw/Documents/6.111/augmented-reality-on-fpga/doc/presentation/main.tex")
+))
+
