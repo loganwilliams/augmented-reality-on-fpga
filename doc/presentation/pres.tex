@@ -311,7 +311,7 @@
 		\column{.6\textwidth}
 		\begin{itemize}
 		\item<1-> 1 image is a lot of data: \( 640\cdot480\cdot24 \text{ bits} \approx 0.88 \text{MiB} \)
-		\item<2-> Total BRAM on board: \( 0.316 \text{MiB} \)
+		\item<2-> Total BRAM: \( 0.316 \text{MiB} \)
 		\item<3-> We need to store 4 images in memory!
 		\item<4-> Let's use the ZBT RAM: \( 2\cdot2.25 \text{MiB} \)
 		\item<5-> Not so fast: 1 clock cycle per memory access
@@ -325,38 +325,48 @@
 
 \begin{frame}
 	\frametitle{{\tt memory\_interface}: operation}
-	\begin{columns}[t]
-		\column{.6\textwidth}
-		\begin{itemize}
-			\item<1-> During a cycle
-			\begin{itemize}
-				\item<2-> Store pixels from {\tt ntsc\_capture} in {\it capturing}
-				\item<3-> Output pixels from {\it display} to {\tt vga\_display}
-				\item<4-> Read and write pixels to {\it processing} from {\tt LPF}
-				\item<5-> Store pixels from {\tt projective\_transform} in {\it next\_display}
-			\end{itemize}
-			\item<6-> Every cycle refresh
-			\begin{itemize}
-				\item<7-> Load image data to {\it processing} (could be previous {\it displaying}
-				\item<8-> Previous {\it next\_display} location $\rightarrow$ Next {\it display} location
-				\item<9-> Previous {\it ntsc\_capture} location $\rightarrow$ Next {\it next\_display} location
-				\item<10-> Previous {\it processing} location $\rightarrow$ Next {\it ntsc\_capture} location
-			\end{itemize}
-		\end{itemize}
-
-		\column{.4\textwidth}
-	\end{columns}
-\end{frame}	
+	\begin{center}
+		Four images in memory:
+	\end{center}
+	\begin{figure}
+		\centering
+		\uncover<1->{\includegraphics[width=0.8\textwidth]{images/memory_interface/before_shift.png}}
+		\uncover<2->{\includegraphics[width=0.8\textwidth]{images/memory_interface/after_shift.png}}
+	\end{figure}
+	\begin{center}
+		\uncover<2->{Shift every refresh cycle}
+	\end{center}
+\end{frame}
 
 % Jose
 \subsection{system io}
 \begin{frame}
-	\frametitle{system io: {\tt ntsc\_capture}}
-	
-\end{frame}
+	\frametitle{system io: {\tt ntsc\_capture} \& {\tt vga\_write}}
+	\begin{columns}
+		\column{.5\textwidth}
+		\begin{block}
+		\uncover<1->{{\tt ntsc\_capture}}
+			\begin{itemize}
+				\item<2-> Image data streaming from camera
+				\item<3-> New image every \(\frac{1}{30}\) seconds
+				\item<4-> Module will be adapted from NTSC code on 6.111 website
+				\item<5-> Requires own clock (ISE)
+				\item<6-> Outputs two pixels to {\tt memory\_interface}
+			\end{itemize}
+		\end{block}
 
-\begin{frame}
-	\frametitle{system io: vga\_write}
+		\begin{block}
+		\uncover<7->{{\tt vga\_write}}
+			\begin{itemize}
+				\item<8-> Image data streamed to monitor
+				\item<9-> New image every \(\frac{1}{60}\) seconds
+				\item<10-> Module will be adapted from Lab 2 VGA code
+				\item<11-> Requires own clock (ISE)
+				\item<12-> {\tt memory\_interface} will feed properly formatted pixels
+			\end{itemize}
+		\end{block}
+		\column{.5\textwidth}
+	\end{columns}
 \end{frame}
 
 % Jose
