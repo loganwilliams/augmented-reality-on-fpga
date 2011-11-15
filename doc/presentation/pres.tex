@@ -15,6 +15,10 @@
 \usepackage{times}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
+\usepackage{subfigure}
+
+% \renewcommand{\thesubfigure}{\thefigure.\arabic{subfigure}}
+\renewcommand{\thesubfigure}{}
 
 \title[Augmented Reality on FPGA]{Augmented Reality on FPGA}
 \subtitle{Realtime Object Recognition and Image Processing}
@@ -247,28 +251,30 @@
 		\column{.5\textwidth}
 		\begin{itemize}
 		\item<1-> {\tt projective\_transform} \(\rightarrow\) aliasing
-		\item<3-> Aliasing reduces the quality of an image
-		\item<4-> Lowpass filtering prevents aliasing
-		\item<5-> Information of an image is mostly phase
-		\item<8-> Symmetric Type I FIR filter \(\rightarrow\) 0 phase distortion
-		\item<9-> Parks-McClellan: reasonable accuracy, symmetric, easily calculable
-		\item<10-> FIR PM filter reduces mem. acceses to 1.5/pixel
+		\item<2-> Aliasing reduces the quality of an image
+		\item<3-> Lowpass filtering prevents aliasing
+		\item<6-> Information of an image is mostly phase
+		\item<7-> Symmetric Type I FIR filter \(\rightarrow\) 0 phase distortion
+		\item<8-> Parks-McClellan: reasonable accuracy, symmetric, easily calculable
+		\item<9-> FIR PM filter reduces mem. acceses to 1.5/pixel
 		\end{itemize}
 	
 		\column{.5\textwidth}
-		\only<1>{graphic showing normal signal}
-		\only<2>{graphic aliases}
-		\only<3>{zoom in on aliased pixels}
-		\only<4>{picture depicting lowpass filter in 2D}
-		\only<5>{picture of original picture}
-		\only<6>{picture of other image}
-		\only<7-8>{picture of original phase with other's magnitude}
-		\only<9>{frequency response of Parks-McClellan filter}
+		\begin{figure}
+			\centering
+			\uncover<1->{\subfigure[Original]{\includegraphics[width=0.4\textwidth]{images/lpf/lpf-purpose/original.png}}}
+			\uncover<2-3,5->{\subfigure[Aliased]{\includegraphics[width=0.4\textwidth]{images/lpf/lpf-purpose/original_aliased.png}}}
+		\end{figure}
+		\begin{figure}
+			\centering
+			\uncover<3->{\subfigure[Mag. of Filter]{\includegraphics[width=0.4\textwidth]{images/lpf/lpf-purpose/filter_mag.png}}}
+			\uncover<4->{\subfigure[Filtered]{\includegraphics[width=0.4\textwidth]{images/lpf/lpf-purpose/original_filtered.png}}}
+		\end{figure}
 	\end{columns}
 \end{frame}
 \begin{frame}
 	\frametitle{{\tt LPF}: the algorithm}
-	\begin{columns}[c]
+	\begin{columns}[t]
 		\column{.5\textwidth}
 		\begin{enumerate}
 		\item<1-> Given an arbitrary image \& skewing coefficients \( M_x \) \& \( M_y \).
@@ -280,40 +286,20 @@
 		\end{enumerate}
 
 		\column{.5\textwidth}
-		\only<1>
-		{
-			graphic showing the interface between object\_recognition and LPF \\
-			image \\
-			magnitude fourier plot of image \\
-		}
-		\only<2>
-		{
-			magnitude plot of image \\
-			magnitude plot of filter with cutoff pi/2 \\
-		}
-		\only<3>
-		{
-			magnitude plot of image \\
-			magnitude plot of filter with cutoff pi/2 \\
-			magnitude fourier plot of filtered \\
-		}
-		\only<4>
-		{
-			magnitude plot of filtered image \\
-			magnitude plot of filter with curoff pi/4 \\
-		}
-		\only<5>
-		{
-			magnitude plot of filtered image \\
-			mangitude plot of filter with cutoff pi/5 \\
-			magnitude plot of output \\
-		}
-		\only<6>
-		{
-			magnitude plot of original \\
-			magnitude plot of filter \\
-			magnitude plot of output \\
-		}
+		\begin{figure}
+			\centering
+			\only<1>{\subfigure[F.T. Original]{\includegraphics[width=0.45\textwidth]{images/lpf/lpf-operation/orig_mag.png}}\subfigure[Original Image]{\includegraphics[width=0.45\textwidth]{images/lpf/lpf-operation/original.jpg}}}
+			\only<2-3>{\subfigure[F.T. Original]{\includegraphics[width=0.45\textwidth]{images/lpf/lpf-operation/orig_mag.png}}\subfigure[1D FIR, $\omega_c=\frac{\pi}{8}$]{\includegraphics[width=0.45\textwidth]{images/lpf/lpf-operation/y-filter.png}}}
+			\only<4-5>{\subfigure[F.T. Filtered]{\includegraphics[width=0.45\textwidth]{images/lpf/lpf-operation/proc_mag.png}}\subfigure[1D FIR, $\omega_c=\frac{\pi}{16}$]{\includegraphics[width=0.45\textwidth]{images/lpf/lpf-operation/x-filter.png}}}
+			\only<6>{\subfigure[Original]{\includegraphics[width=0.45\textwidth]{images/lpf/lpf-operation/original.jpg}}\subfigure[F.T. of Process]{\includegraphics[width=0.4\textwidth]{images/lpf/lpf-operation/total_filt.png}}}
+		\end{figure}
+
+		\begin{figure}
+			\only<3>{\subfigure[F.T. Filtered]{\includegraphics[width=0.4\textwidth]{images/lpf/lpf-operation/proc_mag.png}}}
+			\only<5>{\subfigure[F.T. Output]{\includegraphics[width=0.4\textwidth]{images/lpf/lpf-operation/output_mag.png}}}
+			\only<6>{\subfigure[Output]{\includegraphics[width=0.4\textwidth]{images/lpf/lpf-operation/output.png}}}
+		\end{figure}
+
 	\end{columns}
 \end{frame}
 
