@@ -2,7 +2,7 @@
 `include params.v
 // memory_interface
 // handles EVERYTHING ram related
-// a clock signal must be fed into it
+// actual ram modules are instantiated in top module
 
 module memory_interface
 	(
@@ -11,26 +11,40 @@ module memory_interface
 		input reset,
 		// ntsc_capture
 		input frame_flag,
-		input [`LOG_MEM:0] captured_pixels,
-		input pixel_flag,
+		input ntsc_flag,
+		input [`LOG_MEM:0] ntsc_pixel,
 		output reg done_ntsc,
 		// lpf
+		input lpf_flag,
 		input lpf_wr,
 		input [`LOG_WIDTH:0] lpf_x,
 		input [`LOG_HEIGHT:0] lpf_y,
 		input [`LOG_MEM:0] lpf_pixel_write,
 		output reg done_lpf,
-		output reg [`LOG_MEM:0] pixel_read,
+		output reg [`LOG_MEM:0] lpf_pixel_read,
 		// projective_transform inputs
+		input pt_flag,
 		input pt_wr,
 		input [`LOG_WIDTH:0] pt_x,
 		input [`LOG_HEIGHT:0] pt_y,
 		input [`LOG_TRUNC:0] pt_pixel_write,
 		output reg done_pt,
 		// vga_write inputs
-		input request_pixel,
-		output reg [`LOG_FULL:0] pixel_vga
+		input vga_flag,
+		output done_vga,
+		output reg [`LOG_FULL:0] vga_pixel
 	);
+
+	/******** PARAMETERS ********/
+	// READ QUEUE LENGTH
+	parameter QUEUE_LENGTH = 3;
+	// MODULE ORDINALS
+	parameter NTSC = 2'd0;
+	parameter LPF  = 2'd1;
+	parameter PT   = 2'd2;
+	parameter VGA  = 2'd3;
+	parameter LOG_ORD = 2;
+	/****************************/
 
 	// BLOCK OF SRAM IMAGE IS IN
 	reg capt_mem_block;
@@ -56,6 +70,21 @@ module memory_interface
 	// NEXT LOCS AND BLOCKS
 	reg [3:0] next_blocks;
 	reg [7:0] next_locs;
+
+	// MEMORY
+	// MEM ADDRESSES
+	reg [`LOG_ADDR:0] mem0_addr;
+	reg [`LOG_ADDR:0] mem1_addr;	
+	// MEM READ	
+	reg [`LOG_MEM:0] mem0_read;
+	reg [`LOG_MEM:0] mem1_read;
+	// MEM WRITE
+	reg [`LOG_MEM:0] mem0_write;
+	reg [`LOG_MEM:0] mem1_write;
+	
+	// READ QUEUES
+	reg [QUEUE_LENGTH*LOG_ORD-1:0] mem0_read_queue;
+	reg [QUEUE_LENGTH*LOG_ORD-1:0] mem1_read_queue;
 
 	always @(*) begin
 		// shifting
@@ -86,8 +115,6 @@ module memory_interface
 		// set addresses of NTSC and VGA / update if pixels have been read or written
 		ntsc_addr <= (reset) ? 0 : (ntsc_addr + done_ntsc);
 		vga_addr <= (reset) ? 0 : (vga_addr + done_vga);
-
-		// base pixel fed to mem on flag signal
 	end
 endmodule
 
