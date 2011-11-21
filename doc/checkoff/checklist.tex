@@ -25,11 +25,20 @@
 	\item etc
 	\end{itemize}
 
+% Logan
+\item[] {\tt object\_recognition}
+	\begin{itemize}
+	\item 1
+	\item 2
+	\item etc
+	\end{itemize}
+
 % Jose
 \item[] {\tt memory\_interface}: efficiently interfaces with the memory and all of the modules that have to write to and read from ZBT memory.
 	\begin{itemize}
-	\item Writes data element two cycles after pulsing "done" to module.
-	\item Reads data element and outputs two cycles after pulsing "done" to module.
+	\item Writes data element two cycles after pulsing ``done" to module.
+	\item Reads data element and outputs two cycles after pulsing ``done" to module.
+	\item Correctly parses relative $(x,y)$ coordinates, based on the module that is requesting a memory access and the location of its image.
 	\item Executes a single stream of read and write requests.
 	\item Executes multiple, occasionally colliding streams of read and write requests.
 	\item Writes to memory data from {\tt ntsc\_capture}.
@@ -40,16 +49,19 @@
 	\item (Time permitting:) Read an image from flash memory and store in RAM for use as transformed image.
 	\end{itemize}
 
-% Logan
-\item[] {\tt LPF}
+% Jose
+\item[] {\tt LPF:} applies lowpass filters, vertically and horizontally, on the image that is to be warped, in order to prevent aliasing at the output.
 	\begin{itemize}
-	\item 1
-	\item 2
-	\item etc
+	\item (Out of time:) Just fetches pixels from memory and feeds them to {\tt projective\_transform}. LPF does not filtering.
+	\item Stalls operation when fetching or writing a pair of pixels and {\tt memory\_interface} has not pulsed {\it done\_lpf}.
+	\item Loads appropriate filter coefficients based on the coefficients $M_x$ and $M_y$ from {\tt object\_recognition}.
+	\item Reads data from memory vertically and horizontally, and has the necessary data for the calculation of each output pixel in its buffers.
+	\item Mirrors the data appropriately in its buffers when processing near an edge.
+	\item Outputs to memory\_interface a pair of pixels that correspond to the convolution sum of the corresponding data.
 	\end{itemize}
 
 % Logan
-\item[] {\tt object\_recognition}
+\item[] {\tt ntsc\_capture}
 	\begin{itemize}
 	\item 1
 	\item 2
@@ -59,7 +71,7 @@
 % Jose
 \item[] {\tt vga\_display}
 	\begin{itemize}
-	\item 1
+	\item Displays a 
 	\item 2
 	\item etc
 	\end{itemize}
