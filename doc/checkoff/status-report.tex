@@ -6,6 +6,55 @@
 \usepackage{graphicx}
 \usepackage{mathtools}
 
+\title{6.111 Final Project\\Status Report}
+\author{Logan P. Williams\\Jos\'{e} E. Cruz Serrall\'{e}s}
+\date{21 November 2011}
+
 \begin{document}
+\maketitle
+
+% Description
+% In addition to the checklist, you will provide a written "Status Report", exp-
+% laining the operational status of the blocks that you proposed to design and 
+% expected completion timeline, problems and solutions that you envision.
+
+\section{{\tt projective\_transform}}
+\subsection{Status} 
+\subsection{Possible Issues}
+
+\section{{\tt memory\_interface}}
+\subsection{Status} The first draft of this module is nearly complete. The following functionality has been included: location shifting, handling of conflicting requests, interfacing with memory. The only functionality left to implement is the buffering of read requests due to the two-cycle delay of the ZBT RAM. Projected completion dates are listed in the {\it Timeline} section. 
+\subsection{Possible Issues} There might be some difficulty in handling multiple requests. Code has been written that should handle these requests appropriately. If this code does not work conceptually due to previously unconsidered properties of the ZBT RAM, the clock frequency of the RAM could be elevated slightly, so as to give the RAM more cycles to handle the different streams of memory accesses.
+
+\section{{\tt object\_recognition}}
+\subsection{Status} 
+\subsection{Possible Issues}
+
+\section{{\tt LPF}}
+\subsection{Status} This module has not been started yet, although its implementation should be straightforward. It will simply pass along pixels to {\tt projective\_transform} until it is decided that it will be written.
+\subsection{Possible Issues} The only foreseeable issue with {\tt LPF} is that we might not have time to complete it. Because it is not a requirement for functionality, work will only be started on it if time permits.
+
+\section{{\tt ntsc\_capture}}
+\subsection{Status} 
+\subsection{Possible Issues}
+
+\section{{\tt vga\_display}}
+\subsection{Status} This module has been adapted from the Lab 2 Pong code and awaits testing in lab.
+\subsection{Possible Issues} There are no real foreseeable issues with this module.
+
+\section{Timeline}
+\begin{description}
+\item[Nov. 22 -] First draft of {\tt memory\_interface} completed.
+\item[Nov. 23 -] Start of debugging of {\tt memory\_interface}.
+\item[Nov. 25 -] {\tt memory\_interface} will be fully functional.
+\item[Nov. 26 -] (Optional.) First draft of {\tt LPF} completed. (Optional.) Start of debugging of {\tt LPF}.
+\item[Nov. 27 -] {\tt vga\_display} tested in lab without {\tt memory\_access}.
+\item[Nov. 28 -] (Optional.) {\tt LPF} fully tested.
+\item[Nov. 30 -] Partial integration of {\tt ntsc\_capture}, {\tt memory\_interface}, and {\tt vga\_display} begins.
+\item[Dec. 01 -] Partial integration complete.
+\item[Dec. 04 -] Full integration started. Start of debugging of integration.
+\item[Dec. 07 -] Full integration finalized.
+\item[Dec. 08 -] Project demonstration and videotaping.
+\end{description}
 
 \end{document}
