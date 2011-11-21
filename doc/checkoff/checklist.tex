@@ -4,7 +4,6 @@
 
 \usepackage{fullpage}
 \usepackage{graphicx}
-\usepackage{hyperref}
 \usepackage{mathtools}
 \usepackage{amssymb}
 
@@ -17,7 +16,6 @@
 \begin{document}
 \maketitle
 
-\begin{Form}
 \begin{itemize}
 % Logan
 \item[] {\tt projective\_transform}
@@ -28,11 +26,18 @@
 	\end{itemize}
 
 % Jose
-\item[] {\tt memory\_interface}
+\item[] {\tt memory\_interface}: efficiently interfaces with the memory and all of the modules that have to write to and read from ZBT memory.
 	\begin{itemize}
-	\item 1
-	\item 2
-	\item etc
+	\item Writes data element two cycles after pulsing "done" to module.
+	\item Reads data element and outputs two cycles after pulsing "done" to module.
+	\item Executes a single stream of read and write requests.
+	\item Executes multiple, occasionally colliding streams of read and write requests.
+	\item Writes to memory data from {\tt ntsc\_capture}.
+	\item Reads from memory an image to {\tt vga\_display}.
+	\item Outputs to and captures data from {\tt LPF}.
+	\item Captures data from {\tt projective\_transform}.
+	\item Shifts data locations when {\tt ntsc\_capture} starts providing a new image.
+	\item (Time permitting:) Read an image from flash memory and store in RAM for use as transformed image.
 	\end{itemize}
 
 % Logan
@@ -43,6 +48,7 @@
 	\item etc
 	\end{itemize}
 
+% Logan
 \item[] {\tt object\_recognition}
 	\begin{itemize}
 	\item 1
@@ -50,6 +56,7 @@
 	\item etc
 	\end{itemize}
 
+% Jose
 \item[] {\tt vga\_display}
 	\begin{itemize}
 	\item 1
@@ -58,6 +65,5 @@
 	\end{itemize}
 
 \end{itemize}
-\end{Form}
 
 \end{document}
