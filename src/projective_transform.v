@@ -1,12 +1,30 @@
-module projective_transform(input clk, frame_flag, [17:0] pixel, pixel_flag,
-			    [9:0] ax, [8:0] ay, [9:0] bx, [8:0] by, [9:0] cx, [8:0] cy,
-			    [9:0] dx, [8:0] dy, output reg [17:0] pixel_out, [9:0] pixel_x,
-			    [8:0] pixel_y, pixel_out_flag);
+module projective_transform(
+			    input 	      clk, // System clock (global ->)
+			    input 	      frame_flag, // New frame flag (ntsc_capture ->)
+			    input [17:0]      pixel, // Pixel data input (lpf ->)
+			    input 	      pixel_flag, // New pixel recieved? (lpf ->)
+			    input [9:0]       a_x, // coordinates of the corners
+			    input [8:0]       a_y, //  |  (object_recognition ->)
+			    input [9:0]       b_x, //  |
+			    input [8:0]       b_y, //  |
+			    input [9:0]       c_x, //  |
+			    input [8:0]       c_y, //  |
+			    input [9:0]       d_x, //  |
+			    input [8:0]       d_y, //  |
+			    input 	      ptflag, // Okay to send new data (memory_interface ->) 
+			    output reg [17:0] pt_pixel_write, // Pixel data output (-> memory_interface)
+			    output reg [9:0]  pt_x, // Pixel output data location
+			    output reg [8:0]  pt_y, //  | (-> memory_interface)
+			    output reg 	      pt_wr, // Want to write pixel flag (-> memory_interface)
+			    output reg 	      request_pixel // request a pixel to process (-> lpf) 	      
+			    );
    
-
+   // a register to store the current state of computation
    reg [?:0] state; // not sure how many states we have yet
 
-   // iterator coordinates
+   // iterator coordinates for the three iterator points
+   // these all have 10 extra bits of resolution to simulate decimals
+   // 	(for example 1 is represented by 1 << 10)
    reg [19:0] i_a_x;
    reg [18:0] i_a_y;
    reg [19:0] i_b_x;
@@ -14,7 +32,7 @@ module projective_transform(input clk, frame_flag, [17:0] pixel, pixel_flag,
    reg [19:0] i_c_x;
    reg [18:0] i_c_y;
 
-   // distance stores
+   // registers to store calculations of distance (fractional part does not matter)
    reg [9:0]  d_ad;
    reg [9:0]  d_bc;
    reg [9:0]  d_iterators;
@@ -26,7 +44,7 @@ module projective_transform(input clk, frame_flag, [17:0] pixel, pixel_flag,
    wire [10:0] answer;
    wire        sqrt_done;
 
-   // coordinates of the untransformed images
+   // coordinates iterators in the untransformed images
    reg [9:0]  o_x;
    reg [8:0]  o_y;
 

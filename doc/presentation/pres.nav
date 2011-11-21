@@ -23,53 +23,51 @@
 \headcommand {\beamer@subsectionentry {0}{3}{1}{7}{projective\_transform}}\headcommand {\beamer@subsectionpages {7}{6}}
 \headcommand {\slideentry {3}{1}{1}{7/7}{projective\_transform}{0}}
 \headcommand {\beamer@framepages {7}{7}}
-\headcommand {\slideentry {3}{1}{2}{8/8}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {8}{8}}
-\headcommand {\slideentry {3}{1}{3}{9/9}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {9}{9}}
-\headcommand {\slideentry {3}{1}{4}{10/10}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {10}{10}}
-\headcommand {\slideentry {3}{1}{5}{11/11}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {11}{11}}
-\headcommand {\slideentry {3}{1}{6}{12/12}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {12}{12}}
-\headcommand {\slideentry {3}{1}{7}{13/13}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {13}{13}}
-\headcommand {\slideentry {3}{1}{8}{14/14}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {14}{14}}
-\headcommand {\slideentry {3}{1}{9}{15/15}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {15}{15}}
-\headcommand {\slideentry {3}{1}{10}{16/16}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {16}{16}}
-\headcommand {\slideentry {3}{1}{11}{17/17}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {17}{17}}
-\headcommand {\slideentry {3}{1}{12}{18/18}{projective\_transform}{0}}
-\headcommand {\beamer@framepages {18}{18}}
-\headcommand {\beamer@subsectionentry {0}{3}{2}{19}{object\_recognition}}\headcommand {\beamer@subsectionpages {7}{18}}
-\headcommand {\slideentry {3}{2}{1}{19/19}{object\_recognition}{0}}
-\headcommand {\beamer@framepages {19}{19}}
-\headcommand {\slideentry {3}{2}{2}{20/20}{object\_recognition}{0}}
-\headcommand {\beamer@framepages {20}{20}}
-\headcommand {\beamer@subsectionentry {0}{3}{3}{21}{LPF}}\headcommand {\beamer@subsectionpages {19}{20}}
-\headcommand {\slideentry {3}{3}{1}{21/29}{LPF}{0}}
-\headcommand {\beamer@framepages {21}{29}}
-\headcommand {\slideentry {3}{3}{2}{30/35}{LPF}{0}}
-\headcommand {\beamer@framepages {30}{35}}
-\headcommand {\beamer@subsectionentry {0}{3}{4}{36}{memory\_interface}}\headcommand {\beamer@subsectionpages {21}{35}}
-\headcommand {\slideentry {3}{4}{1}{36/42}{memory\_interface}{0}}
-\headcommand {\beamer@framepages {36}{42}}
-\headcommand {\slideentry {3}{4}{2}{43/43}{memory\_interface}{0}}
-\headcommand {\beamer@framepages {43}{43}}
-\headcommand {\beamer@subsectionentry {0}{3}{5}{44}{system io}}\headcommand {\beamer@subsectionpages {36}{43}}
-\headcommand {\slideentry {3}{5}{1}{44/44}{system io}{0}}
-\headcommand {\beamer@framepages {44}{44}}
-\headcommand {\slideentry {3}{5}{2}{45/45}{system io}{0}}
-\headcommand {\beamer@framepages {45}{45}}
-\headcommand {\beamer@subsectionentry {0}{3}{6}{46}{timeline}}\headcommand {\beamer@subsectionpages {44}{45}}
-\headcommand {\slideentry {3}{6}{1}{46/46}{timeline}{0}}
-\headcommand {\beamer@framepages {46}{46}}
-\headcommand {\beamer@partpages {1}{46}}
-\headcommand {\beamer@subsectionpages {46}{46}}
-\headcommand {\beamer@sectionpages {7}{46}}
-\headcommand {\beamer@documentpages {46}}
-\headcommand {\def \inserttotalframenumber {27}}
+\headcommand {\slideentry {3}{1}{2}{8/13}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {8}{13}}
+\headcommand {\slideentry {3}{1}{3}{14/17}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {14}{17}}
+\headcommand {\slideentry {3}{1}{4}{18/21}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {18}{21}}
+\headcommand {\slideentry {3}{1}{5}{22/22}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {22}{22}}
+\headcommand {\slideentry {3}{1}{6}{23/23}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {23}{23}}
+\headcommand {\slideentry {3}{1}{7}{24/24}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {24}{24}}
+\headcommand {\slideentry {3}{1}{8}{25/25}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {25}{25}}
+\headcommand {\slideentry {3}{1}{9}{26/26}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {26}{26}}
+\headcommand {\slideentry {3}{1}{10}{27/27}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {27}{27}}
+\headcommand {\slideentry {3}{1}{11}{28/33}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {28}{33}}
+\headcommand {\slideentry {3}{1}{12}{34/34}{projective\_transform}{0}}
+\headcommand {\beamer@framepages {34}{34}}
+\headcommand {\beamer@subsectionentry {0}{3}{2}{35}{object\_recognition}}\headcommand {\beamer@subsectionpages {7}{34}}
+\headcommand {\slideentry {3}{2}{1}{35/35}{object\_recognition}{0}}
+\headcommand {\beamer@framepages {35}{35}}
+\headcommand {\slideentry {3}{2}{2}{36/36}{object\_recognition}{0}}
+\headcommand {\beamer@framepages {36}{36}}
+\headcommand {\beamer@subsectionentry {0}{3}{3}{37}{LPF}}\headcommand {\beamer@subsectionpages {35}{36}}
+\headcommand {\slideentry {3}{3}{1}{37/45}{LPF}{0}}
+\headcommand {\beamer@framepages {37}{45}}
+\headcommand {\slideentry {3}{3}{2}{46/51}{LPF}{0}}
+\headcommand {\beamer@framepages {46}{51}}
+\headcommand {\beamer@subsectionentry {0}{3}{4}{52}{memory\_interface}}\headcommand {\beamer@subsectionpages {37}{51}}
+\headcommand {\slideentry {3}{4}{1}{52/58}{memory\_interface}{0}}
+\headcommand {\beamer@framepages {52}{58}}
+\headcommand {\slideentry {3}{4}{2}{59/60}{memory\_interface}{0}}
+\headcommand {\beamer@framepages {59}{60}}
+\headcommand {\beamer@subsectionentry {0}{3}{5}{61}{system io}}\headcommand {\beamer@subsectionpages {52}{60}}
+\headcommand {\slideentry {3}{5}{1}{61/72}{system io}{0}}
+\headcommand {\beamer@framepages {61}{72}}
+\headcommand {\beamer@subsectionentry {0}{3}{6}{73}{timeline}}\headcommand {\beamer@subsectionpages {61}{72}}
+\headcommand {\slideentry {3}{6}{1}{73/73}{timeline}{0}}
+\headcommand {\beamer@framepages {73}{73}}
+\headcommand {\beamer@partpages {1}{73}}
+\headcommand {\beamer@subsectionpages {73}{73}}
+\headcommand {\beamer@sectionpages {7}{73}}
+\headcommand {\beamer@documentpages {73}}
+\headcommand {\def \inserttotalframenumber {26}}
