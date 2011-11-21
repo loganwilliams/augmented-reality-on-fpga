@@ -76,8 +76,8 @@ module memory_interface
 	reg [`LOG_ADDR:0] mem0_addr;
 	reg [`LOG_ADDR:0] mem1_addr;	
 	// MEM READ	
-	reg [`LOG_MEM:0] mem0_read;
-	reg [`LOG_MEM:0] mem1_read;
+	wire [`LOG_MEM:0] mem0_read;
+	wire [`LOG_MEM:0] mem1_read;
 	// MEM WRITE
 	reg [`LOG_MEM:0] mem0_write;
 	reg [`LOG_MEM:0] mem1_write;
@@ -106,6 +106,20 @@ module memory_interface
 		// set addresses of LPF and PT from (x,y) coordinates
 		lpf_addr = (`IMAGE_WIDTH * lpf_y) + lpf_x + (proc_mem_loc * `IMAGE_LENGTH);
 		pt_addr = (`IMAGE_WIDTH * pt_y) + pt_x + (next_mem_loc * `IMAGE_LENGTH);
+
+		// set address
+		if (!capt_mem_block && ntsc_flag) mem0_addr = ntsc_addr;
+		else if (!disp_mem_block && vga_flag) mem0_addr = vga_addr;
+		else if (!proc_mem_block && lpf_flag) mem0_addr = lpf_addr;
+		else if (!next_mem_block && pt_flag) mem0_addr = pt_addr;
+
+		// assign read value to corresponding member of queue
+		
+		// assign write value to mem0 & mem1 based on who's writing
+
+		// update queue
+
+		// this should be it
 	end
 
 	always @(posedge clock) begin
