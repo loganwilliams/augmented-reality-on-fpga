@@ -11,6 +11,9 @@ module projective_transform(
 			    input [8:0]       c_y, //  |
 			    input [9:0]       d_x, //  |
 			    input [8:0]       d_y, //  |
+			    input 	      corners_flag, // (object_recognition ->)
+			  
+			    
 			    input 	      ptflag, // Okay to send new data (memory_interface ->) 
 			    output reg [17:0] pt_pixel_write, // Pixel data output (-> memory_interface)
 			    output reg [9:0]  pt_x, // Pixel output data location
@@ -110,7 +113,11 @@ module projective_transform(
 
    reg [4:0]  counter;
    reg 	      counting = 0;
-   
+
+   // create some registers for dealing with possible delays
+   // in memory_write
+   reg [17:0] pixel_save;
+   reg 	      waiting_for_write;
 
    parameter WAIT_FOR_CORNERS = 0;
    parameter CALC_INIT_DIST_MULT = 1;
@@ -243,64 +250,82 @@ module projective_transform(
 	// then it increments the iterators accordingly.
 	WAIT_FOR_PIXEL: begin
 	   // a new pixel has arrived, process accordingly
-	   if (pixel_flag) begin
-
-	      // output the new pixel coordinates
-	      pt_pixel_write <= pixel;
-	      pt_x <= i_c_x >> 10;
-	      pt_y <= i_c_y >> 10;
-
-	      // increment iterators
-	      i_c_x <= i_c_x + delta_c_x;
-	      i_c_y <= i_c_y + delta_c_y;
-	      o_x <= o_x + 1;
-
-	      // we are getting close to the end of this line. begin calculating the
-	      // next lines deltas and distances. 	   
-	      if (o_x == 600) begin
-		 // calculate distance squared
-		 temp1a <= (i_a_x + delta_a_x - (i_b_x + delta_b_x)) * (i_a_x + delta_a_x - (i_b_x + delta_b_x));
-		 temp1b <= (i_a_y + delta_a_y - (i_b_y + delta_b_y)) * (i_a_y + delta_a_y - (i_b_y + delta_b_y));
-	      end
-
-	      // after distance calculation has been completed
-	      if (o_x == 601) begin
-		 d_sqrt_a <= temp1a + temp1b;
-		 sqrt_start_a <= 1;
-	      end
-	   
-	      // the end of the line
-	      if (o_x == 640 && o_y < 480) begin
-		 // increment iterators
-		 o_y <= o_y + 1;
-		 i_a_x <= i_a_x + delta_a_x;
-		 i_a_y <= i_a_y + delta_a_y;
-		 i_b_x <= i_b_x + delta_b_x;
-		 i_b_y <= i_b_y + delta_b_y;
-
-		 // reset I_C to the new location of I_A
-		 i_c_x <= i_a_x + delta_a_x;
-		 i_c_y <= i_c_y + delta_a_y;
-
-		 // update the deltas
-		 delta_c_x <= delta_c_x_new;
-		 delta_c_y <= delta_c_y_new;
-
-		 // reset o_x
-		 o_x <= 0;
-	      end
-
-	      // the end of the frame
-	      if (o_x == 640 && o_y == 480) begin
-		 // reset the iterator variables
-		 o_x <= 0;
-		 o_y <= 0;
-
-		 // the other iterators will be reset when new corners arrive
+	   if (pixel_flag || waiting_for_write) begin
+	      if (ptflag) begin
+		 waiting_for_write <= 0;
+		 wants_pixel <= 1;
 		 
-		 // go back to waiting
-		 state <= WAIT_FOR_CORNERS;
-	      end
+		 
+		 // output the new pixel coordinates
+		 if (waiting_for_write) begin
+		    pt_pixel_write <= pixel_save;
+		 end else begin
+		    pt_pixel_write <= pixel;
+		 end
+		    
+		 pt_x <= i_c_x >> 10;
+		 pt_y <= i_c_y >> 10;
+		 pt_wr <= 1;
+
+		 // increment iterators
+		 i_c_x <= i_c_x + delta_c_x;
+		 i_c_y <= i_c_y + delta_c_y;
+		 o_x <= o_x + 1;
+
+		 // we are getting close to the end of this line. begin calculating the
+		 // next lines deltas and distances. 	   
+		 if (o_x == 600) begin
+		    // calculate distance squared
+		    temp1a <= (i_a_x + delta_a_x - (i_b_x + delta_b_x)) * (i_a_x + delta_a_x - (i_b_x + delta_b_x));
+		    temp1b <= (i_a_y + delta_a_y - (i_b_y + delta_b_y)) * (i_a_y + delta_a_y - (i_b_y + delta_b_y));
+		 end
+
+		 // after distance calculation has been completed
+		 if (o_x == 601) begin
+		    d_sqrt_a <= temp1a + temp1b;
+		    sqrt_start_a <= 1;
+		 end
+	   
+		 // the end of the line
+		 if (o_x == 640 && o_y < 480) begin
+		    // increment iterators
+		    o_y <= o_y + 1;
+		    i_a_x <= i_a_x + delta_a_x;
+		    i_a_y <= i_a_y + delta_a_y;
+		    i_b_x <= i_b_x + delta_b_x;
+		    i_b_y <= i_b_y + delta_b_y;
+		    
+		    // reset I_C to the new location of I_A
+		    i_c_x <= i_a_x + delta_a_x;
+		    i_c_y <= i_c_y + delta_a_y;
+
+		    // update the deltas
+		    delta_c_x <= delta_c_x_new;
+		    delta_c_y <= delta_c_y_new;
+
+		    // reset o_x
+		    o_x <= 0;
+		 end
+		 
+		 // the end of the frame
+		 if (o_x == 640 && o_y == 480) begin
+		    // reset the iterator variables
+		    o_x <= 0;
+		    o_y <= 0;
+
+		    // the other iterators will be reset when new corners arrive
+		 
+		    // go back to waiting
+		    state <= WAIT_FOR_CORNERS;
+		 end
+	      end else begin // if (ptflag)
+		 waiting_for_write <= 1; // set a flag
+		 pixel_save <= pixel; // store the current pixel data
+		 wants_pixel <= 0; // memory_interface is delayed, we do not
+		                   // want to deal with new pixels right now
+		 
+	      end // else: !if(ptflag)
+		 
 	   end // if (pixel_flag)
 
 	   // if the square root operation is done, we can star the divisions
