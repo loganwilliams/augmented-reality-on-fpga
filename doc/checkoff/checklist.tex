@@ -25,6 +25,7 @@
 	\item Read one new pixel per clock cycle from {\tt LPF}.
 	\item Generate one new set of coordinates per clock cycle and transmit to {\tt memory\_interface}.
 	\item Pipelines square root and division calculations so that there is no delay for each new line.
+	\item Pauses appropriately when {\tt memory\_interface} cannot handle new data.
 	\item Can handle ``unexpected'' new frame events.
 	\end{itemize}
 
@@ -34,7 +35,8 @@
 	\item Sums the coordinates of each color that it receives.
 	\item Correctly averages each coordinate.
 	\item Outputs the list of coordinates and a flag immediately after {\tt ntsc\_capture} has finished processing a frame and the {\tt divide} submodules have finished their averaging operations.
-	\item Generate and output $M_x$ and $M_y$ downsampling coefficients after a frame has been captured.
+	\item Output ``fake'' downsampling coefficients based on linear estimates of distance.
+	\item (Time permitting:) Generate and output $M_x$ and $M_y$ downsampling coefficients after a frame has been captured.
 	\end{itemize}
 
 % Jose
@@ -62,6 +64,7 @@
 \item[] {\tt ntsc\_capture}: process the incoming video stream and send pixels in sets of two to {\tt memory\_interface} (Logan)
 	\begin{itemize}
 	\item Capable of reading the incoming video stream from the video ADC.
+	\item Can transmit pixels to {\tt vga\_display} for immediate display.
 	\item Lumps pixels into groups of two to transmit to {\tt memory\_interface}.
 	\item Recognizes pixels matching specific regions of the Cr/Cb plane, and transmits that information to {\tt object\_recognition}.
 	\end{itemize}
