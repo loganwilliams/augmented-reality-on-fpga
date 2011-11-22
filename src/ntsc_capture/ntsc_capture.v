@@ -7,19 +7,133 @@ module ntsc_capture(
 		    input 	      tv_in_i2c_data, //    |
 		    input 	      tv_in_line_clock1, // |
 		    input 	      tv_in_ycrcb, //       |
-		    output reg [35:0] captured_pixels, // outputs two sets of pixels in Y/Cr/Cb/Y/Cr/Cb format
-		    output reg 	      pixel_flag, // a flag that goes high when a pixel is being output
+		    output reg [35:0] ntsc_pixels, // outputs two sets of pixels in Y/Cr/Cb/Y/Cr/Cb format
+		    output reg 	      ntsc_flag, // a flag that goes high when a pixel is being output
 		    output reg [1:0]  color, // these outputs are for object_recognition. this indicates the color of the recognized pixel
 		    output reg [9:0]  interesting_x, // its x locaiton
 		    output reg [8:0]  interesting_y, // its y location
 		    output reg 	      interesting_flag, // a flag that indicates the data is good
-		    output reg 	      frame_flag); // a flag that indicates when a new frame begins
+		    output 	      frame_flag); // a flag that indicates when a new frame begins
 
-   // needs to initialize an ADV7185 module
+   adv7185init adv7185(.reset(reset), .clk(clk), .source(1'b0),
+		       .tv_in_reset_b(tv_in_reset_b), .tv_in_i2x_clock(tv_in_i2c_clock),
+		       .tv_in_i2c_data(tv_in_i2c_data));
 
-   // needs to initialize an ntsc_decode module
+   wire [29:0] 			      ycrcb;
+   wire [2:0] 			      fvh;
+   wire 			      dv;
 
-   // needs some logic to look for ``interesting'' pixels
+   // this module decodes the data and outputs the ycrcb pair
+   ntsc_decode decode(.clk(tv_in_line_clock1), .reset(reset),
+		      .tv_in_ycrcb(tv_in_ycrcb[19:10]), .ycrcb(ycrcb),
+		      .v(fvh[1]), .h(fvh[0]), .data_valid(dv));
+
+   reg 				      state = 0;
+   reg [9:0] 			      x = 0;
+   reg [8:0] 			      y = 0;
+
+   // frame flag should be high after we have finished capturing
+   // the even part of the interlaced frame
+   assign frame_flag = ((y >= 480) | v) & f;
+   
+   always @ (posedge clk) begin
+
+      interesting_flag <= 0; // reset interesting flag
+      
+      // if vsync
+      if (v) begin
+	 // reset coordinates
+	 x <= 0;
+	 y <= ~f; // if even field (f=1), start at y=0. if f=0, y=1;
+      end
+
+      // if hsync
+      if (h) begin
+	 x <= 0; // reset x coordinate
+	 y <= y + 2;
+      end	 
+      
+      if (dv) begin
+	 if (y <= 480) begin // above 480 lines are blanked
+	    if (state == 0) begin
+	       ntsc_pixels[17:10] <= ycrcb[29:22];
+	       ntsc_pixels[9:5] <= ycrcb[19:15];
+	       ntsc_pixes[4:0] <= ycrcb[9:5];
+
+	       ntsc_flag <= 0;
+	       state <= 1;
+	    
+	    end else begin
+	       ntsc_pixels[35:28] <= ycrcb[29:22];
+	       ntsc_pixels[27:23] <= ycrcb[19:15];
+	       ntsc_pixels[22:18] <= ycrcb[9:5];
+
+	       ntsc_flag <= 1;
+	       state <= 0;
+	       
+	    end // else: !if(state == 0)
+
+	    x <= x + 1; // increment the x coordinate
+
+	    // Look for interesting pixels:
+	    // This identification can be tested once ntsc_capture is connected to
+	    // vga_display by replacing pixels that are above the threshold with
+	    // pixels of another color so that the regions identified can be seen
+	    // visually
+	    
+	    //                cr                          cb
+	    if ((ntsc_pixels[19:10] > 800) & (ntsc_pixels[9:0] > 800)) begin
+	       // upper right corner (of YIQ space)
+	       color <= b'00;
+
+	       interesting_x <= x;
+	       interesting_y <= y;
+	       interesting_flag <= 1;
+	       
+	       //                       cr                         cb
+	    end else if ((ntsc_pixels[19:10] < 200) & (ntsc_pixels[9:0] > 800)) begin
+	       // upper left corner (of YIQ space)
+	       color <= b'01;
+
+	       interesting_x <= x;
+	       interesting_y <= y;
+	       interesting_flag <= 1;
+	       
+	       //                       cr                         cb
+	    end else if ((ntsc_pixels[19:10] > 800) & (ntsc_pixels[9:0] < 200)) begin
+	       // lower right corner (of YIQ space)
+	       color <= b'10;
+
+	       interesting_x <= x;
+	       interesting_y <= y;
+	       interesting_flag <= 1;
+	       
+	       //                       cr                         cb
+	    end else if ((ntsc_pixels[19:10] < 200) & (ntsc_pixels[9:0] < 200)) begin
+	       // lower left corner (of YIQ space)
+	       color <= b'11;
+
+	       interesting_x <= x;
+	       interesting_y <= y;
+	       interesting_flag <= 1;
+	       
+	    end
+	    
+	    
+	 
+	 end // if (y <= 480)
+      end // if (dv)
+
+      if (reset) begin
+	 state <= 0;
+	 x<= 0;
+	 y <= 0;
+      end
+      
+	 
+   end // always @ (posedge clk)
+   
+	 
 
 endmodule // ntsc_capture
 

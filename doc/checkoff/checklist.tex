@@ -22,7 +22,6 @@
 	\begin{itemize}
 	\item Correctly calculates distances and iterator incrementors, using the {\tt sqrt} and {\tt divide} submodules. 
 	\item Sends a signal to {\tt LPF} to request new data when initial frame calculations have been done.
-	\item Read one new pixel per clock cycle from {\tt LPF}.
 	\item Generate one new set of coordinates per clock cycle and transmit to {\tt memory\_interface}.
 	\item Pipelines square root and division calculations so that there is no delay for each new line.
 	\item Pauses appropriately when {\tt memory\_interface} cannot handle new data.
@@ -65,6 +64,7 @@
 	\begin{itemize}
 	\item Capable of reading the incoming video stream from the video ADC.
 	\item Can transmit pixels to {\tt vga\_display} for immediate display.
+	\item Saves full color data.
 	\item Lumps pixels into groups of two to transmit to {\tt memory\_interface}.
 	\item Recognizes pixels matching specific regions of the Cr/Cb plane, and transmits that information to {\tt object\_recognition}.
 	\end{itemize}
