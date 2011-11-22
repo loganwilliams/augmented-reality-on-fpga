@@ -56,14 +56,48 @@
 	 $stop;
       end
 
+      // set register default values
       clk = 0;
+      frame_flag = 0;
+      pixel_flag = 0;
+      ptflag = 1;
+
+      #1000
+
+      // send some made up frame values
+      a_x = 0;
+      a_y = 0;
+
+      b_x = 300;
+      b_y = 100;
+
+      c_x = 250;
+      c_y = 150;
+
+      d_x = 50;
+      d_y = 200;
+
+      // set a frame flag
+      frame_flag = 1;
+      
    end // initial begin
 
    // generate a 50 Mhz clock
    always #10 clk = ~clk;
 
    always @(posedge clk) begin
-      next_pixel = $fscanf(fin, "%d", x);
+      if (request_pixel) begin
+	 pixel = $fscanf(fin, "%d", x);
+	 pixel_flag = 1;
+
+	 if (wr) $fdisplay(fout, "%d", pixel_output);
+	 
+      end else begin
+	 pixel_flag = 0;
+	 
+      end
+      
+	 
    end
 
 endmodule // projective_transform_test
