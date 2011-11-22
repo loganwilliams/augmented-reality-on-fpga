@@ -18,7 +18,7 @@
 
 \begin{itemize}
 % Logan
-\item[] {\tt projective\_transform}: processes a stream of incoming pixels, skewing, rotation, and scaling the image by generating new $(x,y)$ coordinates for each pixel corresponding to the four corners of the frame.
+\item[] {\tt projective\_transform}: processes a stream of incoming pixels, skewing, rotation, and scaling the image by generating new $(x,y)$ coordinates for each pixel corresponding to the four corners of the frame. (Logan)
 	\begin{itemize}
 	\item Correctly calculates distances and iterator incrementors, using the {\tt sqrt} and {\tt divide} submodules. 
 	\item Sends a signal to {\tt LPF} to request new data when initial frame calculations have been done.
@@ -29,7 +29,7 @@
 	\end{itemize}
 
 % Logan
-\item[] {\tt object\_recognition}: average the $(x,y)$ tuples for each pixel that matches one of four Cr/Cb regions of interest.
+\item[] {\tt object\_recognition}: average the $(x,y)$ tuples for each pixel that matches one of four Cr/Cb regions of interest. (Logan)
 	\begin{itemize}
 	\item Sums the coordinates of each color that it receives.
 	\item Correctly averages each coordinate.
@@ -39,26 +39,20 @@
 	\end{itemize}
 
 % Jose
-\item[] {\tt memory\_interface}: efficiently interfaces with the memory and all of the modules that have to write to and read from ZBT memory.
+\item[] {\tt memory\_interface}: efficiently interfaces with the memory and all of the modules that have to write to and read from ZBT memory. (Jos\'{e})
 	\begin{itemize}
-	\item Writes data element two cycles after pulsing ``done" to module.
-	\item Reads data element and outputs two cycles after pulsing ``done" to module.
-	\item Correctly parses relative $(x,y)$ coordinates, based on the module that is requesting a memory access and the location of its image.
-	\item Executes a single stream of read and write requests.
-	\item Executes multiple, occasionally colliding streams of read and write requests.
 	\item Writes to memory data from {\tt ntsc\_capture}.
 	\item Reads from memory an image to {\tt vga\_display}.
 	\item Outputs to and captures data from {\tt LPF}.
 	\item Captures data from {\tt projective\_transform}.
 	\item Shifts data locations when {\tt ntsc\_capture} starts providing a new image.
-	\item (Time permitting:) Read an image from flash memory and store in RAM for use as transformed image.
+	\item (Time permitting:) Reads an image from flash memory and stores it in RAM for use as the transformed image.
 	\end{itemize}
 
 % Jose
-\item[] {\tt LPF:} applies lowpass filters, vertically and horizontally, on the image that is to be warped, in order to prevent aliasing at the output.
+\item[] {\tt LPF:} applies lowpass filters, vertically and horizontally, on the image that is to be warped, in order to prevent aliasing at the output. (Jos\'{e})
 	\begin{itemize}
 	\item (Out of time:) Just fetches pixels from memory and feeds them to {\tt projective\_transform}. LPF does not filtering.
-	\item Stalls operation when fetching or writing a pair of pixels and {\tt memory\_interface} has not pulsed {\it done\_lpf}.
 	\item Loads appropriate filter coefficients based on the coefficients $M_x$ and $M_y$ from {\tt object\_recognition}.
 	\item Reads data from memory vertically and horizontally, and has the necessary data for the calculation of each output pixel in its buffers.
 	\item Mirrors the data appropriately in its buffers when processing near an edge.
@@ -66,7 +60,7 @@
 	\end{itemize}
 
 % Logan
-\item[] {\tt ntsc\_capture}: process the incoming video stream and send pixels in sets of two to {\tt memory\_interface}
+\item[] {\tt ntsc\_capture}: process the incoming video stream and send pixels in sets of two to {\tt memory\_interface} (Logan)
 	\begin{itemize}
 	\item Capable of reading the incoming video stream from the video ADC.
 	\item Can transmit pixels to {\tt vga\_display} for immediate display.
@@ -76,7 +70,7 @@
 	\end{itemize}
 
 % Jose
-\item[] {\tt vga\_display}: fetches data from memory and displays it on the screen.
+\item[] {\tt vga\_display}: fetches data from memory and displays it on the screen. (Jos\'{e})
 	\begin{itemize}
 	\item Displays a predefined pattern on the screen.
 	\item Requests a pixel one video clock cycle before it is needed.

@@ -1,0 +1,83 @@
+# //  ModelSim SE 6.4a Aug 28 2008 Linux 2.6.32-35-generic
+# //
+# //  Copyright 1991-2008 Mentor Graphics Corporation
+# //              All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND 
+# //  PROPRIETARY INFORMATION WHICH IS THE PROPERTY
+# //  OF MENTOR GRAPHICS CORPORATION OR ITS LICENSORS
+# //  AND IS SUBJECT TO LICENSE TERMS.
+# //
+# do {projective_transform_test.fdo} 
+# ** Warning: (vlib-34) Library already exists at "work".
+# Model Technology ModelSim SE vlog 6.4a Compiler 2008.08 Aug 28 2008
+# -- Compiling module divider
+# -- Compiling module glbl
+# 
+# Top level modules:
+# 	divider
+# 	glbl
+# Model Technology ModelSim SE vlog 6.4a Compiler 2008.08 Aug 28 2008
+# -- Compiling module divider
+# -- Compiling module glbl
+# -- Compiling module projective_transform
+# -- Compiling module sqrt
+# 
+# Top level modules:
+# 	glbl
+# 	projective_transform
+# Model Technology ModelSim SE vlog 6.4a Compiler 2008.08 Aug 28 2008
+# -- Compiling module divider
+# -- Compiling module glbl
+# -- Compiling module projective_transform
+# -- Compiling module sqrt
+# -- Compiling module projective_transform_test
+# 
+# Top level modules:
+# 	glbl
+# 	projective_transform_test
+# Model Technology ModelSim SE vlog 6.4a Compiler 2008.08 Aug 28 2008
+# -- Compiling module glbl
+# 
+# Top level modules:
+# 	glbl
+# vsim -L xilinxcorelib_ver -L unisims_ver -L unimacro_ver -lib work -t 1ps projective_transform_test glbl 
+# ** Note: (vsim-3813) Design is being optimized due to module recompilation...
+# Loading work.projective_transform_test(fast)
+# Loading work.projective_transform(fast)
+# Loading work.sqrt(fast)
+# Loading work.divider(fast)
+# Loading unisims_ver.FD(fast)
+# Loading unisims_ver.FD(fast__1)
+# Loading unisims_ver.FDR(fast)
+# Loading unisims_ver.MULT_AND(fast)
+# Loading work.glbl(fast)
+# ** Warning: (vsim-3017) projective_transform.v(148): [TFMPC] - Too few port connections. Expected 6, found 5.
+#         Region: /projective_transform_test/pt/diva
+# ** Warning: (vsim-3722) projective_transform.v(148): [TFMPC] - Missing connection for port 'fractional'.
+# ** Warning: (vsim-3017) projective_transform.v(151): [TFMPC] - Too few port connections. Expected 6, found 5.
+#         Region: /projective_transform_test/pt/divb
+# ** Warning: (vsim-3722) projective_transform.v(151): [TFMPC] - Missing connection for port 'fractional'.
+# ** Warning: (vsim-3017) projective_transform.v(154): [TFMPC] - Too few port connections. Expected 6, found 5.
+#         Region: /projective_transform_test/pt/divc
+# ** Warning: (vsim-3722) projective_transform.v(154): [TFMPC] - Missing connection for port 'fractional'.
+# ** Warning: (vsim-3017) projective_transform.v(157): [TFMPC] - Too few port connections. Expected 6, found 5.
+#         Region: /projective_transform_test/pt/divd
+# ** Warning: (vsim-3722) projective_transform.v(157): [TFMPC] - Missing connection for port 'fractional'.
+# ** Warning: (vsim-3017) projective_transform.v(160): [TFMPC] - Too few port connections. Expected 6, found 5.
+#         Region: /projective_transform_test/pt/dive
+# ** Warning: (vsim-3722) projective_transform.v(160): [TFMPC] - Missing connection for port 'fractional'.
+# ** Warning: (vsim-3017) projective_transform.v(163): [TFMPC] - Too few port connections. Expected 6, found 5.
+#         Region: /projective_transform_test/pt/divf
+# ** Warning: (vsim-3722) projective_transform.v(163): [TFMPC] - Missing connection for port 'fractional'.
+# .main_pane.mdi.interior.cs.vm.paneset.cli_0.wf.clip.cs.pw.wf
+# .main_pane.workspace.interior.cs.nb.canvas.notebook.cs.page2.cs
+# .main_pane.signals.interior.cs
+run 1800ps
+force -freeze sim:/projective_transform_test/pt/quotient_a 00000000000001110000 0
+force -freeze sim:/projective_transform_test/pt/quotient_b 00000000000000011100 0
+force -freeze sim:/projective_transform_test/pt/quotient_c 00000000000100000000 0
+force -freeze sim:/projective_transform_test/pt/quotient_d 00000000000000001100 0
+force -freeze sim:/projective_transform_test/pt/quotient_e 00000000000001010000 0
+force -freeze sim:/projective_transform_test/pt/quotient_f 00000000001000001000 0
+run 1ns
