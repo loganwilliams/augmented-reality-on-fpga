@@ -1,3 +1,5 @@
+`include "divider.v"
+
 module projective_transform(
 			    input 	      clk, // System clock (global ->)
 			    input 	      frame_flag, // New frame flag (ntsc_capture ->)
@@ -129,36 +131,36 @@ module projective_transform(
 
    // this is the iterative square rooter used for distance calculations
    // with NBITS = 21, it will take 21 clock cycles to return a result.
-   sqrta (NBITS = 21) sqrt(.clk(clk), .start(sqrt_start_a),
+   sqrt #(.NBITS(21)) sqrta(.clk(clk), .start(sqrt_start_a),
 			   .data(d_sqrt_a), .answer(answer_a),
 			   .done(sqrt_done_a));
 
-   sqrtb (NBITS = 21) sqrt(.clk(clk), .start(sqrt_start_b),
+   sqrt #(.NBITS(21)) sqrtb(.clk(clk), .start(sqrt_start_b),
 			   .data(d_sqrt_b), .answer(answer_b),
 			   .done(sqrt_done_b));
 
-   sqrtc (NBITS = 21) sqrt(.clk(clk), .start(sqrt_start_c),
+   sqrt #(.NBITS(21)) sqrtc(.clk(clk), .start(sqrt_start_c),
 			   .data(d_sqrt_c), .answer(answer_c),
 			   .done(sqrt_done_c));
 
    // three dividers, for parallelization. these are used to calculate
    // iteration "deltas"
-   diva divider(.clk(clk), .rfd(rfd_a), .dividend(dividend_a),
+   divider diva(.clk(clk), .rfd(rfd_a), .dividend(dividend_a),
 		.divisor(divisor_a), .quotient(quotient_a));
 
-   divb divider(.clk(clk), .rfd(rfd_b), .dividend(dividend_b),
+   divider divb(.clk(clk), .rfd(rfd_b), .dividend(dividend_b),
 		.divisor(divisor_b), .quotient(quotient_b));
    
-   divc divider(.clk(clk), .rfd(rfd_c), .dividend(dividend_c),
+   divider divc(.clk(clk), .rfd(rfd_c), .dividend(dividend_c),
 		.divisor(divisor_c), .quotient(quotient_c));
 
-   divd divider(.clk(clk), .rfd(rfd_d), .dividend(dividend_d),
+   divider divd(.clk(clk), .rfd(rfd_d), .dividend(dividend_d),
 		.divisor(divisor_d), .quotient(quotient_e));
 
-   dive divider(.clk(clk), .rfd(rfd_e), .dividend(dividend_e),
+   divider dive(.clk(clk), .rfd(rfd_e), .dividend(dividend_e),
 		.divisor(divisor_e), .quotient(quotient_d));
    
-   divf divider(.clk(clk), .rfd(rfd_f), .dividend(dividend_f),
+   div divf(.clk(clk), .rfd(rfd_f), .dividend(dividend_f),
 		.divisor(divisor_f), .quotient(quotient_f));
 
    always @(posedge clk) begin
@@ -229,8 +231,8 @@ module projective_transform(
 
 	   // if divider is done (divider delay = M + 4)
 	   // M = dividend width = 20 in this case
-	   if (counter > 24;) begin
-	      wants_pixel <= 1;
+	   if (counter > 24) begin
+	      request_pixel <= 1;
 
 	      delta_a_x <= quotient_a;
 	      delta_a_y <= quotient_b;
@@ -253,7 +255,7 @@ module projective_transform(
 	   if (pixel_flag || waiting_for_write) begin
 	      if (ptflag) begin
 		 waiting_for_write <= 0;
-		 wants_pixel <= 1;
+		 request_pixel <= 1;
 		 
 		 
 		 // output the new pixel coordinates
@@ -300,10 +302,10 @@ module projective_transform(
 		    i_c_y <= i_c_y + delta_a_y;
 
 		    // update the deltas
-		    delta_c_x <= delta_c_x_new;
-		    delta_c_y <= delta_c_y_new;
+		    delta_c_x <= delta_c_x_next;
+		    delta_c_y <= delta_c_y_next;
 
-		    // reset o_x
+		    // reset o_x 
 		    o_x <= 0;
 		 end
 		 
@@ -321,7 +323,7 @@ module projective_transform(
 	      end else begin // if (ptflag)
 		 waiting_for_write <= 1; // set a flag
 		 pixel_save <= pixel; // store the current pixel data
-		 wants_pixel <= 0; // memory_interface is delayed, we do not
+		 request_pixel <= 0; // memory_interface is delayed, we do not
 		                   // want to deal with new pixels right now
 		 
 	      end // else: !if(ptflag)
