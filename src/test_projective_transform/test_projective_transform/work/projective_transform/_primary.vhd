@@ -3,10 +3,8 @@ use verilog.vl_types.all;
 entity projective_transform is
     generic(
         WAIT_FOR_CORNERS: integer := 0;
-        CALC_INIT_DIST_MULT: integer := 1;
-        WAIT_FOR_SQRT   : integer := 2;
-        WAIT_FOR_DIVIDERS: integer := 3;
-        WAIT_FOR_PIXEL  : integer := 4
+        WAIT_FOR_DIVIDERS: integer := 1;
+        WAIT_FOR_PIXEL  : integer := 2
     );
     port(
         clk             : in     vl_logic;

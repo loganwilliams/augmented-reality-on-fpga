@@ -11,30 +11,15 @@
 # do {projective_transform_test.fdo} 
 # ** Warning: (vlib-34) Library already exists at "work".
 # Model Technology ModelSim SE vlog 6.4a Compiler 2008.08 Aug 28 2008
-# -- Compiling module divider
-# -- Compiling module glbl
-# 
-# Top level modules:
-# 	divider
-# 	glbl
-# Model Technology ModelSim SE vlog 6.4a Compiler 2008.08 Aug 28 2008
-# -- Compiling module divider
-# -- Compiling module glbl
 # -- Compiling module projective_transform
-# -- Compiling module sqrt
+# -- Compiling module divider
 # 
 # Top level modules:
-# 	glbl
 # 	projective_transform
 # Model Technology ModelSim SE vlog 6.4a Compiler 2008.08 Aug 28 2008
-# -- Compiling module divider
-# -- Compiling module glbl
-# -- Compiling module projective_transform
-# -- Compiling module sqrt
 # -- Compiling module projective_transform_test
 # 
 # Top level modules:
-# 	glbl
 # 	projective_transform_test
 # Model Technology ModelSim SE vlog 6.4a Compiler 2008.08 Aug 28 2008
 # -- Compiling module glbl
@@ -45,39 +30,33 @@
 # ** Note: (vsim-3813) Design is being optimized due to module recompilation...
 # Loading work.projective_transform_test(fast)
 # Loading work.projective_transform(fast)
-# Loading work.sqrt(fast)
+# ** Warning: (vsim-3009) [TSCALE] - Module 'projective_transform' does not have a `timescale directive in effect, but previous modules do.
+#         Region: /projective_transform_test/pt
 # Loading work.divider(fast)
-# Loading unisims_ver.FD(fast)
-# Loading unisims_ver.FD(fast__1)
-# Loading unisims_ver.FDR(fast)
-# Loading unisims_ver.MULT_AND(fast)
-# Loading work.glbl(fast)
-# ** Warning: (vsim-3017) projective_transform.v(148): [TFMPC] - Too few port connections. Expected 6, found 5.
+# ** Warning: (vsim-3009) [TSCALE] - Module 'divider' does not have a `timescale directive in effect, but previous modules do.
 #         Region: /projective_transform_test/pt/diva
-# ** Warning: (vsim-3722) projective_transform.v(148): [TFMPC] - Missing connection for port 'fractional'.
-# ** Warning: (vsim-3017) projective_transform.v(151): [TFMPC] - Too few port connections. Expected 6, found 5.
+# Loading work.glbl(fast)
+# ** Warning: (vsim-3017) projective_transform.v(98): [TFMPC] - Too few port connections. Expected 8, found 7.
+#         Region: /projective_transform_test/pt/diva
+# ** Warning: (vsim-3722) projective_transform.v(98): [TFMPC] - Missing connection for port 'remainder'.
+# ** Warning: (vsim-3017) projective_transform.v(101): [TFMPC] - Too few port connections. Expected 8, found 7.
 #         Region: /projective_transform_test/pt/divb
-# ** Warning: (vsim-3722) projective_transform.v(151): [TFMPC] - Missing connection for port 'fractional'.
-# ** Warning: (vsim-3017) projective_transform.v(154): [TFMPC] - Too few port connections. Expected 6, found 5.
+# ** Warning: (vsim-3722) projective_transform.v(101): [TFMPC] - Missing connection for port 'remainder'.
+# ** Warning: (vsim-3017) projective_transform.v(104): [TFMPC] - Too few port connections. Expected 8, found 7.
 #         Region: /projective_transform_test/pt/divc
-# ** Warning: (vsim-3722) projective_transform.v(154): [TFMPC] - Missing connection for port 'fractional'.
-# ** Warning: (vsim-3017) projective_transform.v(157): [TFMPC] - Too few port connections. Expected 6, found 5.
+# ** Warning: (vsim-3722) projective_transform.v(104): [TFMPC] - Missing connection for port 'remainder'.
+# ** Warning: (vsim-3017) projective_transform.v(107): [TFMPC] - Too few port connections. Expected 8, found 7.
 #         Region: /projective_transform_test/pt/divd
-# ** Warning: (vsim-3722) projective_transform.v(157): [TFMPC] - Missing connection for port 'fractional'.
-# ** Warning: (vsim-3017) projective_transform.v(160): [TFMPC] - Too few port connections. Expected 6, found 5.
+# ** Warning: (vsim-3722) projective_transform.v(107): [TFMPC] - Missing connection for port 'remainder'.
+# ** Warning: (vsim-3017) projective_transform.v(110): [TFMPC] - Too few port connections. Expected 8, found 7.
 #         Region: /projective_transform_test/pt/dive
-# ** Warning: (vsim-3722) projective_transform.v(160): [TFMPC] - Missing connection for port 'fractional'.
-# ** Warning: (vsim-3017) projective_transform.v(163): [TFMPC] - Too few port connections. Expected 6, found 5.
+# ** Warning: (vsim-3722) projective_transform.v(110): [TFMPC] - Missing connection for port 'remainder'.
+# ** Warning: (vsim-3017) projective_transform.v(113): [TFMPC] - Too few port connections. Expected 8, found 7.
 #         Region: /projective_transform_test/pt/divf
-# ** Warning: (vsim-3722) projective_transform.v(163): [TFMPC] - Missing connection for port 'fractional'.
+# ** Warning: (vsim-3722) projective_transform.v(113): [TFMPC] - Missing connection for port 'remainder'.
 # .main_pane.mdi.interior.cs.vm.paneset.cli_0.wf.clip.cs.pw.wf
 # .main_pane.workspace.interior.cs.nb.canvas.notebook.cs.page2.cs
 # .main_pane.signals.interior.cs
-run 1800ps
-force -freeze sim:/projective_transform_test/pt/quotient_a 00000000000001110000 0
-force -freeze sim:/projective_transform_test/pt/quotient_b 00000000000000011100 0
-force -freeze sim:/projective_transform_test/pt/quotient_c 00000000000100000000 0
-force -freeze sim:/projective_transform_test/pt/quotient_d 00000000000000001100 0
-force -freeze sim:/projective_transform_test/pt/quotient_e 00000000000001010000 0
-force -freeze sim:/projective_transform_test/pt/quotient_f 00000000001000001000 0
-run 1ns
+run 1000ms
+# Break in Module projective_transform_test at projective_transform_testbench.v line 98
+quit

@@ -836,7 +836,6 @@ proc restore { { project_dir "" } } {
   } "A problem occured while restoring project settings."
 
   set user_files { 
-      "divider.xco" 
       "labkit.ucf" 
       "labkit.v" 
       "projective_transform.v" 
@@ -846,14 +845,7 @@ proc restore { { project_dir "" } } {
     AddUserFiles $iProjHelper $user_files
   } "A problem occured while restoring user files."
 
-  set imported_files { 
-      "divider.asy" 
-      "divider.ngc" 
-      "divider.sym" 
-      "divider.v" 
-      "divider.veo" 
-      "divider.vhd" 
-      "divider.vho"}
+  set imported_files {}
 
   set origination 2
 

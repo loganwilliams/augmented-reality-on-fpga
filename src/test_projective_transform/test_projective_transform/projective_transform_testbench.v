@@ -1,7 +1,5 @@
 `timescale 1ns / 100ps 
 
-`include "projective_transform.v"
-
   module projective_transform_test();
    // registers and wires for connection to the PT module
    reg clk;
