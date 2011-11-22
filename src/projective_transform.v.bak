@@ -131,15 +131,15 @@ module projective_transform(
 
    // this is the iterative square rooter used for distance calculations
    // with NBITS = 21, it will take 21 clock cycles to return a result.
-   sqrt #(.NBITS(21)) sqrta(.clk(clk), .start(sqrt_start_a),
+   sqrt (#.NBITS(21)) sqrta(.clk(clk), .start(sqrt_start_a),
 			   .data(d_sqrt_a), .answer(answer_a),
 			   .done(sqrt_done_a));
 
-   sqrt #(.NBITS(21)) sqrtb(.clk(clk), .start(sqrt_start_b),
+   sqrt (#.NBITS(21)) sqrtb(.clk(clk), .start(sqrt_start_b),
 			   .data(d_sqrt_b), .answer(answer_b),
 			   .done(sqrt_done_b));
 
-   sqrt #(.NBITS(21)) sqrtc(.clk(clk), .start(sqrt_start_c),
+   sqrt (#.NBITS(21)) sqrtc(.clk(clk), .start(sqrt_start_c),
 			   .data(d_sqrt_c), .answer(answer_c),
 			   .done(sqrt_done_c));
 
