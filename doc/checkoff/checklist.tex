@@ -1,0 +1,82 @@
+% project checkoff checklist
+
+\documentclass{article}
+
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{amssymb}
+
+\title{6.111 Final Project\\Project Checklist}
+\date{21 November 2011}
+\author{Logan P. Williams\\Jos\'{e} E. Cruz Serrall\'{e}s}
+
+\renewcommand{\labelitemii}{$\Box$}
+
+\begin{document}
+\maketitle
+
+\begin{itemize}
+% Logan
+\item[] {\tt projective\_transform}: processes a stream of incoming pixels, skewing, rotation, and scaling the image by generating new $(x,y)$ coordinates for each pixel corresponding to the four corners of the frame. (Logan)
+	\begin{itemize}
+	\item Correctly calculates distances and iterator incrementors, using the {\tt sqrt} and {\tt divide} submodules. 
+	\item Sends a signal to {\tt LPF} to request new data when initial frame calculations have been done.
+	\item Read one new pixel per clock cycle from {\tt LPF}.
+	\item Generate one new set of coordinates per clock cycle and transmit to {\tt memory\_interface}.
+	\item Pipelines square root and division calculations so that there is no delay for each new line.
+	\item Pauses appropriately when {\tt memory\_interface} cannot handle new data.
+	\item Can handle ``unexpected'' new frame events.
+	\end{itemize}
+
+% Logan
+\item[] {\tt object\_recognition}: average the $(x,y)$ tuples for each pixel that matches one of four Cr/Cb regions of interest. (Logan)
+	\begin{itemize}
+	\item Sums the coordinates of each color that it receives.
+	\item Correctly averages each coordinate.
+	\item Outputs the list of coordinates and a flag immediately after {\tt ntsc\_capture} has finished processing a frame and the {\tt divide} submodules have finished their averaging operations.
+	\item Output ``fake'' downsampling coefficients based on linear estimates of distance.
+	\item (Time permitting:) Generate and output $M_x$ and $M_y$ downsampling coefficients after a frame has been captured.
+	\end{itemize}
+
+% Jose
+\item[] {\tt memory\_interface}: efficiently interfaces with the memory and all of the modules that have to write to and read from ZBT memory. (Jos\'{e})
+	\begin{itemize}
+	\item Writes to memory data from {\tt ntsc\_capture}.
+	\item Reads from memory an image to {\tt vga\_display}.
+	\item Outputs to and captures data from {\tt LPF}.
+	\item Captures data from {\tt projective\_transform}.
+	\item Shifts data locations when {\tt ntsc\_capture} starts providing a new image.
+	\item (Time permitting:) Reads an image from flash memory and stores it in RAM for use as the transformed image.
+	\end{itemize}
+
+% Jose
+\item[] {\tt LPF:} applies lowpass filters, vertically and horizontally, on the image that is to be warped, in order to prevent aliasing at the output. (Jos\'{e})
+	\begin{itemize}
+	\item (Out of time:) Just fetches pixels from memory and feeds them to {\tt projective\_transform}. LPF does not filtering.
+	\item Loads appropriate filter coefficients based on the coefficients $M_x$ and $M_y$ from {\tt object\_recognition}.
+	\item Reads data from memory vertically and horizontally, and has the necessary data for the calculation of each output pixel in its buffers.
+	\item Mirrors the data appropriately in its buffers when processing near an edge.
+	\item Outputs to memory\_interface a pair of pixels that correspond to the convolution sum of the corresponding data.
+	\end{itemize}
+
+% Logan
+\item[] {\tt ntsc\_capture}: process the incoming video stream and send pixels in sets of two to {\tt memory\_interface} (Logan)
+	\begin{itemize}
+	\item Capable of reading the incoming video stream from the video ADC.
+	\item Can transmit pixels to {\tt vga\_display} for immediate display.
+	\item Lumps pixels into groups of two to transmit to {\tt memory\_interface}.
+	\item Recognizes pixels matching specific regions of the Cr/Cb plane, and transmits that information to {\tt object\_recognition}.
+	\end{itemize}
+
+% Jose
+\item[] {\tt vga\_display}: fetches data from memory and displays it on the screen. (Jos\'{e})
+	\begin{itemize}
+	\item Displays a predefined pattern on the screen.
+	\item Requests a pixel one video clock cycle before it is needed.
+	\item Reads an image from memory, through {\tt memory\_interface}, and correctly displays it on the screen.
+	\end{itemize}
+
+\end{itemize}
+
+\end{document}
