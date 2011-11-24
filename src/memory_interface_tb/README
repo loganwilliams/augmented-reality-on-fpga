@@ -1,0 +1,4 @@
+test plan
+
+tb1.v - runs the interface for 2000 cycles to see if the blocks, locs, vga_addr, and ntsc_addr are instantiated properly, midway, it pulses frame_flag, and observes whether blocks, locs are updated properly. - done
+tb2.v -

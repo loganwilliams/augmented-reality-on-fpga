@@ -1,5 +1,5 @@
 `default_nettype none
-`include params.v
+// `include "./params.v"
 // memory_interface
 // handles EVERYTHING ram related
 // actual ram modules are instantiated in top module
@@ -12,45 +12,45 @@ module memory_interface
 		// NTSC_CAPTURE
 		input frame_flag,
 		input ntsc_flag,
-		input [`LOG_MEM:0] ntsc_pixel,
+		input [`LOG_MEM-1:0] ntsc_pixel,
 		output reg done_ntsc,
 		// LPF
 		input lpf_flag,
 		input lpf_wr,
-		input [`LOG_WIDTH:0] lpf_x,
-		input [`LOG_HEIGHT:0] lpf_y,
-		input [`LOG_MEM:0] lpf_pixel_write,
+		input [`LOG_WIDTH-1:0] lpf_x,
+		input [`LOG_HEIGHT-1:0] lpf_y,
+		input [`LOG_MEM-1:0] lpf_pixel_write,
 		output reg done_lpf,
-		output reg [`LOG_MEM:0] lpf_pixel_read,
+		output reg [`LOG_MEM-1:0] lpf_pixel_read,
 		// PROJECTIVE_TRANSFORM
 		input pt_flag,
 		input pt_wr,
-		input [`LOG_WIDTH:0] pt_x,
-		input [`LOG_HEIGHT:0] pt_y,
-		input [`LOG_TRUNC:0] pt_pixel_write,
+		input [`LOG_WIDTH-1:0] pt_x,
+		input [`LOG_HEIGHT-1:0] pt_y,
+		input [`LOG_TRUNC-1:0] pt_pixel_write,
 		output reg done_pt,
 		// VGA_WRITE
 		input vga_flag,
-		output done_vga,
-		output reg [`LOG_FULL:0] vga_pixel,
+		output reg done_vga,
+		output reg [`LOG_FULL-1:0] vga_pixel,
 		// MEMORY
 		// MEM ADDRESSES
-		output reg [`LOG_ADDR:0] mem0_addr,
-		output reg [`LOG_ADDR:0] mem1_addr,	
+		output reg [`LOG_ADDR-1:0] mem0_addr,
+		output reg [`LOG_ADDR-1:0] mem1_addr,	
 		// MEM READ	
-		input [`LOG_MEM:0] mem0_read;
-		input [`LOG_MEM:0] mem1_read;
+		input [`LOG_MEM-1:0] mem0_read,
+		input [`LOG_MEM-1:0] mem1_read,
 		// MEM WRITE
-		output reg [`LOG_MEM:0] mem0_write;
-		output reg [`LOG_MEM:0] mem1_write;
+		output reg [`LOG_MEM-1:0] mem0_write,
+		output reg [`LOG_MEM-1:0] mem1_write,
 		// WR FLAGS
-		output reg mem0_wr;
-		output reg mem1_wr;
+		output reg mem0_wr,
+		output reg mem1_wr
 	);
 
 	/******** PARAMETERS ********/
 	// READ QUEUE LENGTH
-	parameter QUEUE_LENGTH = 3;
+	parameter QUEUE_LENGTH = 2;
 	// MODULE ORDINALS
 	parameter NTSC = 4'b1000;
 	parameter VGA  = 4'b0100;
@@ -76,14 +76,24 @@ module memory_interface
 	reg [1:0] disp_mem_loc;
 
 	// ADDRESSES
-	reg [`LOG_ADDR:0] ntsc_addr;
-	reg [`LOG_ADDR:0] vga_addr;
-	reg [`LOG_ADDR:0] lpf_addr;
-	reg [`LOG_ADDR:0] pt_addr;
+	reg [`LOG_ADDR-1:0] ntsc_addr;
+	reg [`LOG_ADDR-1:0] vga_addr;
+	reg [`LOG_ADDR-1:0] lpf_addr;
+	reg [`LOG_ADDR-1:0] pt_addr;
+	reg [`LOG_ADDR-1:0] next_ntsc_addr;
+	reg [`LOG_ADDR-1:0] next_vga_addr;
 
 	// NEXT LOCS AND BLOCKS
 	reg [3:0] next_blocks;
 	reg [7:0] next_locs;
+	reg next_capt_mem_block;
+	reg next_proc_mem_block;
+	reg next_nexd_mem_block;
+	reg next_disp_mem_block;
+	reg [1:0] next_capt_mem_loc;
+	reg [1:0] next_proc_mem_loc;
+	reg [1:0] next_nexd_mem_loc;
+	reg [1:0] next_disp_mem_loc;
 
 	// PARTIAL DONE FLAGS
 	reg [3:0] mem0_done;
@@ -102,10 +112,10 @@ module memory_interface
 		// shifting
 		if (reset) begin
 			// choose starting condition such that capt and disp never overlap
-			next_blocks = {0,0,1,1};
+			next_blocks = 4'b0011;
 			next_locs = {2'b00, 2'b01, 2'b00, 2'b01};
 		end
-		else if (flame_flag) begin
+		else if (frame_flag) begin
 			next_blocks = {proc_mem_block, disp_mem_block, capt_mem_block, nexd_mem_block};
 			next_locs = {proc_mem_loc, disp_mem_loc, capt_mem_loc, nexd_mem_loc};
 		end
@@ -114,10 +124,8 @@ module memory_interface
 			next_blocks = {capt_mem_block, proc_mem_block, nexd_mem_block, disp_mem_block};
 			next_locs = {capt_mem_loc, proc_mem_loc, nexd_mem_loc, disp_mem_loc};
 		end
-
-		// set addresses of LPF and PT from (x,y) coordinates
-		lpf_addr = (`IMAGE_WIDTH * lpf_y) + lpf_x + (proc_mem_loc * `IMAGE_LENGTH);
-		pt_addr = (`IMAGE_WIDTH * pt_y) + pt_x + (next_mem_loc * `IMAGE_LENGTH);
+		{next_capt_mem_block,next_proc_mem_block,next_nexd_mem_block,next_disp_mem_block} = next_blocks;
+		{next_capt_mem_loc,next_proc_mem_loc,next_nexd_mem_loc,next_disp_mem_loc} = next_locs;
 
 		// set address & write & done flags
 		// assign write value to mem0 & mem1 based on who's writing
@@ -138,7 +146,7 @@ module memory_interface
 			mem0_wr = lpf_wr;
 			mem0_done = LPF;
 		end
-		else if (!next_mem_block && pt_flag) begin
+		else if (!nexd_mem_block && pt_flag) begin
 			mem0_addr = pt_addr;
 			mem0_write = pt_pixel_write;
 			mem0_wr = pt_wr;
@@ -164,13 +172,13 @@ module memory_interface
 		end
 		else if (proc_mem_block && lpf_flag) begin
 			mem1_addr = lpf_addr;
-			mem1_write = lpf_pixel;
+			mem1_write = lpf_pixel_write;
 			mem1_wr = lpf_wr;
 			mem1_done = LPF;
 		end
-		else if (next_mem_block && pt_flag) begin
+		else if (nexd_mem_block && pt_flag) begin
 			mem1_addr = pt_addr;
-			mem1_write = pt_pixel;
+			mem1_write = pt_pixel_write;
 			mem1_wr = pt_wr;
 			mem1_done = PT;
 		end
@@ -214,6 +222,21 @@ module memory_interface
 		else if (mem1_done == LPF && !lpf_wr) next_mem1_read_queue[LOG_ORD-1:0] = LPF;
 		else next_mem1_read_queue[LOG_ORD-1:0] = NONE;
 
+		// set addresses of LPF and PT from (x,y) coordinates
+		lpf_addr = (`IMAGE_WIDTH * lpf_y) + lpf_x + (proc_mem_loc * `IMAGE_LENGTH);
+		pt_addr = (`IMAGE_WIDTH * pt_y) + pt_x + (nexd_mem_loc * `IMAGE_LENGTH);
+
+		// set next addresses of NTSC and VGA
+		// set to starting address at the start of each frame or when the FPGA is reset
+		if (reset || frame_flag) begin
+			next_ntsc_addr = (next_capt_mem_loc*`IMAGE_LENGTH);
+			next_vga_addr = (next_disp_mem_loc*`IMAGE_LENGTH);
+		end
+		// set addresses of NTSC and VGA / update if pixels have been read or written
+		else begin
+			next_ntsc_addr = ntsc_addr + done_ntsc;
+			next_vga_addr = vga_addr + done_vga;
+		end
 		// this should be it
 	end
 
@@ -222,10 +245,9 @@ module memory_interface
 		{capt_mem_block, proc_mem_block, nexd_mem_block, disp_mem_block} <= next_blocks;
 		{capt_mem_loc, proc_mem_loc, nexd_mem_loc, disp_mem_loc} <= next_locs;
 
-		// set addresses of NTSC and VGA / update if pixels have been read or written
-		// set to 0 at the start of each frame or when the FPGA is reset
-		ntsc_addr <= (reset || frame_flag) ? 0 : (ntsc_addr + done_ntsc);
-		vga_addr <= (reset || frame_glag) ? 0 : (vga_addr + done_vga);
+		// update ntsc and vga addresses
+		ntsc_addr <= next_ntsc_addr;
+		vga_addr <= next_vga_addr;
 
 		// update read queues
 		mem0_read_queue <= next_mem0_read_queue;
