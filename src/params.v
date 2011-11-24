@@ -9,13 +9,15 @@
 `define LOG_NTSC_CLOCK 25
 
 // image sizes
-`define TOTAL_PIXELS 20'd307200
-`define IMAGE_WIDTH  10'd640
-`define IMAGE_HEIGHT  9'd480
+`define TOTAL_PIXELS 	20'd307200
+`define IMAGE_WIDTH  	10'd640
+`define IMAGE_WIDTH_D2   9'd320
+`define IMAGE_HEIGHT  	 9'd480
 
 // bitwidth of image sizes
 `define LOG_TOTAL_PIXELS 20
 `define LOG_WIDTH        10
+`define LOG_WIDTH_D2	  9
 `define LOG_HEIGHT 		  9
 
 // memory sizes

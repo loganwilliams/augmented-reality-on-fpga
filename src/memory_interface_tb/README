@@ -1,4 +1,10 @@
 test plan
 
-tb1.v - runs the interface for 2000 cycles to see if the blocks, locs, vga_addr, and ntsc_addr are instantiated properly, midway, it pulses frame_flag, and observes whether blocks, locs are updated properly. - done
-tb2.v -
+tb1.v - runs the interface for 2000 cycles to see if the blocks, locs, vga_addr,
+ and ntsc_addr are instantiated properly, midway, it pulses frame_flag, and ob-
+serves whether blocks, locs are updated properly. - written and tested
+
+tb2.v - feeds a set of (x,y) coordinates from LPF and PT and observes whether 
+they are parsed correctly, based on their locs and blocks - written and tested
+
+tb3.v - 

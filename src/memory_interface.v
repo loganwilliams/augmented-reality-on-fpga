@@ -1,5 +1,6 @@
 `default_nettype none
-// `include "./params.v"
+// comment out when testing
+// `include "params.v"
 // memory_interface
 // handles EVERYTHING ram related
 // actual ram modules are instantiated in top module
@@ -223,8 +224,9 @@ module memory_interface
 		else next_mem1_read_queue[LOG_ORD-1:0] = NONE;
 
 		// set addresses of LPF and PT from (x,y) coordinates
-		lpf_addr = (`IMAGE_WIDTH * lpf_y) + lpf_x + (proc_mem_loc * `IMAGE_LENGTH);
-		pt_addr = (`IMAGE_WIDTH * pt_y) + pt_x + (nexd_mem_loc * `IMAGE_LENGTH);
+		// addr = y*(image_width/2) + lpf_x/2 + loc*(image_width*image_height/2)
+		lpf_addr = (`IMAGE_WIDTH_D2 * lpf_y) + lpf_x[`LOG_WIDTH-1:1] + (proc_mem_loc * `IMAGE_LENGTH);
+		pt_addr = (`IMAGE_WIDTH_D2 * pt_y) + pt_x[`LOG_WIDTH-1:1] + (nexd_mem_loc * `IMAGE_LENGTH);
 
 		// set next addresses of NTSC and VGA
 		// set to starting address at the start of each frame or when the FPGA is reset
