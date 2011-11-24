@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RootFolder label="COREGEN" treetype="folder" language="COREGEN">
+	<Folder label="VERILOG Component Instantiation" treetype="folder">
+		<Template label="divider" treetype="template">
+ 
+ 
+// The following must be inserted into your Verilog file for this
+// core to be instantiated. Change the instance name and port connections
+// (in parentheses) to your own signal names.
+ 
+divider YourInstanceName (
+    .clk(clk),
+    .rfd(rfd),
+    .dividend(dividend), // Bus [19 : 0] 
+    .divisor(divisor), // Bus [9 : 0] 
+    .quotient(quotient), // Bus [19 : 0] 
+    .fractional(fractional)); // Bus [9 : 0] 
+
+ 
+		</Template>
+	</Folder>
+	<Folder label="VHDL Component Instantiation" treetype="folder">
+		<Template label="divider" treetype="template">
+ 
+ 
+-- The following code must appear in the VHDL architecture header:
+ 
+component divider
+    port (
+    clk: IN std_logic;
+    rfd: OUT std_logic;
+    dividend: IN std_logic_VECTOR(19 downto 0);
+    divisor: IN std_logic_VECTOR(9 downto 0);
+    quotient: OUT std_logic_VECTOR(19 downto 0);
+    fractional: OUT std_logic_VECTOR(9 downto 0));
+end component;
+
+
+ 
+-------------------------------------------------------------
+ 
+-- The following code must appear in the VHDL architecture body.
+-- Substitute your own instance name and net names.
+ 
+your_instance_name : divider
+        port map (
+            clk =&gt; clk,
+            rfd =&gt; rfd,
+            dividend =&gt; dividend,
+            divisor =&gt; divisor,
+            quotient =&gt; quotient,
+            fractional =&gt; fractional);
+ 
+		</Template>
+	</Folder>
+</RootFolder>
