@@ -12,6 +12,12 @@ dummy_zbt_tb.v - testing of the dummy_zbt.v module - written and tested
 
 tb3.v - testing of queueing with only NTSC and VGA - written and tested
 
+tb4.v - first, real test: frame_flag pulses, causing capt and next_disp to be
+on the same block. ntsc writes 2 cycles after done_ntsc pulses. pt writes 3 
+cycles after done_pt pulses. ntsc writes the sequence 1:1:1000; pt writes the
+sequence 10000:-1:9000. frame_flag pulses, vga reads pt's sequence. frame_flag
+ pulses again and vga reads ntsc's sequence.
+
 
 What is memory_interface supposed to do?
 - shift the locations and blocks of the different images when reset or frame_flag pulses
@@ -22,3 +28,11 @@ What is memory_interface supposed to do?
 - pass on processed requests to the memory modules, correctly setting the wr, addr, and write signals of each mem module
 - pulse done to respective module when its request has been processed
 
+Progression of images in memory
+    1  2
+0: CP ND
+1: NC DP
+2: DN PC
+3: PD CN
+4: CP ND
+and so on
