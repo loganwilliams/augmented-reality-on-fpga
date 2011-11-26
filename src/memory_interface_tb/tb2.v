@@ -8,6 +8,8 @@ module tb2;
 		frame_flag = 0;
 		#1000 frame_flag = 1;
 		#10 frame_flag = 0;
+		#1000000 frame_flag = 1;
+		#10 frame_flag = 0;
 	end
 
 	integer i;
@@ -30,6 +32,6 @@ module tb2;
 	end
 
 	initial begin
-		#32000000 $stop;
+		#6000000 $stop;
 	end
 endmodule

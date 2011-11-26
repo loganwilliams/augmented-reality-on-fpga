@@ -7,4 +7,18 @@ serves whether blocks, locs are updated properly. - written and tested
 tb2.v - feeds a set of (x,y) coordinates from LPF and PT and observes whether 
 they are parsed correctly, based on their locs and blocks - written and tested
 
-tb3.v - 
+dummy_zbt.v - a very simple recreation of a ZBT SRAM module - written
+dummy_zbt_tb.v - testing of the dummy_zbt.v module - written and tested
+
+tb3.v - testing of queueing with only NTSC and VGA - written and tested
+
+
+What is memory_interface supposed to do?
+- shift the locations and blocks of the different images when reset or frame_flag pulses
+- correctly parse LPF and PT addresses based on (x,y) coords
+- correctly reset NTSC and VGA addresses and increment them when ntsc_capture and vga_write request pixels
+- assign read outputs of both memory modules to modules who requested reads two cycles ago (queueing)
+- prioritize NTSC and VGA over PT and LPF (NTSC and VGA will never overlap)
+- pass on processed requests to the memory modules, correctly setting the wr, addr, and write signals of each mem module
+- pulse done to respective module when its request has been processed
+

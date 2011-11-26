@@ -109,6 +109,11 @@ module memory_interface
 	reg [LOG_ORD-1:0] mem0_next_read;
 	reg [LOG_ORD-1:0] mem1_next_read;
 
+	// PREVIOUS LPF AND VGA READ VALUES
+	// (for stable vga_pixel and lpf_pixel_read)
+	reg [`LOG_MEM-1:0] prev_vga_pixel;
+	reg [`LOG_MEM-1:0] prev_lpf_pixel_read;
+
 	always @(*) begin
 		// shifting
 		if (reset) begin
@@ -152,7 +157,7 @@ module memory_interface
 			mem0_write = pt_pixel_write;
 			mem0_wr = pt_wr;
 			mem0_done = PT;
-		end
+		end 
 		else begin // nothing's happening
 			mem0_addr = 0;
 			mem0_write = 0;
@@ -203,12 +208,12 @@ module memory_interface
 		// LPF's turn
 		if (mem0_next_read == LPF) lpf_pixel_read = mem0_read;
 		else if (mem1_next_read == LPF) lpf_pixel_read = mem1_read;
-		else lpf_pixel_read = 0;
+		else lpf_pixel_read = prev_lpf_pixel_read;
 
 		// VGA's turn
 		if (mem0_next_read == VGA) vga_pixel = mem0_read;
 		else if (mem1_next_read == VGA) vga_pixel = mem1_read;
-		else vga_pixel = 0;
+		else vga_pixel = prev_vga_pixel;
 
 		// shifting of queue on next cycle
 		next_mem0_read_queue[QUEUE_LENGTH*LOG_ORD-1:LOG_ORD] = mem0_read_queue[(QUEUE_LENGTH-1)*LOG_ORD-1:0];
@@ -254,6 +259,10 @@ module memory_interface
 		// update read queues
 		mem0_read_queue <= next_mem0_read_queue;
 		mem1_read_queue <= next_mem1_read_queue;
+
+		// retain previous output pixel values
+		prev_vga_pixel <= vga_pixel;
+		prev_lpf_pixel_read <= lpf_pixel_read;
 	end
 endmodule
 

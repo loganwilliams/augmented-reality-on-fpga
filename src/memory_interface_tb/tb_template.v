@@ -30,8 +30,8 @@
 	wire [`LOG_ADDR-1:0] mem0_addr;
 	wire [`LOG_ADDR-1:0] mem1_addr;
 	// MEM READ	
-	reg [`LOG_MEM-1:0] mem0_read;
-	reg [`LOG_MEM-1:0] mem1_read;
+	wire [`LOG_MEM-1:0] mem0_read;
+	wire [`LOG_MEM-1:0] mem1_read;
 	// MEM WRITE
 	wire [`LOG_MEM-1:0] mem0_write;
 	wire [`LOG_MEM-1:0] mem1_write;
