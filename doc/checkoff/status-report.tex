@@ -22,7 +22,7 @@
 % expected completion timeline, problems and solutions that you envision.
 
 \section{{\tt projective\_transform} (Logan)}
-\subsection{Status} The first draft of this module is complete, and in the process of being tested. A test bench is in progress that will test the following functionality in an automated manner: correctly calculating distances and iterator incrementors; outputs pixel data with correct skewed coordinates; can output these pixels in steady state at a rate of one per clock cycle.
+\subsection{Status} This module is completely written and almost completely tested. Tested functionality includes correctly calculating distance and iterator incrementors, requesting pixels at a rate of one per clock cycle, and correctly outputting coordinates for skewed pixels. A test bench still needs to be written that tests the modules ability to respond to delays in {\tt memory\_interface} and to ``unexpected'' new frame events.
 \subsection{Possible Issues} There might be some timing issues with the dividers and square rooters, as each has a long latency (20 and 24 clock cycles respectively), so that they are pipelined correctly at the end of each line.
 
 \section{{\tt memory\_interface} (Jos\'{e})}
@@ -30,15 +30,15 @@
 \subsection{Possible Issues} There might be some difficulty in handling multiple requests. Code has been written that should handle these requests appropriately. If this code does not work conceptually due to previously unconsidered properties of the ZBT RAM, the clock frequency of the RAM could be elevated slightly, so as to give the RAM more cycles to handle the different streams of memory accesses.
 
 \section{{\tt object\_recognition} (Logan)}
-\subsection{Status} This module has not been started yet, although its implementation should be straightforward. {\tt object\_recognition} will just have to sum several values, and then use a divider module that is in the process of being tested for {\tt projective\_transform}.
-\subsection{Possible Issues}
+\subsection{Status} This module has not been started yet, although its implementation should be straightforward. {\tt object\_recognition} will just have to sum several values, and then use a divider module that has already been tested in {\tt projective\_transform}. To calculate downsampling coefficients, it will use the same {\tt sqrt} module as {\tt projective\_transform} uses.
+\subsection{Possible Issues} No issues are foreseen with this module, as both of the tricky submodules, {\tt divider} and {\tt sqrt} have already been tested in {\tt projective\_transform}.
 
 \section{{\tt LPF} (Jos\'{e})}
 \subsection{Status} This module has not been started yet, although its implementation should be straightforward. {\tt LPF} will simply pass along pixels to {\tt projective\_transform} until we will use the {\tt LPF}.
 \subsection{Possible Issues} The only foreseeable issue with {\tt LPF} is that we might not have time to complete it. Because it is not a requirement for functionality, work will only be started on it if time permits.
 
 \section{{\tt ntsc\_capture} (Logan)}
-\subsection{Status} An initial draft of this module has been written, but is untested. This draft implements all functionality that was proposed, including storing color pixels, and recognizing specific colors. The next step is to write a test bench that can test this functionality
+\subsection{Status} An initial draft of this module has been written, but is untested. This draft implements all functionality that was proposed, including storing color pixels, and recognizing specific colors. The next step is to write a test bench that will test this functionality.
 \subsection{Possible Issues} There may be some issues with correctly identifying the markers on the corners of the picture frame. This will likely take some experimenting to determine the best threshold values to use for color identification.
 
 \section{{\tt vga\_display} (Jos\'{e})}
