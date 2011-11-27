@@ -43,13 +43,49 @@ module test_pt_fetcher();
 
       #20;
 
+      if (ptf_x != 123 || ptf_y != 321 || ptf_wr = 1) begin
+	 $display("Not requesting appropriate pixel");
+	 $stop();
+      end
+
+      // send next pixel
       pt_x = 234;
       pt_y = 432;
       pt_pixel = 23456;
 
+      ptf_pixel_read = 36b'101010101010101010101010101010101010';
+
       #20;
 
-      
+      if (done_pt) begin
+	 $display("Should tell pt to wait");
+	 $stop();
+      end
+
+      if (ptf_x != 122 || ptf_y != 321 || ptf_wr = 0) begin
+	 $display("Not writing appropriate pixel");
+      end
+
+      if (ptf_pixel_write[35:18] != 18b'101010101010101010 ||
+	  ptf_pixel_write[17:0] != 12345) begin
+	 $display("Did not concatenate pixel correctly.");
+      end
+
+      #20;
+
+      if (done_pt) begin
+	 $display("Should tell pt to wait");
+	 $stop();
+      end
+
+      if (ptf_x != 234 || ptf_y != 432 || ptf_wr = 0) begin
+	 $display("Not writing appropriate pixel");
+      end
+     
+      if (ptf_pixel_write[17:0] != 18b'101010101010101010 ||
+	  ptf_pixel_write[35:18] != 23456) begin
+	 $display("Did not concatenate pixel correctly.");
+      end
 
       
    end
