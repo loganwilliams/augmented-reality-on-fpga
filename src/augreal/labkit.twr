@@ -1,0 +1,144 @@
+--------------------------------------------------------------------------------
+Release 10.1.03 Trace  (lin64)
+Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
+
+/afs/csail.mit.edu/proj/redsocs/Xilinx10.1/ISE/bin/lin64/unwrapped/trce -ise
+/afs/athena.mit.edu/user/l/o/loganw/Documents/6.111/augmented-reality-on-fpga/src/augreal/augreal.ise
+-intstyle ise -v 3 -s 4 -xml labkit labkit.ncd -o labkit.twr labkit.pcf -ucf
+labkit.ucf
+
+Design file:              labkit.ncd
+Physical constraint file: labkit.pcf
+Device,package,speed:     xc2v6000,bf957,-4 (PRODUCTION 1.121 2008-07-25, STEPPING level 0)
+Report level:             verbose report
+
+Environment Variable      Effect 
+--------------------      ------ 
+NONE                      No environment variables were set
+--------------------------------------------------------------------------------
+
+INFO:Timing:2698 - No timing constraints found, doing default enumeration.
+INFO:Timing:2752 - To get complete path coverage, use the unconstrained paths 
+   option. All paths that are not constrained will be reported in the 
+   unconstrained paths section(s) of the report.
+INFO:Timing:3339 - The clock-to-out numbers in this timing report are based on 
+   a 50 Ohm transmission line loading model.  For the details of this model, 
+   and for more information on accounting for different loading conditions, 
+   please see the device datasheet.
+
+
+
+Data Sheet report:
+-----------------
+All values displayed in nanoseconds (ns)
+
+Setup/Hold to clock clock_27mhz
+---------------+------------+------------+--------------------+--------+
+               |  Setup to  |  Hold to   |                    | Clock  |
+Source         | clk (edge) | clk (edge) |Internal Clock(s)   | Phase  |
+---------------+------------+------------+--------------------+--------+
+tv_in_ycrcb<16>|    6.144(R)|   -4.503(R)|analyzer1_clock_OBUF|   0.000|
+tv_in_ycrcb<17>|    6.777(R)|   -5.385(R)|analyzer1_clock_OBUF|   0.000|
+---------------+------------+------------+--------------------+--------+
+
+Setup/Hold to clock tv_in_line_clock1
+---------------+------------+------------+-----------------------+--------+
+               |  Setup to  |  Hold to   |                       | Clock  |
+Source         | clk (edge) | clk (edge) |Internal Clock(s)      | Phase  |
+---------------+------------+------------+-----------------------+--------+
+tv_in_ycrcb<10>|   12.042(R)|   -6.919(R)|tv_in_line_clock1_BUFGP|   0.000|
+tv_in_ycrcb<11>|   10.890(R)|   -6.374(R)|tv_in_line_clock1_BUFGP|   0.000|
+tv_in_ycrcb<12>|    9.783(R)|   -5.689(R)|tv_in_line_clock1_BUFGP|   0.000|
+tv_in_ycrcb<13>|   10.230(R)|   -4.584(R)|tv_in_line_clock1_BUFGP|   0.000|
+tv_in_ycrcb<14>|   14.484(R)|   -6.704(R)|tv_in_line_clock1_BUFGP|   0.000|
+tv_in_ycrcb<15>|    8.428(R)|   -4.866(R)|tv_in_line_clock1_BUFGP|   0.000|
+tv_in_ycrcb<16>|   10.394(R)|   -5.602(R)|tv_in_line_clock1_BUFGP|   0.000|
+tv_in_ycrcb<17>|   10.035(R)|   -5.835(R)|tv_in_line_clock1_BUFGP|   0.000|
+tv_in_ycrcb<18>|    7.350(R)|   -3.952(R)|tv_in_line_clock1_BUFGP|   0.000|
+tv_in_ycrcb<19>|    8.840(R)|   -3.542(R)|tv_in_line_clock1_BUFGP|   0.000|
+---------------+------------+------------+-----------------------+--------+
+
+Clock clock_27mhz to Pad
+------------------+------------+--------------------+--------+
+                  | clk (edge) |                    | Clock  |
+Destination       |   to PAD   |Internal Clock(s)   | Phase  |
+------------------+------------+--------------------+--------+
+analyzer1_data<0> |   12.444(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<1> |   11.931(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<2> |   12.749(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<3> |   11.231(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<4> |   12.949(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<5> |   12.120(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<6> |   12.151(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<7> |   12.825(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<8> |   13.163(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<9> |   12.959(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<10>|   13.038(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<11>|   13.954(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<12>|   13.996(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<13>|   14.488(R)|analyzer1_clock_OBUF|   0.000|
+analyzer1_data<14>|   14.377(R)|analyzer1_clock_OBUF|   0.000|
+------------------+------------+--------------------+--------+
+
+Clock tv_in_line_clock1 to Pad
+------------------+------------+-----------------------+--------+
+                  | clk (edge) |                       | Clock  |
+Destination       |   to PAD   |Internal Clock(s)      | Phase  |
+------------------+------------+-----------------------+--------+
+analyzer3_data<15>|   18.401(R)|tv_in_line_clock1_BUFGP|   0.000|
+------------------+------------+-----------------------+--------+
+
+Clock to Setup on destination clock clock_27mhz
+-----------------+---------+---------+---------+---------+
+                 | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock     |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+-----------------+---------+---------+---------+---------+
+clock_27mhz      |    5.391|         |         |         |
+tv_in_line_clock1|    7.015|         |         |         |
+-----------------+---------+---------+---------+---------+
+
+Clock to Setup on destination clock tv_in_line_clock1
+-----------------+---------+---------+---------+---------+
+                 | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock     |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+-----------------+---------+---------+---------+---------+
+clock_27mhz      |    7.019|         |         |         |
+tv_in_line_clock1|    5.300|         |         |         |
+-----------------+---------+---------+---------+---------+
+
+Pad to Pad
+---------------+------------------+---------+
+Source Pad     |Destination Pad   |  Delay  |
+---------------+------------------+---------+
+clock_27mhz    |analyzer1_clock   |   11.658|
+clock_27mhz    |analyzer3_clock   |   10.271|
+clock_27mhz    |tv_in_clock       |   13.783|
+tv_in_ycrcb<5> |analyzer3_data<0> |    5.922|
+tv_in_ycrcb<6> |analyzer3_data<1> |    6.391|
+tv_in_ycrcb<7> |analyzer3_data<2> |    6.699|
+tv_in_ycrcb<8> |analyzer3_data<3> |    7.680|
+tv_in_ycrcb<9> |analyzer3_data<4> |    8.385|
+tv_in_ycrcb<10>|analyzer3_data<5> |   11.996|
+tv_in_ycrcb<11>|analyzer3_data<6> |   11.330|
+tv_in_ycrcb<12>|analyzer3_data<7> |   12.358|
+tv_in_ycrcb<13>|analyzer3_data<8> |   11.182|
+tv_in_ycrcb<14>|analyzer3_data<9> |   10.707|
+tv_in_ycrcb<15>|analyzer3_data<10>|   12.594|
+tv_in_ycrcb<16>|analyzer3_data<11>|   12.412|
+tv_in_ycrcb<17>|analyzer3_data<12>|   11.689|
+tv_in_ycrcb<18>|analyzer3_data<13>|   14.988|
+tv_in_ycrcb<19>|analyzer3_data<14>|   14.993|
+---------------+------------------+---------+
+
+
+Analysis completed Mon Nov 28 15:10:38 2011 
+--------------------------------------------------------------------------------
+
+Trace Settings:
+-------------------------
+Trace Settings 
+
+Peak Memory Usage: 337 MB
+
+
+
