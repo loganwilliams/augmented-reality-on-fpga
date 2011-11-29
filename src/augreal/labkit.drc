@@ -1,3 +1,9 @@
+WARNING:PhysDesignRules:372 - Gated clock. Clock net fvh<0> is sourced by a
+   combinatorial pin. This is not good design practice. Use the CE pin to
+   control the loading of data into the flip-flop.
+WARNING:PhysDesignRules:372 - Gated clock. Clock net fvh<1> is sourced by a
+   combinatorial pin. This is not good design practice. Use the CE pin to
+   control the loading of data into the flip-flop.
 WARNING:PhysDesignRules:367 - The signal <disp_data_in_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <tv_in_data_valid_IBUF> is incomplete.
@@ -504,5 +510,5 @@ INFO:PhysDesignRules:772 - To achieve optimal frequency synthesis performance
 INFO:PhysDesignRules:772 - To achieve optimal frequency synthesis performance
    with the CLKFX and CLKFX180 outputs of the DCM comp vclk3, consult the device
    Interactive Data Sheet.
-DRC detected 0 errors and 250 warnings.  Please see the previously displayed
+DRC detected 0 errors and 252 warnings.  Please see the previously displayed
 individual error or warning messages for more details.

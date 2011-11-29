@@ -26,8 +26,14 @@ To see the details of these <arg fmt="%s" index="5">warning</arg> messages, plea
 <msg type="info" file="LIT" num="244" delta="unknown" >All of the single ended outputs in this design are using slew rate limited output drivers. The delay on speed critical single ended outputs can be dramatically reduced by designating them as fast outputs.
 </msg>
 
-<msg type="warning" file="LIT" num="176" delta="unknown" >Clock buffer is designated to drive clock loads. <arg fmt="%s" index="1">BUFGMUX symbol &quot;physical_group_clock_25mhz/vclk4&quot; (output signal=clock_25mhz)</arg> has a mix of clock and non-clock loads. The non-clock loads are:
+<msg type="warning" file="LIT" num="176" delta="unknown" >Clock buffer is designated to drive clock loads. <arg fmt="%s" index="1">BUFGMUX symbol &quot;physical_group_analyzer4_clock_OBUF/vclk4&quot; (output signal=analyzer4_clock_OBUF)</arg> has a mix of clock and non-clock loads. The non-clock loads are:
 <arg fmt="%s" index="2">Pin CLR of vga/vga_out_pixel_clock</arg>
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="372" delta="unknown" >Gated clock. Clock net <arg fmt="%s" index="1">fvh&lt;0&gt;</arg> is sourced by a combinatorial pin. This is not good design practice. Use the CE pin to control the loading of data into the flip-flop.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="372" delta="unknown" >Gated clock. Clock net <arg fmt="%s" index="1">fvh&lt;1&gt;</arg> is sourced by a combinatorial pin. This is not good design practice. Use the CE pin to control the loading of data into the flip-flop.
 </msg>
 
 <msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">disp_data_in_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.

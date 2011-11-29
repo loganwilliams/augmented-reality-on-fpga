@@ -1,5 +1,6 @@
 verilog work "ycbcr2rgb.v"
 verilog work "vga_write.v"
+verilog work "test_ntsc_clean.v"
 verilog work "ntsc_capture.v"
 verilog work "memory_interface.v"
 verilog work "labkit.v"

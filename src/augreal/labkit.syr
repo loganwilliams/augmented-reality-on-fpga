@@ -114,14 +114,21 @@ Compiling verilog file "vga_write.v" in library work
 Compiling verilog include file "params.v"
 Module <ycbcr2rgb> compiled
 Module <vga_write> compiled
-Compiling verilog file "ntsc_capture.v" in library work
+Compiling verilog file "test_ntsc_clean.v" in library work
+Compiling verilog include file "ntsc_clean.v"
 Module <xvga> compiled
+Module <ntsc_clean> compiled
+Compiling verilog file "ntsc_capture.v" in library work
+Module <test_ntsc_clean> compiled
+Module <synchronize> compiled
 Module <ntsc_capture> compiled
 Module <ntsc_decode> compiled
 Module <adv7185init> compiled
 Compiling verilog file "memory_interface.v" in library work
 Compiling verilog include file "params.v"
 Module <i2c> compiled
+WARNING:HDLCompilers:298 - "memory_interface.v" line 61 Too many digits specified in decimal constant
+WARNING:HDLCompilers:298 - "memory_interface.v" line 62 Too many digits specified in decimal constant
 Compiling verilog file "labkit.v" in library work
 Compiling verilog include file "params.v"
 Module <memory_interface> compiled
@@ -139,6 +146,8 @@ Analyzing hierarchy for module <labkit> in library <work>.
 Analyzing hierarchy for module <ramclock> in library <work>.
 
 Analyzing hierarchy for module <ntsc_capture> in library <work>.
+
+Analyzing hierarchy for module <ntsc_clean> in library <work>.
 
 Analyzing hierarchy for module <memory_interface> in library <work> with parameters.
 	LOG_ORD = "00000000000000000000000000000100"
@@ -178,6 +187,8 @@ Analyzing hierarchy for module <ntsc_decode> in library <work> with parameters.
 	SYNC_2 = "00000000000000000000000000000001"
 	SYNC_3 = "00000000000000000000000000000010"
 
+Analyzing hierarchy for module <synchronize> in library <work>.
+
 Analyzing hierarchy for module <xvga> in library <work>.
 
 Analyzing hierarchy for module <ycbcr2rgb> in library <work> with parameters.
@@ -190,43 +201,43 @@ Analyzing hierarchy for module <ycbcr2rgb> in library <work> with parameters.
 
 Analyzing hierarchy for module <i2c> in library <work>.
 
-WARNING:Xst:2591 - "labkit.v" line 215: attribute on instance <CLKFX_DIVIDE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 215: attribute on instance <CLKFX_MULTIPLY> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 215: attribute on instance <CLKIN_PERIOD> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 215: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 224: attribute on instance <CLKFX_DIVIDE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 224: attribute on instance <CLKFX_MULTIPLY> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 224: attribute on instance <CLKIN_PERIOD> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 224: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <CLKOUT_PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <DFS_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <DLL_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <DUTY_CYCLE_CORRECTION> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <STARTUP_WAIT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <CLKOUT_PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <DFS_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <DLL_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <DUTY_CYCLE_CORRECTION> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <STARTUP_WAIT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 451: attribute on instance <INIT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 197: attribute on instance <CLKFX_DIVIDE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 197: attribute on instance <CLKFX_MULTIPLY> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 197: attribute on instance <CLKIN_PERIOD> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 197: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 206: attribute on instance <CLKFX_DIVIDE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 206: attribute on instance <CLKFX_MULTIPLY> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 206: attribute on instance <CLKIN_PERIOD> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 206: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 501: attribute on instance <CLKOUT_PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 501: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 501: attribute on instance <DFS_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 501: attribute on instance <DLL_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 501: attribute on instance <DUTY_CYCLE_CORRECTION> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 501: attribute on instance <PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 501: attribute on instance <STARTUP_WAIT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 518: attribute on instance <CLKOUT_PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 518: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 518: attribute on instance <DFS_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 518: attribute on instance <DLL_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 518: attribute on instance <DUTY_CYCLE_CORRECTION> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 518: attribute on instance <PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 518: attribute on instance <STARTUP_WAIT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 531: attribute on instance <INIT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
 
 =========================================================================
 *                            HDL Analysis                               *
 =========================================================================
 Analyzing top module <labkit>.
-WARNING:Xst:852 - "labkit.v" line 378: Unconnected input port 'lpf_flag' of instance 'mi' is tied to GND.
-WARNING:Xst:852 - "labkit.v" line 378: Unconnected input port 'lpf_wr' of instance 'mi' is tied to GND.
-WARNING:Xst:852 - "labkit.v" line 378: Unconnected input port 'lpf_x' of instance 'mi' is tied to GND.
-WARNING:Xst:852 - "labkit.v" line 378: Unconnected input port 'lpf_y' of instance 'mi' is tied to GND.
-WARNING:Xst:852 - "labkit.v" line 378: Unconnected input port 'lpf_pixel_write' of instance 'mi' is tied to GND.
-WARNING:Xst:852 - "labkit.v" line 378: Unconnected input port 'pt_flag' of instance 'mi' is tied to GND.
-WARNING:Xst:852 - "labkit.v" line 378: Unconnected input port 'pt_x' of instance 'mi' is tied to GND.
-WARNING:Xst:852 - "labkit.v" line 378: Unconnected input port 'pt_y' of instance 'mi' is tied to GND.
-WARNING:Xst:852 - "labkit.v" line 378: Unconnected input port 'pt_pixel' of instance 'mi' is tied to GND.
+WARNING:Xst:852 - "labkit.v" line 419: Unconnected input port 'lpf_flag' of instance 'mi' is tied to GND.
+WARNING:Xst:852 - "labkit.v" line 419: Unconnected input port 'lpf_wr' of instance 'mi' is tied to GND.
+WARNING:Xst:852 - "labkit.v" line 419: Unconnected input port 'lpf_x' of instance 'mi' is tied to GND.
+WARNING:Xst:852 - "labkit.v" line 419: Unconnected input port 'lpf_y' of instance 'mi' is tied to GND.
+WARNING:Xst:852 - "labkit.v" line 419: Unconnected input port 'lpf_pixel_write' of instance 'mi' is tied to GND.
+WARNING:Xst:852 - "labkit.v" line 419: Unconnected input port 'pt_flag' of instance 'mi' is tied to GND.
+WARNING:Xst:852 - "labkit.v" line 419: Unconnected input port 'pt_x' of instance 'mi' is tied to GND.
+WARNING:Xst:852 - "labkit.v" line 419: Unconnected input port 'pt_y' of instance 'mi' is tied to GND.
+WARNING:Xst:852 - "labkit.v" line 419: Unconnected input port 'pt_pixel' of instance 'mi' is tied to GND.
 Module <labkit> is correct for synthesis.
  
     Set user-defined property "CLKDV_DIVIDE =  2.0000000000000000" for instance <vclk1> in unit <labkit>.
@@ -305,39 +316,39 @@ Analyzing module <ntsc_capture> in library <work>.
 Module <ntsc_capture> is correct for synthesis.
  
 Analyzing module <adv7185init> in library <work>.
-"ntsc_capture.v" line 677: $display : ADV7185 Initialization values:
-WARNING:Xst:2326 - "ntsc_capture.v" line 678: Invalid escape sequence : %X.
-"ntsc_capture.v" line 678: $display :   Register 0:  0x%X 0
-WARNING:Xst:2326 - "ntsc_capture.v" line 679: Invalid escape sequence : %X.
-"ntsc_capture.v" line 679: $display :   Register 1:  0x%X128
-WARNING:Xst:2326 - "ntsc_capture.v" line 680: Invalid escape sequence : %X.
-"ntsc_capture.v" line 680: $display :   Register 2:  0x%X 4
-WARNING:Xst:2326 - "ntsc_capture.v" line 681: Invalid escape sequence : %X.
-"ntsc_capture.v" line 681: $display :   Register 3:  0x%X 0
-WARNING:Xst:2326 - "ntsc_capture.v" line 682: Invalid escape sequence : %X.
-"ntsc_capture.v" line 682: $display :   Register 4:  0x%X12
-WARNING:Xst:2326 - "ntsc_capture.v" line 683: Invalid escape sequence : %X.
-"ntsc_capture.v" line 683: $display :   Register 5:  0x%X64
-WARNING:Xst:2326 - "ntsc_capture.v" line 684: Invalid escape sequence : %X.
-"ntsc_capture.v" line 684: $display :   Register 7:  0x%X144
-WARNING:Xst:2326 - "ntsc_capture.v" line 685: Invalid escape sequence : %X.
-"ntsc_capture.v" line 685: $display :   Register 8:  0x%X128
-WARNING:Xst:2326 - "ntsc_capture.v" line 686: Invalid escape sequence : %X.
-"ntsc_capture.v" line 686: $display :   Register 9:  0x%X140
-WARNING:Xst:2326 - "ntsc_capture.v" line 687: Invalid escape sequence : %X.
-"ntsc_capture.v" line 687: $display :   Register A:  0x%X 0
-WARNING:Xst:2326 - "ntsc_capture.v" line 688: Invalid escape sequence : %X.
-"ntsc_capture.v" line 688: $display :   Register B:  0x%X 0
-WARNING:Xst:2326 - "ntsc_capture.v" line 689: Invalid escape sequence : %X.
-"ntsc_capture.v" line 689: $display :   Register C:  0x%X48
-WARNING:Xst:2326 - "ntsc_capture.v" line 690: Invalid escape sequence : %X.
-"ntsc_capture.v" line 690: $display :   Register D:  0x%X136
-WARNING:Xst:2326 - "ntsc_capture.v" line 691: Invalid escape sequence : %X.
-"ntsc_capture.v" line 691: $display :   Register E:  0x%X 0
-WARNING:Xst:2326 - "ntsc_capture.v" line 692: Invalid escape sequence : %X.
-"ntsc_capture.v" line 692: $display :   Register F:  0x%X 0
-WARNING:Xst:2326 - "ntsc_capture.v" line 693: Invalid escape sequence : %X.
-"ntsc_capture.v" line 693: $display :   Register 33: 0x%X227
+"ntsc_capture.v" line 698: $display : ADV7185 Initialization values:
+WARNING:Xst:2326 - "ntsc_capture.v" line 699: Invalid escape sequence : %X.
+"ntsc_capture.v" line 699: $display :   Register 0:  0x%X 0
+WARNING:Xst:2326 - "ntsc_capture.v" line 700: Invalid escape sequence : %X.
+"ntsc_capture.v" line 700: $display :   Register 1:  0x%X128
+WARNING:Xst:2326 - "ntsc_capture.v" line 701: Invalid escape sequence : %X.
+"ntsc_capture.v" line 701: $display :   Register 2:  0x%X 4
+WARNING:Xst:2326 - "ntsc_capture.v" line 702: Invalid escape sequence : %X.
+"ntsc_capture.v" line 702: $display :   Register 3:  0x%X 0
+WARNING:Xst:2326 - "ntsc_capture.v" line 703: Invalid escape sequence : %X.
+"ntsc_capture.v" line 703: $display :   Register 4:  0x%X12
+WARNING:Xst:2326 - "ntsc_capture.v" line 704: Invalid escape sequence : %X.
+"ntsc_capture.v" line 704: $display :   Register 5:  0x%X64
+WARNING:Xst:2326 - "ntsc_capture.v" line 705: Invalid escape sequence : %X.
+"ntsc_capture.v" line 705: $display :   Register 7:  0x%X144
+WARNING:Xst:2326 - "ntsc_capture.v" line 706: Invalid escape sequence : %X.
+"ntsc_capture.v" line 706: $display :   Register 8:  0x%X128
+WARNING:Xst:2326 - "ntsc_capture.v" line 707: Invalid escape sequence : %X.
+"ntsc_capture.v" line 707: $display :   Register 9:  0x%X140
+WARNING:Xst:2326 - "ntsc_capture.v" line 708: Invalid escape sequence : %X.
+"ntsc_capture.v" line 708: $display :   Register A:  0x%X 0
+WARNING:Xst:2326 - "ntsc_capture.v" line 709: Invalid escape sequence : %X.
+"ntsc_capture.v" line 709: $display :   Register B:  0x%X 0
+WARNING:Xst:2326 - "ntsc_capture.v" line 710: Invalid escape sequence : %X.
+"ntsc_capture.v" line 710: $display :   Register C:  0x%X48
+WARNING:Xst:2326 - "ntsc_capture.v" line 711: Invalid escape sequence : %X.
+"ntsc_capture.v" line 711: $display :   Register D:  0x%X136
+WARNING:Xst:2326 - "ntsc_capture.v" line 712: Invalid escape sequence : %X.
+"ntsc_capture.v" line 712: $display :   Register E:  0x%X 0
+WARNING:Xst:2326 - "ntsc_capture.v" line 713: Invalid escape sequence : %X.
+"ntsc_capture.v" line 713: $display :   Register F:  0x%X 0
+WARNING:Xst:2326 - "ntsc_capture.v" line 714: Invalid escape sequence : %X.
+"ntsc_capture.v" line 714: $display :   Register 33: 0x%X227
 Module <adv7185init> is correct for synthesis.
  
     Set user-defined property "INIT =  0" for signal <clock_slow>.
@@ -364,6 +375,12 @@ Analyzing module <ntsc_decode> in library <work>.
 	SYNC_2 = 32'sb00000000000000000000000000000001
 	SYNC_3 = 32'sb00000000000000000000000000000010
 Module <ntsc_decode> is correct for synthesis.
+ 
+Analyzing module <synchronize> in library <work>.
+Module <synchronize> is correct for synthesis.
+ 
+Analyzing module <ntsc_clean> in library <work>.
+Module <ntsc_clean> is correct for synthesis.
  
 Analyzing module <memory_interface> in library <work>.
 	LOG_ORD = 32'sb00000000000000000000000000000100
@@ -415,6 +432,15 @@ INFO:Xst:2561 - Always blocking tristate driving signal <daughtercard> in unit <
 INFO:Xst:2561 - Always blocking tristate driving signal <systemace_data> in unit <labkit> is removed.
 INFO:Xst:2679 - Register <i> in unit <vga_write> has a constant value of 100 during circuit operation. The register is replaced by logic.
 
+Synthesizing Unit <ntsc_clean>.
+    Related source file is "ntsc_clean.v".
+    Found 1-bit register for signal <clean_ntsc_flag>.
+    Found 1-bit register for signal <state>.
+    Summary:
+	inferred   2 D-type flip-flop(s).
+Unit <ntsc_clean> synthesized.
+
+
 Synthesizing Unit <memory_interface>.
     Related source file is "memory_interface.v".
 WARNING:Xst:647 - Input <pt_pixel> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
@@ -429,7 +455,6 @@ WARNING:Xst:1780 - Signal <ptf_x<0>> is never used or assigned. This unconnected
 WARNING:Xst:653 - Signal <ptf_wr> is used but never assigned. This sourceless signal will be automatically connected to value 0.
 WARNING:Xst:653 - Signal <ptf_pixel_write> is used but never assigned. This sourceless signal will be automatically connected to value 000000000000000000000000000000000000.
 WARNING:Xst:653 - Signal <ptf_flag> is used but never assigned. This sourceless signal will be automatically connected to value 0.
-WARNING:Xst:646 - Signal <prev_vga_pixel<35:24>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <next_proc_mem_loc> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <next_proc_mem_block> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <next_nexd_mem_loc> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
@@ -445,24 +470,25 @@ WARNING:Xst:646 - Signal <mem0_done> is assigned but never used. This unconnecte
 WARNING:Xst:646 - Signal <done_ptf> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:737 - Found 36-bit latch for signal <mem0_write>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
 WARNING:Xst:737 - Found 36-bit latch for signal <mem1_write>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
-WARNING:Xst:643 - "memory_interface.v" line 250: The result of a 2x18-bit multiplication is partially used. Only the 19 least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
-WARNING:Xst:643 - "memory_interface.v" line 251: The result of a 2x18-bit multiplication is partially used. Only the 19 least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
-WARNING:Xst:643 - "memory_interface.v" line 256: The result of a 2x18-bit multiplication is partially used. Only the 19 least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
 WARNING:Xst:643 - "memory_interface.v" line 257: The result of a 2x18-bit multiplication is partially used. Only the 19 least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
+WARNING:Xst:643 - "memory_interface.v" line 258: The result of a 2x18-bit multiplication is partially used. Only the 19 least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
+WARNING:Xst:643 - "memory_interface.v" line 263: The result of a 2x18-bit multiplication is partially used. Only the 19 least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
+WARNING:Xst:643 - "memory_interface.v" line 264: The result of a 2x18-bit multiplication is partially used. Only the 19 least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
+    Found 36-bit 4-to-1 multiplexer for signal <vga_pixel>.
     Found 36-bit 4-to-1 multiplexer for signal <lpf_pixel_read>.
     Found 1-bit register for signal <capt_mem_block>.
     Found 2-bit register for signal <capt_mem_loc>.
     Found 1-bit register for signal <disp_mem_block>.
     Found 2-bit register for signal <disp_mem_loc>.
-    Found 2x18-bit multiplier for signal <lpf_addr$mult0001> created at line 250.
+    Found 2x18-bit multiplier for signal <lpf_addr$mult0001> created at line 257.
     Found 8-bit register for signal <mem0_read_queue>.
     Found 8-bit register for signal <mem1_read_queue>.
     Found 1-bit register for signal <nexd_mem_block>.
     Found 2-bit register for signal <nexd_mem_loc>.
-    Found 19-bit adder for signal <next_ntsc_addr$addsub0000> created at line 261.
-    Found 2x18-bit multiplier for signal <next_ntsc_addr$mult0001> created at line 256.
-    Found 19-bit adder for signal <next_vga_addr$addsub0000> created at line 262.
-    Found 2x18-bit multiplier for signal <next_vga_addr$mult0001> created at line 257.
+    Found 19-bit adder for signal <next_ntsc_addr$addsub0000> created at line 268.
+    Found 2x18-bit multiplier for signal <next_ntsc_addr$mult0001> created at line 263.
+    Found 19-bit adder for signal <next_vga_addr$addsub0000> created at line 269.
+    Found 2x18-bit multiplier for signal <next_vga_addr$mult0001> created at line 264.
     Found 19-bit register for signal <ntsc_addr>.
     Found 36-bit register for signal <prev_lpf_pixel_read>.
     Found 36-bit register for signal <prev_ptf_pixel_read>.
@@ -470,14 +496,14 @@ WARNING:Xst:643 - "memory_interface.v" line 257: The result of a 2x18-bit multip
     Found 1-bit register for signal <proc_mem_block>.
     Found 2-bit register for signal <proc_mem_loc>.
     Found 19-bit adder for signal <ptf_addr>.
-    Found 18-bit adder carry out for signal <ptf_addr$addsub0001> created at line 251.
-    Found 2x18-bit multiplier for signal <ptf_addr$mult0001> created at line 251.
+    Found 18-bit adder carry out for signal <ptf_addr$addsub0001> created at line 258.
+    Found 2x18-bit multiplier for signal <ptf_addr$mult0001> created at line 258.
     Found 19-bit register for signal <vga_addr>.
     Summary:
 	inferred 174 D-type flip-flop(s).
 	inferred   4 Adder/Subtractor(s).
 	inferred   4 Multiplier(s).
-	inferred  36 Multiplexer(s).
+	inferred  72 Multiplexer(s).
 Unit <memory_interface> synthesized.
 
 
@@ -491,6 +517,12 @@ Synthesizing Unit <ntsc_decode>.
     Summary:
 	inferred  36 D-type flip-flop(s).
 Unit <ntsc_decode> synthesized.
+
+
+Synthesizing Unit <synchronize>.
+    Related source file is "ntsc_capture.v".
+WARNING:Xst:737 - Found 1-bit latch for signal <syncsig>. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
+Unit <synchronize> synthesized.
 
 
 Synthesizing Unit <i2c>.
@@ -674,25 +706,29 @@ WARNING:Xst:646 - Signal <ycrcb<4:0>> is assigned but never used. This unconnect
     Found 10-bit register for signal <interesting_x>.
     Found 9-bit register for signal <interesting_y>.
     Found 1-bit register for signal <frame_flag>.
-    Found 10-bit comparator greatequal for signal <color$cmp_ge0000> created at line 135.
-    Found 10-bit comparator greatequal for signal <color$cmp_ge0001> created at line 135.
-    Found 10-bit comparator lessequal for signal <color$cmp_le0000> created at line 126.
-    Found 10-bit comparator lessequal for signal <color$cmp_le0001> created at line 117.
-    Found 9-bit comparator greatequal for signal <frame_flag$cmp_ge0000> created at line 67.
-    Found 9-bit comparator greater for signal <interesting_flag$cmp_gt0000> created at line 80.
-    Found 10-bit comparator greater for signal <interesting_flag$cmp_gt0001> created at line 108.
-    Found 10-bit comparator greater for signal <interesting_flag$cmp_gt0002> created at line 108.
-    Found 10-bit comparator less for signal <interesting_flag$cmp_lt0000> created at line 117.
-    Found 10-bit comparator less for signal <interesting_flag$cmp_lt0001> created at line 126.
+    Found 10-bit comparator greatequal for signal <color$cmp_ge0000> created at line 154.
+    Found 10-bit comparator greatequal for signal <color$cmp_ge0001> created at line 154.
+    Found 10-bit comparator lessequal for signal <color$cmp_le0000> created at line 145.
+    Found 10-bit comparator lessequal for signal <color$cmp_le0001> created at line 136.
+    Found 9-bit comparator greater for signal <frame_flag$cmp_gt0000> created at line 88.
+    Found 10-bit comparator greater for signal <interesting_flag$cmp_gt0000> created at line 127.
+    Found 10-bit comparator greater for signal <interesting_flag$cmp_gt0001> created at line 127.
+    Found 10-bit comparator less for signal <interesting_flag$cmp_lt0000> created at line 136.
+    Found 10-bit comparator less for signal <interesting_flag$cmp_lt0001> created at line 145.
     Found 1-bit register for signal <pulseonce>.
+    Found 1-bit register for signal <rh>.
+    Found 1-bit register for signal <rv>.
     Found 1-bit register for signal <state>.
-    Found 10-bit adder for signal <x$addsub0000> created at line 99.
-    Found 9-bit comparator lessequal for signal <x$cmp_le0000> created at line 80.
-    Found 9-bit adder for signal <y$addsub0000> created at line 78.
+    Found 10-bit adder for signal <x$addsub0000> created at line 118.
+    Found 9-bit comparator greatequal for signal <x$cmp_ge0000> created at line 99.
+    Found 10-bit comparator greatequal for signal <x$cmp_ge0001> created at line 99.
+    Found 9-bit comparator less for signal <x$cmp_lt0000> created at line 99.
+    Found 10-bit comparator less for signal <x$cmp_lt0001> created at line 99.
+    Found 9-bit adder for signal <y$addsub0000> created at line 79.
     Summary:
-	inferred  81 D-type flip-flop(s).
+	inferred  83 D-type flip-flop(s).
 	inferred   2 Adder/Subtractor(s).
-	inferred  11 Comparator(s).
+	inferred  13 Comparator(s).
 Unit <ntsc_capture> synthesized.
 
 
@@ -932,8 +968,12 @@ WARNING:Xst:2565 - Inout <user3<2>> is never assigned.
 WARNING:Xst:2565 - Inout <user3<27>> is never assigned.
 WARNING:Xst:2565 - Inout <user3<3>> is never assigned.
 WARNING:Xst:646 - Signal <weirdclock> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-WARNING:Xst:646 - Signal <nx> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:1780 - Signal <pt_flag> is never used or assigned. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:646 - Signal <ny> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:1780 - Signal <lpf_flag> is never used or assigned. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <locked> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:1780 - Signal <done_pt> is never used or assigned. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:1780 - Signal <done_lpf> is never used or assigned. This unconnected signal will be trimmed during the optimization process.
 Unit <labkit> synthesized.
 
 
@@ -966,8 +1006,8 @@ Macro Statistics
  8-bit up counter                                      : 1
 # Accumulators                                         : 1
  3-bit up accumulator                                  : 1
-# Registers                                            : 90
- 1-bit register                                        : 65
+# Registers                                            : 94
+ 1-bit register                                        : 69
  10-bit register                                       : 5
  19-bit register                                       : 2
  2-bit register                                        : 5
@@ -975,20 +1015,21 @@ Macro Statistics
  5-bit register                                        : 1
  8-bit register                                        : 4
  9-bit register                                        : 2
-# Latches                                              : 2
+# Latches                                              : 4
+ 1-bit latch                                           : 2
  36-bit latch                                          : 2
-# Comparators                                          : 20
- 10-bit comparator greatequal                          : 4
+# Comparators                                          : 22
+ 10-bit comparator greatequal                          : 5
  10-bit comparator greater                             : 2
- 10-bit comparator less                                : 2
+ 10-bit comparator less                                : 3
  10-bit comparator lessequal                           : 2
  23-bit comparator less                                : 3
  4-bit comparator greater                              : 1
  9-bit comparator greatequal                           : 1
  9-bit comparator greater                              : 4
- 9-bit comparator lessequal                            : 1
-# Multiplexers                                         : 2
- 36-bit 4-to-1 multiplexer                             : 2
+ 9-bit comparator less                                 : 1
+# Multiplexers                                         : 3
+ 36-bit 4-to-1 multiplexer                             : 3
 # Tristates                                            : 1
  1-bit tristate buffer                                 : 1
 
@@ -1106,8 +1147,8 @@ WARNING:Xst:2404 -  FFs/Latches <pixels_2<35:1>> (without init value) have a con
 WARNING:Xst:2404 -  FFs/Latches <pixels_3<35:1>> (without init value) have a constant value of 0 in block <vga_write>.
 
 Synthesizing (advanced) Unit <memory_interface>.
-INFO:Xst:2385 - HDL ADVISOR - You can improve the performance of the multiplier Mmult_next_vga_addr_mult0001 by adding 2 register level(s).
 INFO:Xst:2385 - HDL ADVISOR - You can improve the performance of the multiplier Mmult_next_ntsc_addr_mult0001 by adding 2 register level(s).
+INFO:Xst:2385 - HDL ADVISOR - You can improve the performance of the multiplier Mmult_next_vga_addr_mult0001 by adding 2 register level(s).
 Unit <memory_interface> synthesized (advanced).
 
 Synthesizing (advanced) Unit <vga_write>.
@@ -1200,18 +1241,6 @@ WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem1_read_queue_7> 
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem0_read_queue_4> (without init value) has a constant value of 0 in block <memory_interface>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem0_read_queue_5> (without init value) has a constant value of 0 in block <memory_interface>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <mem0_read_queue_7> (without init value) has a constant value of 0 in block <memory_interface>. This FF/Latch will be trimmed during the optimization process.
-WARNING:Xst:2677 - Node <prev_vga_pixel_24> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_25> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_26> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_27> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_28> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_29> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_30> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_31> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_32> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_33> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_34> of sequential type is unconnected in block <memory_interface>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_35> of sequential type is unconnected in block <memory_interface>.
 WARNING:Xst:1710 - FF/Latch <vga_out_sync_b> (without init value) has a constant value of 1 in block <vga_write>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <old_source> (without init value) has a constant value of 0 in block <adv7185init>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <FSM_FFd4> (without init value) has a constant value of 0 in block <state>. This FF/Latch will be trimmed during the optimization process.
@@ -1249,29 +1278,6 @@ WARNING:Xst:2677 - Node <cb_1> of sequential type is unconnected in block <decod
 WARNING:Xst:2677 - Node <cb_2> of sequential type is unconnected in block <decode>.
 WARNING:Xst:2677 - Node <cb_3> of sequential type is unconnected in block <decode>.
 WARNING:Xst:2677 - Node <cb_4> of sequential type is unconnected in block <decode>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_1> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_2> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_3> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_4> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_5> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_6> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_7> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_8> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_9> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_10> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_11> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_12> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_13> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_14> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_15> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_16> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_17> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_18> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_19> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_20> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_21> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_22> of sequential type is unconnected in block <mi>.
-WARNING:Xst:2677 - Node <prev_vga_pixel_23> of sequential type is unconnected in block <mi>.
 WARNING:Xst:1710 - FF/Latch <FSM_FFd2> (without init value) has a constant value of 0 in block <state>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <FSM_FFd1> (without init value) has a constant value of 0 in block <state>. This FF/Latch will be trimmed during the optimization process.
 WARNING:Xst:1710 - FF/Latch <FSM_FFd3> (without init value) has a constant value of 0 in block <state>. This FF/Latch will be trimmed during the optimization process.
@@ -1305,22 +1311,23 @@ Macro Statistics
  8-bit up counter                                      : 1
 # Accumulators                                         : 1
  3-bit up accumulator                                  : 1
-# Registers                                            : 349
- Flip-Flops                                            : 349
-# Latches                                              : 2
+# Registers                                            : 365
+ Flip-Flops                                            : 365
+# Latches                                              : 4
+ 1-bit latch                                           : 2
  36-bit latch                                          : 2
-# Comparators                                          : 20
- 10-bit comparator greatequal                          : 4
+# Comparators                                          : 22
+ 10-bit comparator greatequal                          : 5
  10-bit comparator greater                             : 2
- 10-bit comparator less                                : 2
+ 10-bit comparator less                                : 3
  10-bit comparator lessequal                           : 2
  23-bit comparator less                                : 3
  4-bit comparator greater                              : 1
  9-bit comparator greatequal                           : 1
  9-bit comparator greater                              : 4
- 9-bit comparator lessequal                            : 1
-# Multiplexers                                         : 2
- 36-bit 4-to-1 multiplexer                             : 2
+ 9-bit comparator less                                 : 1
+# Multiplexers                                         : 3
+ 36-bit 4-to-1 multiplexer                             : 3
 
 =========================================================================
 
@@ -1402,17 +1409,8 @@ WARNING:Xst:2677 - Node <ntsc/interesting_x_1> of sequential type is unconnected
 WARNING:Xst:2677 - Node <ntsc/interesting_x_0> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/color_1> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/color_0> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_9> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_8> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_7> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_6> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_5> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_4> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_3> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_2> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_1> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_0> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/interesting_flag> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/y_0> of sequential type is unconnected in block <labkit>.
 
 Optimizing unit <labkit> ...
 
@@ -1437,6 +1435,18 @@ WARNING:Xst:2677 - Node <ntsc/decode/cr_3> of sequential type is unconnected in 
 WARNING:Xst:2677 - Node <ntsc/decode/cr_2> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/cr_1> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/cr_0> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_35> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_34> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_33> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_32> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_31> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_30> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_29> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_28> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_27> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_26> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_25> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <mi/prev_vga_pixel_24> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <mi/prev_vga_pixel_23> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <mi/prev_vga_pixel_22> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <mi/prev_vga_pixel_21> of sequential type is unconnected in block <labkit>.
@@ -1478,8 +1488,8 @@ Unit <labkit> processed.
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 278
- Flip-Flops                                            : 278
+# Registers                                            : 291
+ Flip-Flops                                            : 291
 # Shift Registers                                      : 2
  2-bit shift register                                  : 2
 
@@ -1510,26 +1520,27 @@ Design Statistics
 # IOs                              : 576
 
 Cell Usage :
-# BELS                             : 936
+# BELS                             : 956
 #      GND                         : 1
-#      INV                         : 18
+#      INV                         : 22
 #      LUT1                        : 62
-#      LUT2                        : 117
-#      LUT3                        : 211
-#      LUT4                        : 212
+#      LUT2                        : 119
+#      LUT3                        : 216
+#      LUT4                        : 220
 #      MUXCY                       : 167
-#      MUXF5                       : 13
+#      MUXF5                       : 14
 #      VCC                         : 1
 #      XORCY                       : 134
-# FlipFlops/Latches                : 357
-#      FD                          : 26
+# FlipFlops/Latches                : 372
+#      FD                          : 25
 #      FDE                         : 85
-#      FDR                         : 103
-#      FDRE                        : 49
+#      FDR                         : 107
+#      FDRE                        : 59
 #      FDRS                        : 7
 #      FDRSE                       : 2
 #      FDS                         : 3
 #      FDSE                        : 5
+#      LDC                         : 2
 #      LDCP                        : 37
 #      LDCP_1                      : 37
 #      OFDDRRSE                    : 3
@@ -1556,10 +1567,10 @@ Device utilization summary:
 
 Selected Device : 2v6000bf957-4 
 
- Number of Slices:                      357  out of  33792     1%  
- Number of Slice Flip Flops:            284  out of  67584     0%  
- Number of 4 input LUTs:                643  out of  67584     0%  
-    Number used as logic:               620
+ Number of Slices:                      369  out of  33792     1%  
+ Number of Slice Flip Flops:            299  out of  67584     0%  
+ Number of 4 input LUTs:                662  out of  67584     0%  
+    Number used as logic:               639
     Number used as Shift registers:       4
     Number used as RAMs:                 19
  Number of IOs:                         576
@@ -1590,177 +1601,182 @@ Clock Information:
 ------------------------------------------------+----------------------------+-------+
 Clock Signal                                    | Clock buffer(FF name)      | Load  |
 ------------------------------------------------+----------------------------+-------+
-clock_27mhz                                     | IBUFG+BUFG                 | 67    |
-clock_27mhz                                     | vclk1:CLKFX+rc/ext_dcm:CLK0| 71    |
+clock_27mhz                                     | vclk1:CLKFX                | 73    |
+clock_27mhz                                     | IBUFG                      | 18    |
 ntsc/adv7185/clock_slow1                        | BUFG                       | 96    |
-tv_in_line_clock1                               | IBUF                       | 24    |
+fvh<1>(ntsc/decode/_AUX_9<1>1:O)                | NONE(*)(ntsc/syncv/syncsig)| 1     |
+fvh<0>(ntsc/decode/_AUX_9<0>1:O)                | NONE(*)(ntsc/synch/syncsig)| 1     |
+tv_in_line_clock1                               | IBUF+BUFG                  | 84    |
 mi/mem0_write_not00011(mi/mem0_write_not00011:O)| BUFG(*)(mi/mem0_write_35)  | 37    |
 mi/mem1_write_and00001(mi/mem1_write_and00001:O)| BUFG(*)(mi/mem1_write_35)  | 37    |
 clock_27mhz                                     | vclk3:CLKFX                | 43    |
 ------------------------------------------------+----------------------------+-------+
-(*) These 2 clock signal(s) are generated by combinatorial logic,
+(*) These 4 clock signal(s) are generated by combinatorial logic,
 and XST is not able to identify which are the primary clock signals.
 Please use the CLOCK_SIGNAL constraint to specify the clock signal(s) generated by combinatorial logic.
+INFO:Xst:2169 - HDL ADVISOR - Some clock signals were not automatically buffered by XST with BUFG/BUFR resources. Please use the buffer_type constraint in order to insert these buffers to the clock signals to help prevent skew problems.
 
 Asynchronous Control Signals Information:
 ----------------------------------------
--------------------------------------------------------+------------------------+-------+
-Control Signal                                         | Buffer(FF name)        | Load  |
--------------------------------------------------------+------------------------+-------+
-mi/mem0_write_0__and0000(mi/mem0_write_0__and00001:O)  | NONE(mi/mem0_write_0_1)| 2     |
-mi/mem0_write_0__and0001(mi/mem0_write_0__and00011:O)  | NONE(mi/mem0_write_0_1)| 2     |
-mi/mem1_write_0__and0000(mi/mem1_write_0__and00001:O)  | NONE(mi/mem1_write_0)  | 2     |
-mi/mem1_write_0__and0001(mi/mem1_write_0__and00011:O)  | NONE(mi/mem1_write_0)  | 2     |
-mi/mem0_write_10__and0000(mi/mem0_write_10__and00001:O)| NONE(mi/mem0_write_10) | 1     |
-mi/mem0_write_10__and0001(mi/mem0_write_10__and00011:O)| NONE(mi/mem0_write_10) | 1     |
-mi/mem0_write_11__and0000(mi/mem0_write_11__and00001:O)| NONE(mi/mem0_write_11) | 1     |
-mi/mem0_write_11__and0001(mi/mem0_write_11__and00011:O)| NONE(mi/mem0_write_11) | 1     |
-mi/mem0_write_12__and0000(mi/mem0_write_12__and00001:O)| NONE(mi/mem0_write_12) | 1     |
-mi/mem0_write_12__and0001(mi/mem0_write_12__and00011:O)| NONE(mi/mem0_write_12) | 1     |
-mi/mem0_write_13__and0000(mi/mem0_write_13__and00001:O)| NONE(mi/mem0_write_13) | 1     |
-mi/mem0_write_13__and0001(mi/mem0_write_13__and00011:O)| NONE(mi/mem0_write_13) | 1     |
-mi/mem0_write_14__and0000(mi/mem0_write_14__and00001:O)| NONE(mi/mem0_write_14) | 1     |
-mi/mem0_write_14__and0001(mi/mem0_write_14__and00011:O)| NONE(mi/mem0_write_14) | 1     |
-mi/mem0_write_15__and0000(mi/mem0_write_15__and00001:O)| NONE(mi/mem0_write_15) | 1     |
-mi/mem0_write_15__and0001(mi/mem0_write_15__and00011:O)| NONE(mi/mem0_write_15) | 1     |
-mi/mem0_write_16__and0000(mi/mem0_write_16__and00001:O)| NONE(mi/mem0_write_16) | 1     |
-mi/mem0_write_16__and0001(mi/mem0_write_16__and00011:O)| NONE(mi/mem0_write_16) | 1     |
-mi/mem0_write_17__and0000(mi/mem0_write_17__and00001:O)| NONE(mi/mem0_write_17) | 1     |
-mi/mem0_write_17__and0001(mi/mem0_write_17__and00011:O)| NONE(mi/mem0_write_17) | 1     |
-mi/mem0_write_18__and0000(mi/mem0_write_18__and00001:O)| NONE(mi/mem0_write_18) | 1     |
-mi/mem0_write_18__and0001(mi/mem0_write_18__and00011:O)| NONE(mi/mem0_write_18) | 1     |
-mi/mem0_write_19__and0000(mi/mem0_write_19__and00001:O)| NONE(mi/mem0_write_19) | 1     |
-mi/mem0_write_19__and0001(mi/mem0_write_19__and00011:O)| NONE(mi/mem0_write_19) | 1     |
-mi/mem0_write_1__and0000(mi/mem0_write_1__and00001:O)  | NONE(mi/mem0_write_1)  | 1     |
-mi/mem0_write_1__and0001(mi/mem0_write_1__and00011:O)  | NONE(mi/mem0_write_1)  | 1     |
-mi/mem0_write_20__and0000(mi/mem0_write_20__and00001:O)| NONE(mi/mem0_write_20) | 1     |
-mi/mem0_write_20__and0001(mi/mem0_write_20__and00011:O)| NONE(mi/mem0_write_20) | 1     |
-mi/mem0_write_21__and0000(mi/mem0_write_21__and00001:O)| NONE(mi/mem0_write_21) | 1     |
-mi/mem0_write_21__and0001(mi/mem0_write_21__and00011:O)| NONE(mi/mem0_write_21) | 1     |
-mi/mem0_write_22__and0000(mi/mem0_write_22__and00001:O)| NONE(mi/mem0_write_22) | 1     |
-mi/mem0_write_22__and0001(mi/mem0_write_22__and00011:O)| NONE(mi/mem0_write_22) | 1     |
-mi/mem0_write_23__and0000(mi/mem0_write_23__and00001:O)| NONE(mi/mem0_write_23) | 1     |
-mi/mem0_write_23__and0001(mi/mem0_write_23__and00011:O)| NONE(mi/mem0_write_23) | 1     |
-mi/mem0_write_24__and0000(mi/mem0_write_24__and00001:O)| NONE(mi/mem0_write_24) | 1     |
-mi/mem0_write_24__and0001(mi/mem0_write_24__and00011:O)| NONE(mi/mem0_write_24) | 1     |
-mi/mem0_write_25__and0000(mi/mem0_write_25__and00001:O)| NONE(mi/mem0_write_25) | 1     |
-mi/mem0_write_25__and0001(mi/mem0_write_25__and00011:O)| NONE(mi/mem0_write_25) | 1     |
-mi/mem0_write_26__and0000(mi/mem0_write_26__and00001:O)| NONE(mi/mem0_write_26) | 1     |
-mi/mem0_write_26__and0001(mi/mem0_write_26__and00011:O)| NONE(mi/mem0_write_26) | 1     |
-mi/mem0_write_27__and0000(mi/mem0_write_27__and00001:O)| NONE(mi/mem0_write_27) | 1     |
-mi/mem0_write_27__and0001(mi/mem0_write_27__and00011:O)| NONE(mi/mem0_write_27) | 1     |
-mi/mem0_write_28__and0000(mi/mem0_write_28__and00001:O)| NONE(mi/mem0_write_28) | 1     |
-mi/mem0_write_28__and0001(mi/mem0_write_28__and00011:O)| NONE(mi/mem0_write_28) | 1     |
-mi/mem0_write_29__and0000(mi/mem0_write_29__and00001:O)| NONE(mi/mem0_write_29) | 1     |
-mi/mem0_write_29__and0001(mi/mem0_write_29__and00011:O)| NONE(mi/mem0_write_29) | 1     |
-mi/mem0_write_2__and0000(mi/mem0_write_2__and00001:O)  | NONE(mi/mem0_write_2)  | 1     |
-mi/mem0_write_2__and0001(mi/mem0_write_2__and00011:O)  | NONE(mi/mem0_write_2)  | 1     |
-mi/mem0_write_30__and0000(mi/mem0_write_30__and00001:O)| NONE(mi/mem0_write_30) | 1     |
-mi/mem0_write_30__and0001(mi/mem0_write_30__and00011:O)| NONE(mi/mem0_write_30) | 1     |
-mi/mem0_write_31__and0000(mi/mem0_write_31__and00001:O)| NONE(mi/mem0_write_31) | 1     |
-mi/mem0_write_31__and0001(mi/mem0_write_31__and00011:O)| NONE(mi/mem0_write_31) | 1     |
-mi/mem0_write_32__and0000(mi/mem0_write_32__and00001:O)| NONE(mi/mem0_write_32) | 1     |
-mi/mem0_write_32__and0001(mi/mem0_write_32__and00011:O)| NONE(mi/mem0_write_32) | 1     |
-mi/mem0_write_33__and0000(mi/mem0_write_33__and00001:O)| NONE(mi/mem0_write_33) | 1     |
-mi/mem0_write_33__and0001(mi/mem0_write_33__and00011:O)| NONE(mi/mem0_write_33) | 1     |
-mi/mem0_write_34__and0000(mi/mem0_write_34__and00001:O)| NONE(mi/mem0_write_34) | 1     |
-mi/mem0_write_34__and0001(mi/mem0_write_34__and00011:O)| NONE(mi/mem0_write_34) | 1     |
-mi/mem0_write_35__and0000(mi/mem0_write_35__and00001:O)| NONE(mi/mem0_write_35) | 1     |
-mi/mem0_write_35__and0001(mi/mem0_write_35__and00011:O)| NONE(mi/mem0_write_35) | 1     |
-mi/mem0_write_3__and0000(mi/mem0_write_3__and00001:O)  | NONE(mi/mem0_write_3)  | 1     |
-mi/mem0_write_3__and0001(mi/mem0_write_3__and00011:O)  | NONE(mi/mem0_write_3)  | 1     |
-mi/mem0_write_4__and0000(mi/mem0_write_4__and00001:O)  | NONE(mi/mem0_write_4)  | 1     |
-mi/mem0_write_4__and0001(mi/mem0_write_4__and00011:O)  | NONE(mi/mem0_write_4)  | 1     |
-mi/mem0_write_5__and0000(mi/mem0_write_5__and00001:O)  | NONE(mi/mem0_write_5)  | 1     |
-mi/mem0_write_5__and0001(mi/mem0_write_5__and00011:O)  | NONE(mi/mem0_write_5)  | 1     |
-mi/mem0_write_6__and0000(mi/mem0_write_6__and00001:O)  | NONE(mi/mem0_write_6)  | 1     |
-mi/mem0_write_6__and0001(mi/mem0_write_6__and00011:O)  | NONE(mi/mem0_write_6)  | 1     |
-mi/mem0_write_7__and0000(mi/mem0_write_7__and00001:O)  | NONE(mi/mem0_write_7)  | 1     |
-mi/mem0_write_7__and0001(mi/mem0_write_7__and00011:O)  | NONE(mi/mem0_write_7)  | 1     |
-mi/mem0_write_8__and0000(mi/mem0_write_8__and00001:O)  | NONE(mi/mem0_write_8)  | 1     |
-mi/mem0_write_8__and0001(mi/mem0_write_8__and00011:O)  | NONE(mi/mem0_write_8)  | 1     |
-mi/mem0_write_9__and0000(mi/mem0_write_9__and00001:O)  | NONE(mi/mem0_write_9)  | 1     |
-mi/mem0_write_9__and0001(mi/mem0_write_9__and00011:O)  | NONE(mi/mem0_write_9)  | 1     |
-mi/mem1_write_10__and0000(mi/mem1_write_10__and00001:O)| NONE(mi/mem1_write_10) | 1     |
-mi/mem1_write_10__and0001(mi/mem1_write_10__and00011:O)| NONE(mi/mem1_write_10) | 1     |
-mi/mem1_write_11__and0000(mi/mem1_write_11__and00001:O)| NONE(mi/mem1_write_11) | 1     |
-mi/mem1_write_11__and0001(mi/mem1_write_11__and00011:O)| NONE(mi/mem1_write_11) | 1     |
-mi/mem1_write_12__and0000(mi/mem1_write_12__and00001:O)| NONE(mi/mem1_write_12) | 1     |
-mi/mem1_write_12__and0001(mi/mem1_write_12__and00011:O)| NONE(mi/mem1_write_12) | 1     |
-mi/mem1_write_13__and0000(mi/mem1_write_13__and00001:O)| NONE(mi/mem1_write_13) | 1     |
-mi/mem1_write_13__and0001(mi/mem1_write_13__and00011:O)| NONE(mi/mem1_write_13) | 1     |
-mi/mem1_write_14__and0000(mi/mem1_write_14__and00001:O)| NONE(mi/mem1_write_14) | 1     |
-mi/mem1_write_14__and0001(mi/mem1_write_14__and00011:O)| NONE(mi/mem1_write_14) | 1     |
-mi/mem1_write_15__and0000(mi/mem1_write_15__and00001:O)| NONE(mi/mem1_write_15) | 1     |
-mi/mem1_write_15__and0001(mi/mem1_write_15__and00011:O)| NONE(mi/mem1_write_15) | 1     |
-mi/mem1_write_16__and0000(mi/mem1_write_16__and00001:O)| NONE(mi/mem1_write_16) | 1     |
-mi/mem1_write_16__and0001(mi/mem1_write_16__and00011:O)| NONE(mi/mem1_write_16) | 1     |
-mi/mem1_write_17__and0000(mi/mem1_write_17__and00001:O)| NONE(mi/mem1_write_17) | 1     |
-mi/mem1_write_17__and0001(mi/mem1_write_17__and00011:O)| NONE(mi/mem1_write_17) | 1     |
-mi/mem1_write_18__and0000(mi/mem1_write_18__and00001:O)| NONE(mi/mem1_write_18) | 1     |
-mi/mem1_write_18__and0001(mi/mem1_write_18__and00011:O)| NONE(mi/mem1_write_18) | 1     |
-mi/mem1_write_19__and0000(mi/mem1_write_19__and00001:O)| NONE(mi/mem1_write_19) | 1     |
-mi/mem1_write_19__and0001(mi/mem1_write_19__and00011:O)| NONE(mi/mem1_write_19) | 1     |
-mi/mem1_write_1__and0000(mi/mem1_write_1__and00001:O)  | NONE(mi/mem1_write_1)  | 1     |
-mi/mem1_write_1__and0001(mi/mem1_write_1__and00011:O)  | NONE(mi/mem1_write_1)  | 1     |
-mi/mem1_write_20__and0000(mi/mem1_write_20__and00001:O)| NONE(mi/mem1_write_20) | 1     |
-mi/mem1_write_20__and0001(mi/mem1_write_20__and00011:O)| NONE(mi/mem1_write_20) | 1     |
-mi/mem1_write_21__and0000(mi/mem1_write_21__and00001:O)| NONE(mi/mem1_write_21) | 1     |
-mi/mem1_write_21__and0001(mi/mem1_write_21__and00011:O)| NONE(mi/mem1_write_21) | 1     |
-mi/mem1_write_22__and0000(mi/mem1_write_22__and00001:O)| NONE(mi/mem1_write_22) | 1     |
-mi/mem1_write_22__and0001(mi/mem1_write_22__and00011:O)| NONE(mi/mem1_write_22) | 1     |
-mi/mem1_write_23__and0000(mi/mem1_write_23__and00001:O)| NONE(mi/mem1_write_23) | 1     |
-mi/mem1_write_23__and0001(mi/mem1_write_23__and00011:O)| NONE(mi/mem1_write_23) | 1     |
-mi/mem1_write_24__and0000(mi/mem1_write_24__and00001:O)| NONE(mi/mem1_write_24) | 1     |
-mi/mem1_write_24__and0001(mi/mem1_write_24__and00011:O)| NONE(mi/mem1_write_24) | 1     |
-mi/mem1_write_25__and0000(mi/mem1_write_25__and00001:O)| NONE(mi/mem1_write_25) | 1     |
-mi/mem1_write_25__and0001(mi/mem1_write_25__and00011:O)| NONE(mi/mem1_write_25) | 1     |
-mi/mem1_write_26__and0000(mi/mem1_write_26__and00001:O)| NONE(mi/mem1_write_26) | 1     |
-mi/mem1_write_26__and0001(mi/mem1_write_26__and00011:O)| NONE(mi/mem1_write_26) | 1     |
-mi/mem1_write_27__and0000(mi/mem1_write_27__and00001:O)| NONE(mi/mem1_write_27) | 1     |
-mi/mem1_write_27__and0001(mi/mem1_write_27__and00011:O)| NONE(mi/mem1_write_27) | 1     |
-mi/mem1_write_28__and0000(mi/mem1_write_28__and00001:O)| NONE(mi/mem1_write_28) | 1     |
-mi/mem1_write_28__and0001(mi/mem1_write_28__and00011:O)| NONE(mi/mem1_write_28) | 1     |
-mi/mem1_write_29__and0000(mi/mem1_write_29__and00001:O)| NONE(mi/mem1_write_29) | 1     |
-mi/mem1_write_29__and0001(mi/mem1_write_29__and00011:O)| NONE(mi/mem1_write_29) | 1     |
-mi/mem1_write_2__and0000(mi/mem1_write_2__and00001:O)  | NONE(mi/mem1_write_2)  | 1     |
-mi/mem1_write_2__and0001(mi/mem1_write_2__and00011:O)  | NONE(mi/mem1_write_2)  | 1     |
-mi/mem1_write_30__and0000(mi/mem1_write_30__and00001:O)| NONE(mi/mem1_write_30) | 1     |
-mi/mem1_write_30__and0001(mi/mem1_write_30__and00011:O)| NONE(mi/mem1_write_30) | 1     |
-mi/mem1_write_31__and0000(mi/mem1_write_31__and00001:O)| NONE(mi/mem1_write_31) | 1     |
-mi/mem1_write_31__and0001(mi/mem1_write_31__and00011:O)| NONE(mi/mem1_write_31) | 1     |
-mi/mem1_write_32__and0000(mi/mem1_write_32__and00001:O)| NONE(mi/mem1_write_32) | 1     |
-mi/mem1_write_32__and0001(mi/mem1_write_32__and00011:O)| NONE(mi/mem1_write_32) | 1     |
-mi/mem1_write_33__and0000(mi/mem1_write_33__and00001:O)| NONE(mi/mem1_write_33) | 1     |
-mi/mem1_write_33__and0001(mi/mem1_write_33__and00011:O)| NONE(mi/mem1_write_33) | 1     |
-mi/mem1_write_34__and0000(mi/mem1_write_34__and00001:O)| NONE(mi/mem1_write_34) | 1     |
-mi/mem1_write_34__and0001(mi/mem1_write_34__and00011:O)| NONE(mi/mem1_write_34) | 1     |
-mi/mem1_write_35__and0000(mi/mem1_write_35__and00001:O)| NONE(mi/mem1_write_35) | 1     |
-mi/mem1_write_35__and0001(mi/mem1_write_35__and00011:O)| NONE(mi/mem1_write_35) | 1     |
-mi/mem1_write_3__and0000(mi/mem1_write_3__and00001:O)  | NONE(mi/mem1_write_3)  | 1     |
-mi/mem1_write_3__and0001(mi/mem1_write_3__and00011:O)  | NONE(mi/mem1_write_3)  | 1     |
-mi/mem1_write_4__and0000(mi/mem1_write_4__and00001:O)  | NONE(mi/mem1_write_4)  | 1     |
-mi/mem1_write_4__and0001(mi/mem1_write_4__and00011:O)  | NONE(mi/mem1_write_4)  | 1     |
-mi/mem1_write_5__and0000(mi/mem1_write_5__and00001:O)  | NONE(mi/mem1_write_5)  | 1     |
-mi/mem1_write_5__and0001(mi/mem1_write_5__and00011:O)  | NONE(mi/mem1_write_5)  | 1     |
-mi/mem1_write_6__and0000(mi/mem1_write_6__and00001:O)  | NONE(mi/mem1_write_6)  | 1     |
-mi/mem1_write_6__and0001(mi/mem1_write_6__and00011:O)  | NONE(mi/mem1_write_6)  | 1     |
-mi/mem1_write_7__and0000(mi/mem1_write_7__and00001:O)  | NONE(mi/mem1_write_7)  | 1     |
-mi/mem1_write_7__and0001(mi/mem1_write_7__and00011:O)  | NONE(mi/mem1_write_7)  | 1     |
-mi/mem1_write_8__and0000(mi/mem1_write_8__and00001:O)  | NONE(mi/mem1_write_8)  | 1     |
-mi/mem1_write_8__and0001(mi/mem1_write_8__and00011:O)  | NONE(mi/mem1_write_8)  | 1     |
-mi/mem1_write_9__and0000(mi/mem1_write_9__and00001:O)  | NONE(mi/mem1_write_9)  | 1     |
-mi/mem1_write_9__and0001(mi/mem1_write_9__and00011:O)  | NONE(mi/mem1_write_9)  | 1     |
--------------------------------------------------------+------------------------+-------+
+-------------------------------------------------------+-------------------------+-------+
+Control Signal                                         | Buffer(FF name)         | Load  |
+-------------------------------------------------------+-------------------------+-------+
+mi/mem0_write_0__and0000(mi/mem0_write_0__and00001:O)  | NONE(mi/mem0_write_0_1) | 2     |
+mi/mem0_write_0__and0001(mi/mem0_write_0__and00011:O)  | NONE(mi/mem0_write_0_1) | 2     |
+mi/mem1_write_0__and0000(mi/mem1_write_0__and00001:O)  | NONE(mi/mem1_write_0)   | 2     |
+mi/mem1_write_0__and0001(mi/mem1_write_0__and00011:O)  | NONE(mi/mem1_write_0)   | 2     |
+mi/mem0_write_10__and0000(mi/mem0_write_10__and00001:O)| NONE(mi/mem0_write_10)  | 1     |
+mi/mem0_write_10__and0001(mi/mem0_write_10__and00011:O)| NONE(mi/mem0_write_10)  | 1     |
+mi/mem0_write_11__and0000(mi/mem0_write_11__and00001:O)| NONE(mi/mem0_write_11)  | 1     |
+mi/mem0_write_11__and0001(mi/mem0_write_11__and00011:O)| NONE(mi/mem0_write_11)  | 1     |
+mi/mem0_write_12__and0000(mi/mem0_write_12__and00001:O)| NONE(mi/mem0_write_12)  | 1     |
+mi/mem0_write_12__and0001(mi/mem0_write_12__and00011:O)| NONE(mi/mem0_write_12)  | 1     |
+mi/mem0_write_13__and0000(mi/mem0_write_13__and00001:O)| NONE(mi/mem0_write_13)  | 1     |
+mi/mem0_write_13__and0001(mi/mem0_write_13__and00011:O)| NONE(mi/mem0_write_13)  | 1     |
+mi/mem0_write_14__and0000(mi/mem0_write_14__and00001:O)| NONE(mi/mem0_write_14)  | 1     |
+mi/mem0_write_14__and0001(mi/mem0_write_14__and00011:O)| NONE(mi/mem0_write_14)  | 1     |
+mi/mem0_write_15__and0000(mi/mem0_write_15__and00001:O)| NONE(mi/mem0_write_15)  | 1     |
+mi/mem0_write_15__and0001(mi/mem0_write_15__and00011:O)| NONE(mi/mem0_write_15)  | 1     |
+mi/mem0_write_16__and0000(mi/mem0_write_16__and00001:O)| NONE(mi/mem0_write_16)  | 1     |
+mi/mem0_write_16__and0001(mi/mem0_write_16__and00011:O)| NONE(mi/mem0_write_16)  | 1     |
+mi/mem0_write_17__and0000(mi/mem0_write_17__and00001:O)| NONE(mi/mem0_write_17)  | 1     |
+mi/mem0_write_17__and0001(mi/mem0_write_17__and00011:O)| NONE(mi/mem0_write_17)  | 1     |
+mi/mem0_write_18__and0000(mi/mem0_write_18__and00001:O)| NONE(mi/mem0_write_18)  | 1     |
+mi/mem0_write_18__and0001(mi/mem0_write_18__and00011:O)| NONE(mi/mem0_write_18)  | 1     |
+mi/mem0_write_19__and0000(mi/mem0_write_19__and00001:O)| NONE(mi/mem0_write_19)  | 1     |
+mi/mem0_write_19__and0001(mi/mem0_write_19__and00011:O)| NONE(mi/mem0_write_19)  | 1     |
+mi/mem0_write_1__and0000(mi/mem0_write_1__and00001:O)  | NONE(mi/mem0_write_1)   | 1     |
+mi/mem0_write_1__and0001(mi/mem0_write_1__and00011:O)  | NONE(mi/mem0_write_1)   | 1     |
+mi/mem0_write_20__and0000(mi/mem0_write_20__and00001:O)| NONE(mi/mem0_write_20)  | 1     |
+mi/mem0_write_20__and0001(mi/mem0_write_20__and00011:O)| NONE(mi/mem0_write_20)  | 1     |
+mi/mem0_write_21__and0000(mi/mem0_write_21__and00001:O)| NONE(mi/mem0_write_21)  | 1     |
+mi/mem0_write_21__and0001(mi/mem0_write_21__and00011:O)| NONE(mi/mem0_write_21)  | 1     |
+mi/mem0_write_22__and0000(mi/mem0_write_22__and00001:O)| NONE(mi/mem0_write_22)  | 1     |
+mi/mem0_write_22__and0001(mi/mem0_write_22__and00011:O)| NONE(mi/mem0_write_22)  | 1     |
+mi/mem0_write_23__and0000(mi/mem0_write_23__and00001:O)| NONE(mi/mem0_write_23)  | 1     |
+mi/mem0_write_23__and0001(mi/mem0_write_23__and00011:O)| NONE(mi/mem0_write_23)  | 1     |
+mi/mem0_write_24__and0000(mi/mem0_write_24__and00001:O)| NONE(mi/mem0_write_24)  | 1     |
+mi/mem0_write_24__and0001(mi/mem0_write_24__and00011:O)| NONE(mi/mem0_write_24)  | 1     |
+mi/mem0_write_25__and0000(mi/mem0_write_25__and00001:O)| NONE(mi/mem0_write_25)  | 1     |
+mi/mem0_write_25__and0001(mi/mem0_write_25__and00011:O)| NONE(mi/mem0_write_25)  | 1     |
+mi/mem0_write_26__and0000(mi/mem0_write_26__and00001:O)| NONE(mi/mem0_write_26)  | 1     |
+mi/mem0_write_26__and0001(mi/mem0_write_26__and00011:O)| NONE(mi/mem0_write_26)  | 1     |
+mi/mem0_write_27__and0000(mi/mem0_write_27__and00001:O)| NONE(mi/mem0_write_27)  | 1     |
+mi/mem0_write_27__and0001(mi/mem0_write_27__and00011:O)| NONE(mi/mem0_write_27)  | 1     |
+mi/mem0_write_28__and0000(mi/mem0_write_28__and00001:O)| NONE(mi/mem0_write_28)  | 1     |
+mi/mem0_write_28__and0001(mi/mem0_write_28__and00011:O)| NONE(mi/mem0_write_28)  | 1     |
+mi/mem0_write_29__and0000(mi/mem0_write_29__and00001:O)| NONE(mi/mem0_write_29)  | 1     |
+mi/mem0_write_29__and0001(mi/mem0_write_29__and00011:O)| NONE(mi/mem0_write_29)  | 1     |
+mi/mem0_write_2__and0000(mi/mem0_write_2__and00001:O)  | NONE(mi/mem0_write_2)   | 1     |
+mi/mem0_write_2__and0001(mi/mem0_write_2__and00011:O)  | NONE(mi/mem0_write_2)   | 1     |
+mi/mem0_write_30__and0000(mi/mem0_write_30__and00001:O)| NONE(mi/mem0_write_30)  | 1     |
+mi/mem0_write_30__and0001(mi/mem0_write_30__and00011:O)| NONE(mi/mem0_write_30)  | 1     |
+mi/mem0_write_31__and0000(mi/mem0_write_31__and00001:O)| NONE(mi/mem0_write_31)  | 1     |
+mi/mem0_write_31__and0001(mi/mem0_write_31__and00011:O)| NONE(mi/mem0_write_31)  | 1     |
+mi/mem0_write_32__and0000(mi/mem0_write_32__and00001:O)| NONE(mi/mem0_write_32)  | 1     |
+mi/mem0_write_32__and0001(mi/mem0_write_32__and00011:O)| NONE(mi/mem0_write_32)  | 1     |
+mi/mem0_write_33__and0000(mi/mem0_write_33__and00001:O)| NONE(mi/mem0_write_33)  | 1     |
+mi/mem0_write_33__and0001(mi/mem0_write_33__and00011:O)| NONE(mi/mem0_write_33)  | 1     |
+mi/mem0_write_34__and0000(mi/mem0_write_34__and00001:O)| NONE(mi/mem0_write_34)  | 1     |
+mi/mem0_write_34__and0001(mi/mem0_write_34__and00011:O)| NONE(mi/mem0_write_34)  | 1     |
+mi/mem0_write_35__and0000(mi/mem0_write_35__and00001:O)| NONE(mi/mem0_write_35)  | 1     |
+mi/mem0_write_35__and0001(mi/mem0_write_35__and00011:O)| NONE(mi/mem0_write_35)  | 1     |
+mi/mem0_write_3__and0000(mi/mem0_write_3__and00001:O)  | NONE(mi/mem0_write_3)   | 1     |
+mi/mem0_write_3__and0001(mi/mem0_write_3__and00011:O)  | NONE(mi/mem0_write_3)   | 1     |
+mi/mem0_write_4__and0000(mi/mem0_write_4__and00001:O)  | NONE(mi/mem0_write_4)   | 1     |
+mi/mem0_write_4__and0001(mi/mem0_write_4__and00011:O)  | NONE(mi/mem0_write_4)   | 1     |
+mi/mem0_write_5__and0000(mi/mem0_write_5__and00001:O)  | NONE(mi/mem0_write_5)   | 1     |
+mi/mem0_write_5__and0001(mi/mem0_write_5__and00011:O)  | NONE(mi/mem0_write_5)   | 1     |
+mi/mem0_write_6__and0000(mi/mem0_write_6__and00001:O)  | NONE(mi/mem0_write_6)   | 1     |
+mi/mem0_write_6__and0001(mi/mem0_write_6__and00011:O)  | NONE(mi/mem0_write_6)   | 1     |
+mi/mem0_write_7__and0000(mi/mem0_write_7__and00001:O)  | NONE(mi/mem0_write_7)   | 1     |
+mi/mem0_write_7__and0001(mi/mem0_write_7__and00011:O)  | NONE(mi/mem0_write_7)   | 1     |
+mi/mem0_write_8__and0000(mi/mem0_write_8__and00001:O)  | NONE(mi/mem0_write_8)   | 1     |
+mi/mem0_write_8__and0001(mi/mem0_write_8__and00011:O)  | NONE(mi/mem0_write_8)   | 1     |
+mi/mem0_write_9__and0000(mi/mem0_write_9__and00001:O)  | NONE(mi/mem0_write_9)   | 1     |
+mi/mem0_write_9__and0001(mi/mem0_write_9__and00011:O)  | NONE(mi/mem0_write_9)   | 1     |
+mi/mem1_write_10__and0000(mi/mem1_write_10__and00001:O)| NONE(mi/mem1_write_10)  | 1     |
+mi/mem1_write_10__and0001(mi/mem1_write_10__and00011:O)| NONE(mi/mem1_write_10)  | 1     |
+mi/mem1_write_11__and0000(mi/mem1_write_11__and00001:O)| NONE(mi/mem1_write_11)  | 1     |
+mi/mem1_write_11__and0001(mi/mem1_write_11__and00011:O)| NONE(mi/mem1_write_11)  | 1     |
+mi/mem1_write_12__and0000(mi/mem1_write_12__and00001:O)| NONE(mi/mem1_write_12)  | 1     |
+mi/mem1_write_12__and0001(mi/mem1_write_12__and00011:O)| NONE(mi/mem1_write_12)  | 1     |
+mi/mem1_write_13__and0000(mi/mem1_write_13__and00001:O)| NONE(mi/mem1_write_13)  | 1     |
+mi/mem1_write_13__and0001(mi/mem1_write_13__and00011:O)| NONE(mi/mem1_write_13)  | 1     |
+mi/mem1_write_14__and0000(mi/mem1_write_14__and00001:O)| NONE(mi/mem1_write_14)  | 1     |
+mi/mem1_write_14__and0001(mi/mem1_write_14__and00011:O)| NONE(mi/mem1_write_14)  | 1     |
+mi/mem1_write_15__and0000(mi/mem1_write_15__and00001:O)| NONE(mi/mem1_write_15)  | 1     |
+mi/mem1_write_15__and0001(mi/mem1_write_15__and00011:O)| NONE(mi/mem1_write_15)  | 1     |
+mi/mem1_write_16__and0000(mi/mem1_write_16__and00001:O)| NONE(mi/mem1_write_16)  | 1     |
+mi/mem1_write_16__and0001(mi/mem1_write_16__and00011:O)| NONE(mi/mem1_write_16)  | 1     |
+mi/mem1_write_17__and0000(mi/mem1_write_17__and00001:O)| NONE(mi/mem1_write_17)  | 1     |
+mi/mem1_write_17__and0001(mi/mem1_write_17__and00011:O)| NONE(mi/mem1_write_17)  | 1     |
+mi/mem1_write_18__and0000(mi/mem1_write_18__and00001:O)| NONE(mi/mem1_write_18)  | 1     |
+mi/mem1_write_18__and0001(mi/mem1_write_18__and00011:O)| NONE(mi/mem1_write_18)  | 1     |
+mi/mem1_write_19__and0000(mi/mem1_write_19__and00001:O)| NONE(mi/mem1_write_19)  | 1     |
+mi/mem1_write_19__and0001(mi/mem1_write_19__and00011:O)| NONE(mi/mem1_write_19)  | 1     |
+mi/mem1_write_1__and0000(mi/mem1_write_1__and00001:O)  | NONE(mi/mem1_write_1)   | 1     |
+mi/mem1_write_1__and0001(mi/mem1_write_1__and00011:O)  | NONE(mi/mem1_write_1)   | 1     |
+mi/mem1_write_20__and0000(mi/mem1_write_20__and00001:O)| NONE(mi/mem1_write_20)  | 1     |
+mi/mem1_write_20__and0001(mi/mem1_write_20__and00011:O)| NONE(mi/mem1_write_20)  | 1     |
+mi/mem1_write_21__and0000(mi/mem1_write_21__and00001:O)| NONE(mi/mem1_write_21)  | 1     |
+mi/mem1_write_21__and0001(mi/mem1_write_21__and00011:O)| NONE(mi/mem1_write_21)  | 1     |
+mi/mem1_write_22__and0000(mi/mem1_write_22__and00001:O)| NONE(mi/mem1_write_22)  | 1     |
+mi/mem1_write_22__and0001(mi/mem1_write_22__and00011:O)| NONE(mi/mem1_write_22)  | 1     |
+mi/mem1_write_23__and0000(mi/mem1_write_23__and00001:O)| NONE(mi/mem1_write_23)  | 1     |
+mi/mem1_write_23__and0001(mi/mem1_write_23__and00011:O)| NONE(mi/mem1_write_23)  | 1     |
+mi/mem1_write_24__and0000(mi/mem1_write_24__and00001:O)| NONE(mi/mem1_write_24)  | 1     |
+mi/mem1_write_24__and0001(mi/mem1_write_24__and00011:O)| NONE(mi/mem1_write_24)  | 1     |
+mi/mem1_write_25__and0000(mi/mem1_write_25__and00001:O)| NONE(mi/mem1_write_25)  | 1     |
+mi/mem1_write_25__and0001(mi/mem1_write_25__and00011:O)| NONE(mi/mem1_write_25)  | 1     |
+mi/mem1_write_26__and0000(mi/mem1_write_26__and00001:O)| NONE(mi/mem1_write_26)  | 1     |
+mi/mem1_write_26__and0001(mi/mem1_write_26__and00011:O)| NONE(mi/mem1_write_26)  | 1     |
+mi/mem1_write_27__and0000(mi/mem1_write_27__and00001:O)| NONE(mi/mem1_write_27)  | 1     |
+mi/mem1_write_27__and0001(mi/mem1_write_27__and00011:O)| NONE(mi/mem1_write_27)  | 1     |
+mi/mem1_write_28__and0000(mi/mem1_write_28__and00001:O)| NONE(mi/mem1_write_28)  | 1     |
+mi/mem1_write_28__and0001(mi/mem1_write_28__and00011:O)| NONE(mi/mem1_write_28)  | 1     |
+mi/mem1_write_29__and0000(mi/mem1_write_29__and00001:O)| NONE(mi/mem1_write_29)  | 1     |
+mi/mem1_write_29__and0001(mi/mem1_write_29__and00011:O)| NONE(mi/mem1_write_29)  | 1     |
+mi/mem1_write_2__and0000(mi/mem1_write_2__and00001:O)  | NONE(mi/mem1_write_2)   | 1     |
+mi/mem1_write_2__and0001(mi/mem1_write_2__and00011:O)  | NONE(mi/mem1_write_2)   | 1     |
+mi/mem1_write_30__and0000(mi/mem1_write_30__and00001:O)| NONE(mi/mem1_write_30)  | 1     |
+mi/mem1_write_30__and0001(mi/mem1_write_30__and00011:O)| NONE(mi/mem1_write_30)  | 1     |
+mi/mem1_write_31__and0000(mi/mem1_write_31__and00001:O)| NONE(mi/mem1_write_31)  | 1     |
+mi/mem1_write_31__and0001(mi/mem1_write_31__and00011:O)| NONE(mi/mem1_write_31)  | 1     |
+mi/mem1_write_32__and0000(mi/mem1_write_32__and00001:O)| NONE(mi/mem1_write_32)  | 1     |
+mi/mem1_write_32__and0001(mi/mem1_write_32__and00011:O)| NONE(mi/mem1_write_32)  | 1     |
+mi/mem1_write_33__and0000(mi/mem1_write_33__and00001:O)| NONE(mi/mem1_write_33)  | 1     |
+mi/mem1_write_33__and0001(mi/mem1_write_33__and00011:O)| NONE(mi/mem1_write_33)  | 1     |
+mi/mem1_write_34__and0000(mi/mem1_write_34__and00001:O)| NONE(mi/mem1_write_34)  | 1     |
+mi/mem1_write_34__and0001(mi/mem1_write_34__and00011:O)| NONE(mi/mem1_write_34)  | 1     |
+mi/mem1_write_35__and0000(mi/mem1_write_35__and00001:O)| NONE(mi/mem1_write_35)  | 1     |
+mi/mem1_write_35__and0001(mi/mem1_write_35__and00011:O)| NONE(mi/mem1_write_35)  | 1     |
+mi/mem1_write_3__and0000(mi/mem1_write_3__and00001:O)  | NONE(mi/mem1_write_3)   | 1     |
+mi/mem1_write_3__and0001(mi/mem1_write_3__and00011:O)  | NONE(mi/mem1_write_3)   | 1     |
+mi/mem1_write_4__and0000(mi/mem1_write_4__and00001:O)  | NONE(mi/mem1_write_4)   | 1     |
+mi/mem1_write_4__and0001(mi/mem1_write_4__and00011:O)  | NONE(mi/mem1_write_4)   | 1     |
+mi/mem1_write_5__and0000(mi/mem1_write_5__and00001:O)  | NONE(mi/mem1_write_5)   | 1     |
+mi/mem1_write_5__and0001(mi/mem1_write_5__and00011:O)  | NONE(mi/mem1_write_5)   | 1     |
+mi/mem1_write_6__and0000(mi/mem1_write_6__and00001:O)  | NONE(mi/mem1_write_6)   | 1     |
+mi/mem1_write_6__and0001(mi/mem1_write_6__and00011:O)  | NONE(mi/mem1_write_6)   | 1     |
+mi/mem1_write_7__and0000(mi/mem1_write_7__and00001:O)  | NONE(mi/mem1_write_7)   | 1     |
+mi/mem1_write_7__and0001(mi/mem1_write_7__and00011:O)  | NONE(mi/mem1_write_7)   | 1     |
+mi/mem1_write_8__and0000(mi/mem1_write_8__and00001:O)  | NONE(mi/mem1_write_8)   | 1     |
+mi/mem1_write_8__and0001(mi/mem1_write_8__and00011:O)  | NONE(mi/mem1_write_8)   | 1     |
+mi/mem1_write_9__and0000(mi/mem1_write_9__and00001:O)  | NONE(mi/mem1_write_9)   | 1     |
+mi/mem1_write_9__and0001(mi/mem1_write_9__and00011:O)  | NONE(mi/mem1_write_9)   | 1     |
+ntsc/rh(ntsc/rh:Q)                                     | NONE(ntsc/synch/syncsig)| 1     |
+ntsc/rv(ntsc/rv:Q)                                     | NONE(ntsc/syncv/syncsig)| 1     |
+-------------------------------------------------------+-------------------------+-------+
 
 Timing Summary:
 ---------------
 Speed Grade: -4
 
-   Minimum period: 84.722ns (Maximum Frequency: 11.803MHz)
-   Minimum input arrival time before clock: 8.775ns
+   Minimum period: 85.048ns (Maximum Frequency: 11.758MHz)
+   Minimum input arrival time before clock: 8.746ns
    Maximum output required time after clock: 23.648ns
-   Maximum combinational path delay: 7.715ns
+   Maximum combinational path delay: 7.589ns
 
 Timing Detail:
 --------------
@@ -1768,10 +1784,10 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clock_27mhz'
-  Clock period: 84.722ns (frequency: 11.803MHz)
-  Total number of paths / destination ports: 2770 / 354
+  Clock period: 85.048ns (frequency: 11.758MHz)
+  Total number of paths / destination ports: 2198 / 287
 -------------------------------------------------------------------------
-Delay:               6.052ns (Levels of Logic = 1)
+Delay:               6.075ns (Levels of Logic = 1)
   Source:            reset_sr (FF)
   Destination:       vga/Mram_vcounts9 (RAM)
   Source Clock:      clock_27mhz rising
@@ -1781,17 +1797,17 @@ Delay:               6.052ns (Levels of Logic = 1)
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     SRL16:CLK->Q         70   2.901   1.186  reset_sr (ntsc/adv7185/reset_count_cst)
+     SRL16:CLK->Q         79   2.901   1.209  reset_sr (ntsc/adv7185/reset_count_cst)
      INV:I->O             16   0.439   1.000  vga/reset_inv2_INV_0 (ntsc/decode/reset_inv)
      RAM16X1S:WE               0.525          vga/Mram_blanks
     ----------------------------------------
-    Total                      6.052ns (3.865ns logic, 2.187ns route)
-                                       (63.9% logic, 36.1% route)
+    Total                      6.075ns (3.865ns logic, 2.210ns route)
+                                       (63.6% logic, 36.4% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'ntsc/adv7185/clock_slow1'
   Clock period: 5.738ns (frequency: 174.277MHz)
-  Total number of paths / destination ports: 510 / 122
+  Total number of paths / destination ports: 532 / 122
 -------------------------------------------------------------------------
 Delay:               5.738ns (Levels of Logic = 9)
   Source:            ntsc/adv7185/state_FSM_FFd21 (FF)
@@ -1803,14 +1819,14 @@ Delay:               5.738ns (Levels of Logic = 9)
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDRE:C->Q             3   0.568   1.010  ntsc/adv7185/state_FSM_FFd21 (ntsc/adv7185/state_FSM_FFd21)
+     FDRE:C->Q             2   0.568   0.987  ntsc/adv7185/state_FSM_FFd21 (ntsc/adv7185/state_FSM_FFd21)
      LUT4:I0->O            1   0.439   0.000  ntsc/adv7185/data_or0000_wg_lut<1> (ntsc/adv7185/data_or0000_wg_lut<1>)
      MUXCY:S->O            1   0.298   0.000  ntsc/adv7185/data_or0000_wg_cy<1> (ntsc/adv7185/data_or0000_wg_cy<1>)
      MUXCY:CI->O           1   0.053   0.000  ntsc/adv7185/data_or0000_wg_cy<2> (ntsc/adv7185/data_or0000_wg_cy<2>)
      MUXCY:CI->O           1   0.053   0.000  ntsc/adv7185/data_or0000_wg_cy<3> (ntsc/adv7185/data_or0000_wg_cy<3>)
      MUXCY:CI->O           1   0.053   0.000  ntsc/adv7185/data_or0000_wg_cy<4> (ntsc/adv7185/data_or0000_wg_cy<4>)
      MUXCY:CI->O           1   0.053   0.000  ntsc/adv7185/data_or0000_wg_cy<5> (ntsc/adv7185/data_or0000_wg_cy<5>)
-     MUXCY:CI->O           7   0.942   1.024  ntsc/adv7185/data_or0000_wg_cy<6> (ntsc/adv7185/data_or0000)
+     MUXCY:CI->O           8   0.942   1.048  ntsc/adv7185/data_or0000_wg_cy<6> (ntsc/adv7185/data_or0000)
      LUT4:I1->O            1   0.439   0.000  ntsc/adv7185/data_mux0000<1>1 (ntsc/adv7185/data_mux0000<1>1)
      MUXF5:I0->O           1   0.436   0.000  ntsc/adv7185/data_mux0000<1>_f5 (ntsc/adv7185/data_mux0000<1>)
      FDE:D                     0.370          ntsc/adv7185/data_6
@@ -1820,56 +1836,34 @@ Delay:               5.738ns (Levels of Logic = 9)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'tv_in_line_clock1'
-  Clock period: 7.048ns (frequency: 141.884MHz)
-  Total number of paths / destination ports: 162 / 24
+  Clock period: 7.259ns (frequency: 137.770MHz)
+  Total number of paths / destination ports: 1050 / 131
 -------------------------------------------------------------------------
-Delay:               7.048ns (Levels of Logic = 5)
-  Source:            ntsc/decode/current_state_2 (FF)
-  Destination:       ntsc/decode/current_state_1 (FF)
+Delay:               7.259ns (Levels of Logic = 4)
+  Source:            ntsc/decode/current_state_1 (FF)
+  Destination:       ntsc/frame_flag (FF)
   Source Clock:      tv_in_line_clock1 rising
   Destination Clock: tv_in_line_clock1 rising
 
-  Data Path: ntsc/decode/current_state_2 to ntsc/decode/current_state_1
+  Data Path: ntsc/decode/current_state_1 to ntsc/frame_flag
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDE:C->Q             15   0.568   1.023  ntsc/decode/current_state_2 (ntsc/decode/current_state_2)
-     LUT3:I2->O            1   0.439   0.802  ntsc/decode/current_state_mux0000<3>324 (ntsc/decode/current_state_mux0000<3>324)
-     LUT4:I0->O            2   0.439   0.736  ntsc/decode/current_state_mux0000<3>359 (ntsc/decode/current_state_mux0000<3>359)
-     LUT3:I2->O            1   0.439   0.551  ntsc/decode/current_state_mux0000<3>376 (ntsc/decode/N8)
-     LUT4:I2->O            1   0.439   0.803  ntsc/decode/current_state_mux0000<3>20 (ntsc/decode/current_state_mux0000<3>20)
-     LUT2:I0->O            1   0.439   0.000  ntsc/decode/current_state_mux0000<3>94 (ntsc/decode/current_state_mux0000<3>)
-     FDE:D                     0.370          ntsc/decode/current_state_1
+     FDE:C->Q             13   0.568   1.240  ntsc/decode/current_state_1 (ntsc/decode/current_state_1)
+     LUT2:I0->O            2   0.439   0.986  ntsc/decode/current_state_mux0000<4>221 (ntsc/decode/N311)
+     LUT4:I0->O            5   0.439   0.978  ntsc/decode/current_state_mux0000<1>410 (ntsc/decode/f_cmp_eq0000)
+     LUT2:I1->O            3   0.439   0.933  ntsc/decode/_AUX_9<1>1 (fvh<1>)
+     LUT4:I1->O            1   0.439   0.518  ntsc/frame_flag_not00011 (ntsc/frame_flag_not0001)
+     FDR:R                     0.280          ntsc/frame_flag
     ----------------------------------------
-    Total                      7.048ns (3.133ns logic, 3.915ns route)
-                                       (44.5% logic, 55.5% route)
-
-=========================================================================
-Timing constraint: Default OFFSET IN BEFORE for Clock 'clock_27mhz'
-  Total number of paths / destination ports: 29 / 20
--------------------------------------------------------------------------
-Offset:              4.632ns (Levels of Logic = 3)
-  Source:            tv_in_ycrcb<17> (PAD)
-  Destination:       ntsc/pulseonce (FF)
-  Destination Clock: clock_27mhz rising
-
-  Data Path: tv_in_ycrcb<17> to ntsc/pulseonce
-                                Gate     Net
-    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
-    ----------------------------------------  ------------
-     IBUF:I->O            14   0.825   1.263  tv_in_ycrcb_17_IBUF (tv_in_ycrcb_17_IBUF)
-     LUT4:I0->O            2   0.439   0.909  ntsc/frame_flag_mux00001 (N2)
-     LUT2:I1->O            1   0.439   0.517  ntsc/pulseonce_and00001 (ntsc/pulseonce_and0000)
-     FDRE:CE                   0.240          ntsc/pulseonce
-    ----------------------------------------
-    Total                      4.632ns (1.943ns logic, 2.689ns route)
-                                       (41.9% logic, 58.1% route)
+    Total                      7.259ns (2.604ns logic, 4.655ns route)
+                                       (35.9% logic, 64.1% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'tv_in_line_clock1'
-  Total number of paths / destination ports: 235 / 24
+  Total number of paths / destination ports: 237 / 26
 -------------------------------------------------------------------------
-Offset:              8.775ns (Levels of Logic = 7)
+Offset:              8.746ns (Levels of Logic = 7)
   Source:            tv_in_ycrcb<17> (PAD)
   Destination:       ntsc/decode/current_state_1 (FF)
   Destination Clock: tv_in_line_clock1 rising
@@ -1878,17 +1872,17 @@ Offset:              8.775ns (Levels of Logic = 7)
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O            14   0.825   1.263  tv_in_ycrcb_17_IBUF (tv_in_ycrcb_17_IBUF)
+     IBUF:I->O            13   0.825   1.240  tv_in_ycrcb_17_IBUF (tv_in_ycrcb_17_IBUF)
      LUT4:I0->O            1   0.439   0.557  ntsc/decode/current_state_cmp_eq002210 (ntsc/decode/current_state_cmp_eq002210)
-     LUT4:I3->O            2   0.439   0.741  ntsc/decode/current_state_cmp_eq002217_SW0 (N132)
-     LUT4:I3->O            7   0.439   0.857  ntsc/decode/current_state_cmp_eq002217 (ntsc/decode/current_state_cmp_eq0022)
-     LUT4:I3->O            1   0.439   0.803  ntsc/decode/current_state_mux0000<3>64 (ntsc/decode/current_state_mux0000<3>64)
-     LUT4:I0->O            1   0.439   0.725  ntsc/decode/current_state_mux0000<3>83 (ntsc/decode/current_state_mux0000<3>83)
-     LUT2:I1->O            1   0.439   0.000  ntsc/decode/current_state_mux0000<3>94 (ntsc/decode/current_state_mux0000<3>)
+     LUT4:I3->O            2   0.439   0.741  ntsc/decode/current_state_cmp_eq002217_SW0 (N151)
+     LUT4:I3->O            7   0.439   1.024  ntsc/decode/current_state_cmp_eq002217 (ntsc/decode/current_state_cmp_eq0022)
+     LUT3:I1->O            1   0.439   0.551  ntsc/decode/current_state_mux0000<3>376 (ntsc/decode/N8)
+     LUT4:I2->O            1   0.439   0.803  ntsc/decode/current_state_mux0000<3>20 (ntsc/decode/current_state_mux0000<3>20)
+     LUT2:I0->O            1   0.439   0.000  ntsc/decode/current_state_mux0000<3>94 (ntsc/decode/current_state_mux0000<3>)
      FDE:D                     0.370          ntsc/decode/current_state_1
     ----------------------------------------
-    Total                      8.775ns (3.829ns logic, 4.946ns route)
-                                       (43.6% logic, 56.4% route)
+    Total                      8.746ns (3.829ns logic, 4.917ns route)
+                                       (43.8% logic, 56.2% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'ntsc/adv7185/clock_slow1'
@@ -1911,7 +1905,7 @@ Offset:              5.630ns (Levels of Logic = 1)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clock_27mhz'
-  Total number of paths / destination ports: 62384 / 87
+  Total number of paths / destination ports: 62480 / 89
 -------------------------------------------------------------------------
 Offset:              23.648ns (Levels of Logic = 12)
   Source:            vga/vindex_1 (FF)
@@ -1979,57 +1973,58 @@ Offset:              5.552ns (Levels of Logic = 1)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'tv_in_line_clock1'
-  Total number of paths / destination ports: 16 / 4
+  Total number of paths / destination ports: 84 / 72
 -------------------------------------------------------------------------
-Offset:              10.394ns (Levels of Logic = 4)
-  Source:            ntsc/decode/current_state_2 (FF)
-  Destination:       analyzer3_data<13> (PAD)
+Offset:              11.246ns (Levels of Logic = 5)
+  Source:            ntsc/frame_flag (FF)
+  Destination:       analyzer4_data<15> (PAD)
   Source Clock:      tv_in_line_clock1 rising
 
-  Data Path: ntsc/decode/current_state_2 to analyzer3_data<13>
+  Data Path: ntsc/frame_flag to analyzer4_data<15>
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDE:C->Q             15   0.568   1.274  ntsc/decode/current_state_2 (ntsc/decode/current_state_2)
-     LUT2:I0->O            2   0.439   0.986  ntsc/decode/current_state_mux0000<4>221 (ntsc/decode/N311)
-     LUT4:I0->O           11   0.439   1.116  ntsc/decode/current_state_mux0000<1>41 (ntsc/decode/f_cmp_eq0000)
-     LUT2:I1->O            5   0.439   0.771  ntsc/decode/_AUX_9<0>1 (fvh<0>)
-     OBUF:I->O                 4.361          analyzer3_data_13_OBUF (analyzer3_data<13>)
+     FDR:C->Q             38   0.568   1.137  ntsc/frame_flag (ntsc/frame_flag)
+     LUT3:I2->O            1   0.439   0.557  vga/vga_flag_SW0_SW0 (N135)
+     LUT4:I3->O            6   0.439   1.078  vga/vga_flag (vga_flag)
+     LUT4:I0->O           21   0.439   1.087  mi/mem0_addr<0>11 (mi/next_mem0_read_queue<2>)
+     LUT4:I3->O            2   0.439   0.701  mi/mem0_addr<7>1 (ram0_address_7_OBUF)
+     OBUF:I->O                 4.361          analyzer4_data_15_OBUF (analyzer4_data<15>)
     ----------------------------------------
-    Total                     10.394ns (6.246ns logic, 4.148ns route)
-                                       (60.1% logic, 39.9% route)
+    Total                     11.246ns (6.685ns logic, 4.561ns route)
+                                       (59.4% logic, 40.6% route)
 
 =========================================================================
 Timing constraint: Default path analysis
-  Total number of paths / destination ports: 6 / 6
+  Total number of paths / destination ports: 5 / 5
 -------------------------------------------------------------------------
-Delay:               7.715ns (Levels of Logic = 3)
-  Source:            tv_in_ycrcb<16> (PAD)
-  Destination:       analyzer3_data<13> (PAD)
+Delay:               7.589ns (Levels of Logic = 3)
+  Source:            tv_in_ycrcb<17> (PAD)
+  Destination:       analyzer1_data<8> (PAD)
 
-  Data Path: tv_in_ycrcb<16> to analyzer3_data<13>
+  Data Path: tv_in_ycrcb<17> to analyzer1_data<8>
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O            19   0.825   1.320  tv_in_ycrcb_16_IBUF (tv_in_ycrcb_16_IBUF)
-     LUT2:I0->O            5   0.439   0.771  ntsc/decode/_AUX_9<0>1 (fvh<0>)
-     OBUF:I->O                 4.361          analyzer3_data_13_OBUF (analyzer3_data<13>)
+     IBUF:I->O            13   0.825   1.240  tv_in_ycrcb_17_IBUF (tv_in_ycrcb_17_IBUF)
+     LUT2:I0->O            3   0.439   0.725  ntsc/decode/_AUX_9<1>1 (fvh<1>)
+     OBUF:I->O                 4.361          analyzer1_data_8_OBUF (analyzer1_data<8>)
     ----------------------------------------
-    Total                      7.715ns (5.625ns logic, 2.090ns route)
-                                       (72.9% logic, 27.1% route)
+    Total                      7.589ns (5.625ns logic, 1.964ns route)
+                                       (74.1% logic, 25.9% route)
 
 =========================================================================
 
 
-Total REAL time to Xst completion: 13.00 secs
-Total CPU time to Xst completion: 11.70 secs
+Total REAL time to Xst completion: 14.00 secs
+Total CPU time to Xst completion: 12.08 secs
  
 --> 
 
 
-Total memory usage is 482964 kilobytes
+Total memory usage is 483528 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :  550 (   0 filtered)
-Number of infos    :   21 (   0 filtered)
+Number of warnings :  524 (   0 filtered)
+Number of infos    :   22 (   0 filtered)
 

@@ -5,7 +5,7 @@
     The structure and the elements are likely to change over the next few releases.
     This means code written to parse this file will need to be revisited each subsequent release.-->
 
-  <application stringID="par" timeStamp="Mon Nov 28 23:33:03 2011">
+  <application stringID="par" timeStamp="Tue Nov 29 16:41:29 2011">
     <task stringID="PAR_DEVICE_UTILIZATION">
       <section stringID="PAR_DEVICE_UTLIZATION">
         <item AVAILABLE="684" dataType="int" stringID="PAR_EXTERNAL_IOB" value="576">
@@ -19,7 +19,7 @@
         <item stringID="PAR_CPU_TIME_COMPLETION_ROUTER" value="22 secs "/>
         <item dataType="int" stringID="PAR_UNROUTES" value="0"/>
         <item dataType="float" stringID="PAR_TIMING_SCORE" value="0.000000"/>
-        <item stringID="PAR_REAL_TIME_COMPLETION_PAR" value="32 secs "/>
+        <item stringID="PAR_REAL_TIME_COMPLETION_PAR" value="33 secs "/>
         <item stringID="PAR_CPU_TIME_COMPLETION_PAR" value="27 secs "/>
       </section>
     </task>
@@ -35,6 +35,8 @@
           <row stringID="row" value="6"></row>
           <row stringID="row" value="7"></row>
           <row stringID="row" value="8"></row>
+          <row stringID="row" value="9"></row>
+          <row stringID="row" value="10"></row>
         </table>
       </section>
       <section stringID="PAR_PAD_PIN_REPORT"></section>

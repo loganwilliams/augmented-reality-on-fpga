@@ -8,6 +8,24 @@
 <msg type="info" file="Par" num="282" delta="unknown" >No user timing constraints were detected or you have set the option to ignore timing constraints (&quot;par -x&quot;). Place and Route will run in &quot;Performance Evaluation Mode&quot; to automatically improve the performance of all internal clocks in this design. The PAR timing summary will list the performance achieved for each clock. Note: For the fastest runtime, set the effort level to &quot;std&quot;.  For best performance, set the effort level to &quot;high&quot;. For a balance between the fastest runtime and best performance, set the effort level to &quot;med&quot;.
 </msg>
 
+<msg type="warning" file="Timing" num="3328" delta="unknown" >Timing Constraint 
+&quot;<arg fmt="%s" index="1">Autotimespec constraint for clock net analyzer1_clock_OBUF</arg>&quot;
+ fails the minimum period check for the output clock &quot;<arg fmt="%s" index="2">clock_65mhz_unbuf</arg>&quot; from <arg fmt="%s" index="3">DCM</arg> block &quot;<arg fmt="%s" index="4">vclk1</arg>&quot; because the period constraint value (<arg fmt="%d" index="5">4166</arg> ps) is less than the minimum internal period limit of <arg fmt="%d" index="6">4761</arg> ps.   Please increase the period of the constraint to remove this timing failure.</msg>
+
+<msg type="warning" file="Timing" num="3327" delta="unknown" >Timing Constraint 
+&quot;<arg fmt="%s" index="1">PERIOD analysis for net &quot;clock_65mhz_unbuf&quot; derived from
+ Autotimespec constraint for clock net analyzer1_clock_OBUF
+ divided by 2.40 and duty cycle corrected to 4.167 nS  HIGH 2.083 nS 
+</arg>&quot;
+ fails the minimum period check for the input clock &quot;<arg fmt="%s" index="2">analyzer2_clock_OBUF</arg>&quot; to <arg fmt="%s" index="3">DCM</arg> block &quot;<arg fmt="%s" index="4">rc/ext_dcm</arg>&quot; because the period constraint value (<arg fmt="%d" index="5">4166</arg> ps) is less than the minimum internal period limit of <arg fmt="%d" index="6">5555</arg> ps.   Please increase the period of the constraint to remove this timing failure.</msg>
+
+<msg type="warning" file="Timing" num="3328" delta="unknown" >Timing Constraint 
+&quot;<arg fmt="%s" index="1">PERIOD analysis for net &quot;clock_65mhz_unbuf&quot; derived from
+ Autotimespec constraint for clock net analyzer1_clock_OBUF
+ divided by 2.40 and duty cycle corrected to 4.167 nS  HIGH 2.083 nS 
+</arg>&quot;
+ fails the minimum period check for the output clock &quot;<arg fmt="%s" index="2">rc/ram_clk</arg>&quot; from <arg fmt="%s" index="3">DCM</arg> block &quot;<arg fmt="%s" index="4">rc/ext_dcm</arg>&quot; because the period constraint value (<arg fmt="%d" index="5">4166</arg> ps) is less than the minimum internal period limit of <arg fmt="%d" index="6">5555</arg> ps.   Please increase the period of the constraint to remove this timing failure.</msg>
+
 <msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">disp_data_in_IBUF</arg> has no load.  PAR will not attempt to route this signal.
 </msg>
 
@@ -758,7 +776,13 @@
 <msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">user4&lt;9&gt;_IBUF</arg> has no load.  PAR will not attempt to route this signal.
 </msg>
 
-<msg type="warning" file="Place" num="414" delta="unknown" >The input design contains local clock signal(s). To get a better result, we recommend users run map with the &quot;-timing&quot; option set before starting the placement.
+<msg type="warning" file="Route" num="0" delta="unknown" >CLK Net:<arg fmt="%s" index="1">analyzer1_clock_OBUF</arg> is being routed on general routing resources. Please consider using a dedicated clocking routing resource. For more information on clock routing resources, see the target architecture&apos;s user guide.
+</msg>
+
+<msg type="warning" file="Route" num="0" delta="unknown" >CLK Net:<arg fmt="%s" index="1">fvh&lt;0&gt;</arg> may have excessive skew because <arg fmt="%d" index="2">1</arg> CLK pins and <arg fmt="%d" index="3">1</arg> NON_CLK pins failed to route using a CLK template.
+</msg>
+
+<msg type="warning" file="Route" num="0" delta="unknown" >CLK Net:<arg fmt="%s" index="1">fvh&lt;1&gt;</arg> may have excessive skew because <arg fmt="%d" index="2">1</arg> CLK pins and <arg fmt="%d" index="3">2</arg> NON_CLK pins failed to route using a CLK template.
 </msg>
 
 <msg type="info" file="Timing" num="2761" delta="unknown" >N/A entries in the Constraints list may indicate that the constraint does not cover any paths or that it has no requested value.</msg>

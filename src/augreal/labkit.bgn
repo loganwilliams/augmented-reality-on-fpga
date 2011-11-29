@@ -12,7 +12,7 @@ stepping level for this device is '1'. Additional information on "stepping
 level" is available at support.xilinx.com.
 Opened constraints file labkit.pcf.
 
-Mon Nov 28 23:33:40 2011
+Tue Nov 29 16:42:06 2011
 
 /afs/csail.mit.edu/proj/redsocs/Xilinx10.1/ISE/bin/lin64/unwrapped/bitgen -intstyle ise -w -g DebugBitstream:No -g Binary:no -g CRC:Enable -g ConfigRate:4 -g CclkPin:PullUp -g M0Pin:PullUp -g M1Pin:PullUp -g M2Pin:PullUp -g ProgPin:PullUp -g DonePin:PullUp -g PowerdownPin:PullUp -g TckPin:PullUp -g TdiPin:PullUp -g TdoPin:PullUp -g TmsPin:PullUp -g UnusedPin:PullDown -g UserID:0xFFFFFFFF -g DCMShutdown:Disable -g DisableBandgap:No -g FreezeDCI:Yes -g StartUpClk:CClk -g DONE_cycle:4 -g GTS_cycle:5 -g GWE_cycle:6 -g LCK_cycle:NoWait -g Match_cycle:Auto -g Security:None -g DonePipe:No -g DriveDone:No -g Encrypt:No labkit.ncd 
 
@@ -145,6 +145,12 @@ Summary of Bitgen Options:
  ** The specified setting matches the default setting.
 
 Running DRC.
+WARNING:PhysDesignRules:372 - Gated clock. Clock net fvh<0> is sourced by a
+   combinatorial pin. This is not good design practice. Use the CE pin to
+   control the loading of data into the flip-flop.
+WARNING:PhysDesignRules:372 - Gated clock. Clock net fvh<1> is sourced by a
+   combinatorial pin. This is not good design practice. Use the CE pin to
+   control the loading of data into the flip-flop.
 WARNING:PhysDesignRules:367 - The signal <disp_data_in_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <tv_in_data_valid_IBUF> is incomplete.
@@ -651,7 +657,7 @@ INFO:PhysDesignRules:772 - To achieve optimal frequency synthesis performance
 INFO:PhysDesignRules:772 - To achieve optimal frequency synthesis performance
    with the CLKFX and CLKFX180 outputs of the DCM comp vclk3, consult the device
    Interactive Data Sheet.
-DRC detected 0 errors and 250 warnings.  Please see the previously displayed
+DRC detected 0 errors and 252 warnings.  Please see the previously displayed
 individual error or warning messages for more details.
 Creating bit map...
 Saving bit stream in "labkit.bit".

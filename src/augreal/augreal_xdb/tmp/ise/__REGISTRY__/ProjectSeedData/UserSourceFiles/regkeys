@@ -1,5 +1,5 @@
 NUM_USER_FILES
-7
+9
 s
 user_file_1
 ntsc_capture.v
@@ -20,5 +20,11 @@ user_file_6
 params.v
 s
 user_file_7
+ntsc_clean.v
+s
+user_file_8
+test_ntsc_clean.v
+s
+user_file_9
 memory_interface.v
 s

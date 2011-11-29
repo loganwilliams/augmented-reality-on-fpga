@@ -5,154 +5,160 @@
      behavior or data corruption.  It is strongly advised that
      users do not edit the contents of this file. -->
 <messages>
-<msg type="warning" file="HDLCompilers" num="261" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 379 </arg>Connection to output port &apos;<arg fmt="%s" index="2">vga_pixel</arg>&apos; does not match port size
+<msg type="warning" file="HDLCompilers" num="298" delta="unknown" ><arg fmt="%s" index="1">&quot;memory_interface.v&quot; line 61 </arg>Too many digits specified in decimal constant
 </msg>
 
-<msg type="warning" file="HDLCompilers" num="259" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 386 </arg>Connection to input port &apos;<arg fmt="%s" index="2">vga_pixel</arg>&apos; does not match port size
+<msg type="warning" file="HDLCompilers" num="298" delta="unknown" ><arg fmt="%s" index="1">&quot;memory_interface.v&quot; line 62 </arg>Too many digits specified in decimal constant
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 215:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKFX_DIVIDE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="HDLCompilers" num="261" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 421 </arg>Connection to output port &apos;<arg fmt="%s" index="2">vga_pixel</arg>&apos; does not match port size
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 215:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKFX_MULTIPLY</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="HDLCompilers" num="259" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 446 </arg>Connection to input port &apos;<arg fmt="%s" index="2">vga_pixel</arg>&apos; does not match port size
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 215:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKIN_PERIOD</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 197:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKFX_DIVIDE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 215:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLK_FEEDBACK</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 197:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKFX_MULTIPLY</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 224:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKFX_DIVIDE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 197:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKIN_PERIOD</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 224:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKFX_MULTIPLY</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 197:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLK_FEEDBACK</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 224:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKIN_PERIOD</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 206:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKFX_DIVIDE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 224:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLK_FEEDBACK</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 206:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKFX_MULTIPLY</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 421:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKOUT_PHASE_SHIFT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 206:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKIN_PERIOD</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 421:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLK_FEEDBACK</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 206:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLK_FEEDBACK</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 421:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DFS_FREQUENCY_MODE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 501:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKOUT_PHASE_SHIFT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 421:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DLL_FREQUENCY_MODE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 501:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLK_FEEDBACK</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 421:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DUTY_CYCLE_CORRECTION</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 501:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DFS_FREQUENCY_MODE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 421:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">PHASE_SHIFT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 501:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DLL_FREQUENCY_MODE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 421:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">STARTUP_WAIT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 501:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DUTY_CYCLE_CORRECTION</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 438:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKOUT_PHASE_SHIFT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 501:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">PHASE_SHIFT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 438:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLK_FEEDBACK</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 501:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">STARTUP_WAIT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 438:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DFS_FREQUENCY_MODE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 518:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLKOUT_PHASE_SHIFT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 438:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DLL_FREQUENCY_MODE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 518:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">CLK_FEEDBACK</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 438:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DUTY_CYCLE_CORRECTION</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 518:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DFS_FREQUENCY_MODE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 438:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">PHASE_SHIFT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 518:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DLL_FREQUENCY_MODE</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 438:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">STARTUP_WAIT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 518:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">DUTY_CYCLE_CORRECTION</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 451:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">INIT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 518:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">PHASE_SHIFT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">378</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">lpf_flag</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 518:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">STARTUP_WAIT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">378</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">lpf_wr</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
+<msg type="warning" file="Xst" num="2591" delta="unknown" ><arg fmt="%s" index="1">&quot;labkit.v&quot; line 531:</arg> <arg fmt="%s" index="2">attribute on instance</arg> &lt;<arg fmt="%s" index="3">INIT</arg>&gt; overrides <arg fmt="%s" index="4">generic/parameter on entity</arg>. It is possible that simulator will not take this attribute into account.
 </msg>
 
-<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">378</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">lpf_x</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
+<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">419</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">lpf_flag</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
 </msg>
 
-<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">378</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">lpf_y</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
+<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">419</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">lpf_wr</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
 </msg>
 
-<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">378</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">lpf_pixel_write</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
+<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">419</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">lpf_x</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
 </msg>
 
-<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">378</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">pt_flag</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
+<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">419</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">lpf_y</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
 </msg>
 
-<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">378</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">pt_x</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
+<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">419</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">lpf_pixel_write</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
 </msg>
 
-<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">378</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">pt_y</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
+<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">419</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">pt_flag</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
 </msg>
 
-<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">378</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">pt_pixel</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
+<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">419</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">pt_x</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">678</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">419</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">pt_y</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">679</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">labkit.v</arg>&quot; line <arg fmt="%d" index="2">419</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">pt_pixel</arg>&apos; of instance &apos;<arg fmt="%s" index="4">mi</arg>&apos; is tied to GND.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">680</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">699</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">681</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">700</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">682</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">701</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">683</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">702</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">684</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">703</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">685</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">704</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">686</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">705</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">687</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">706</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">688</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">707</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">689</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">708</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">690</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">709</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">691</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">710</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">692</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">711</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">693</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">712</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+</msg>
+
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">713</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
+</msg>
+
+<msg type="warning" file="Xst" num="2326" delta="unknown" >&quot;<arg fmt="%s" index="1">ntsc_capture.v</arg>&quot; line <arg fmt="%d" index="2">714</arg>: Invalid escape sequence : %<arg fmt="%c" index="3">X</arg>.
 </msg>
 
 <msg type="warning" file="Xst" num="852" delta="unknown" >&quot;<arg fmt="%s" index="1">vga_write.v</arg>&quot; line <arg fmt="%d" index="2">30</arg>: Unconnected input port &apos;<arg fmt="%s" index="3">frame_flag</arg>&apos; of instance &apos;<arg fmt="%s" index="4">xvga1</arg>&apos; is tied to GND.
@@ -227,9 +233,6 @@
 <msg type="warning" file="Xst" num="653" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">ptf_flag</arg>&gt; is used but never assigned. This sourceless signal will be automatically connected to value <arg fmt="%s" index="2">0</arg>.
 </msg>
 
-<msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">prev_vga_pixel&lt;35:24&gt;</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-</msg>
-
 <msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">next_proc_mem_loc</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 </msg>
 
@@ -275,16 +278,19 @@
 <msg type="warning" file="Xst" num="737" delta="unknown" >Found <arg fmt="%d" index="1">36</arg>-bit latch for signal &lt;<arg fmt="%s" index="2">mem1_write</arg>&gt;. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
 </msg>
 
-<msg type="warning" file="Xst" num="643" delta="unknown" >&quot;<arg fmt="%s" index="1">memory_interface.v</arg>&quot; line <arg fmt="%d" index="2">250</arg>: The result of a <arg fmt="%d" index="3">2</arg>x<arg fmt="%d" index="4">18</arg>-bit multiplication is partially used. Only the <arg fmt="%d" index="5">19</arg> least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
-</msg>
-
-<msg type="warning" file="Xst" num="643" delta="unknown" >&quot;<arg fmt="%s" index="1">memory_interface.v</arg>&quot; line <arg fmt="%d" index="2">251</arg>: The result of a <arg fmt="%d" index="3">2</arg>x<arg fmt="%d" index="4">18</arg>-bit multiplication is partially used. Only the <arg fmt="%d" index="5">19</arg> least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
-</msg>
-
-<msg type="warning" file="Xst" num="643" delta="unknown" >&quot;<arg fmt="%s" index="1">memory_interface.v</arg>&quot; line <arg fmt="%d" index="2">256</arg>: The result of a <arg fmt="%d" index="3">2</arg>x<arg fmt="%d" index="4">18</arg>-bit multiplication is partially used. Only the <arg fmt="%d" index="5">19</arg> least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
-</msg>
-
 <msg type="warning" file="Xst" num="643" delta="unknown" >&quot;<arg fmt="%s" index="1">memory_interface.v</arg>&quot; line <arg fmt="%d" index="2">257</arg>: The result of a <arg fmt="%d" index="3">2</arg>x<arg fmt="%d" index="4">18</arg>-bit multiplication is partially used. Only the <arg fmt="%d" index="5">19</arg> least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
+</msg>
+
+<msg type="warning" file="Xst" num="643" delta="unknown" >&quot;<arg fmt="%s" index="1">memory_interface.v</arg>&quot; line <arg fmt="%d" index="2">258</arg>: The result of a <arg fmt="%d" index="3">2</arg>x<arg fmt="%d" index="4">18</arg>-bit multiplication is partially used. Only the <arg fmt="%d" index="5">19</arg> least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
+</msg>
+
+<msg type="warning" file="Xst" num="643" delta="unknown" >&quot;<arg fmt="%s" index="1">memory_interface.v</arg>&quot; line <arg fmt="%d" index="2">263</arg>: The result of a <arg fmt="%d" index="3">2</arg>x<arg fmt="%d" index="4">18</arg>-bit multiplication is partially used. Only the <arg fmt="%d" index="5">19</arg> least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
+</msg>
+
+<msg type="warning" file="Xst" num="643" delta="unknown" >&quot;<arg fmt="%s" index="1">memory_interface.v</arg>&quot; line <arg fmt="%d" index="2">264</arg>: The result of a <arg fmt="%d" index="3">2</arg>x<arg fmt="%d" index="4">18</arg>-bit multiplication is partially used. Only the <arg fmt="%d" index="5">19</arg> least significant bits are used. If you are doing this on purpose, you may safely ignore this warning. Otherwise, make sure you are not losing information, leading to unexpected circuit behavior.
+</msg>
+
+<msg type="warning" file="Xst" num="737" delta="unknown" >Found <arg fmt="%d" index="1">1</arg>-bit latch for signal &lt;<arg fmt="%s" index="2">syncsig</arg>&gt;. Latches may be generated from incomplete case or if statements. We do not recommend the use of latches in FPGA/CPLD designs, as they may lead to timing problems.
 </msg>
 
 <msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">r_rnm0</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
@@ -1040,10 +1046,22 @@
 <msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">weirdclock</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 </msg>
 
-<msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">nx</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+<msg type="warning" file="Xst" num="1780" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">pt_flag</arg>&gt; is never used or assigned. This unconnected signal will be trimmed during the optimization process.
+</msg>
+
+<msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">ny</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+</msg>
+
+<msg type="warning" file="Xst" num="1780" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">lpf_flag</arg>&gt; is never used or assigned. This unconnected signal will be trimmed during the optimization process.
 </msg>
 
 <msg type="warning" file="Xst" num="646" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">locked</arg>&gt; is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+</msg>
+
+<msg type="warning" file="Xst" num="1780" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">done_pt</arg>&gt; is never used or assigned. This unconnected signal will be trimmed during the optimization process.
+</msg>
+
+<msg type="warning" file="Xst" num="1780" delta="unknown" >Signal &lt;<arg fmt="%s" index="1">done_lpf</arg>&gt; is never used or assigned. This unconnected signal will be trimmed during the optimization process.
 </msg>
 
 <msg type="warning" file="Xst" num="2404" delta="unknown" > FFs/Latches &lt;<arg fmt="%s" index="1">pixels_1</arg>&lt;<arg fmt="%d" index="2">35</arg>:<arg fmt="%d" index="3">1</arg>&gt;&gt; (without init value) have a constant value of 0 in block &lt;<arg fmt="%s" index="4">vga_write</arg>&gt;.
@@ -1058,10 +1076,10 @@
 <msg type="warning" file="Xst" num="2404" delta="unknown" > FFs/Latches &lt;<arg fmt="%s" index="1">pixels_3</arg>&lt;<arg fmt="%d" index="2">35</arg>:<arg fmt="%d" index="3">1</arg>&gt;&gt; (without init value) have a constant value of 0 in block &lt;<arg fmt="%s" index="4">vga_write</arg>&gt;.
 </msg>
 
-<msg type="info" file="Xst" num="2385" delta="unknown" >HDL ADVISOR - You can improve the performance of the multiplier <arg fmt="%s" index="1">Mmult_next_vga_addr_mult0001</arg> by adding <arg fmt="%d" index="2">2</arg> register level(s).
+<msg type="info" file="Xst" num="2385" delta="unknown" >HDL ADVISOR - You can improve the performance of the multiplier <arg fmt="%s" index="1">Mmult_next_ntsc_addr_mult0001</arg> by adding <arg fmt="%d" index="2">2</arg> register level(s).
 </msg>
 
-<msg type="info" file="Xst" num="2385" delta="unknown" >HDL ADVISOR - You can improve the performance of the multiplier <arg fmt="%s" index="1">Mmult_next_ntsc_addr_mult0001</arg> by adding <arg fmt="%d" index="2">2</arg> register level(s).
+<msg type="info" file="Xst" num="2385" delta="unknown" >HDL ADVISOR - You can improve the performance of the multiplier <arg fmt="%s" index="1">Mmult_next_vga_addr_mult0001</arg> by adding <arg fmt="%d" index="2">2</arg> register level(s).
 </msg>
 
 <msg type="info" file="Xst" num="0" delta="unknown" >The small RAM &lt;<arg fmt="%s" index="1">Mram_vsyncs</arg>&gt; will be implemented on LUTs in order to maximize performance and save block RAM resources. If you want to force its implementation on block, use option/constraint ram_style.
@@ -1128,42 +1146,6 @@
 </msg>
 
 <msg type="warning" file="Xst" num="1895" delta="unknown" >Due to other FF/Latch trimming, FF/Latch &lt;<arg fmt="%s" index="1">mem0_read_queue_7</arg>&gt; (without init value) has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">memory_interface</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_24</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_25</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_26</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_27</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_28</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_29</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_30</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_31</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_32</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_33</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_34</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_35</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">memory_interface</arg>&gt;.
 </msg>
 
 <msg type="warning" file="Xst" num="1710" delta="unknown" >FF/Latch &lt;<arg fmt="%s" index="1">vga_out_sync_b</arg>&gt; (without init value) has a constant value of <arg fmt="%d" index="2">1</arg> in block &lt;<arg fmt="%s" index="3">vga_write</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
@@ -1275,75 +1257,6 @@
 </msg>
 
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">cb_4</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">decode</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_1</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_2</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_3</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_4</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_5</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_6</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_7</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_8</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_9</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_10</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_11</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_12</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_13</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_14</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_15</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_16</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_17</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_18</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_19</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_20</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_21</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_22</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">prev_vga_pixel_23</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">mi</arg>&gt;.
 </msg>
 
 <msg type="warning" file="Xst" num="1710" delta="unknown" >FF/Latch &lt;<arg fmt="%s" index="1">FSM_FFd2</arg>&gt; (without init value) has a constant value of <arg fmt="%d" index="2">0</arg> in block &lt;<arg fmt="%s" index="3">state</arg>&gt;. This FF/Latch will be trimmed during the optimization process.
@@ -1583,37 +1496,10 @@
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/color_0</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
 </msg>
 
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/x_9</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/x_8</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/x_7</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/x_6</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/x_5</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/x_4</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/x_3</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/x_2</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/x_1</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
-</msg>
-
-<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/x_0</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
-</msg>
-
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/interesting_flag</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/y_0</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
 </msg>
 
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/decode/cb_4</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
@@ -1650,6 +1536,42 @@
 </msg>
 
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">ntsc/decode/cr_0</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_35</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_34</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_33</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_32</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_31</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_30</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_29</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_28</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_27</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_26</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_25</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_24</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
 </msg>
 
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_23</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
@@ -1719,6 +1641,9 @@
 </msg>
 
 <msg type="warning" file="Xst" num="2677" delta="unknown" >Node &lt;<arg fmt="%s" index="1">mi/prev_vga_pixel_1</arg>&gt; of sequential type is unconnected in block &lt;<arg fmt="%s" index="2">labkit</arg>&gt;.
+</msg>
+
+<msg type="info" file="Xst" num="2169" delta="unknown" >HDL ADVISOR - Some clock signals were not automatically buffered by XST with BUFG/BUFR resources. Please use the buffer_type constraint in order to insert these buffers to the clock signals to help prevent skew problems.
 </msg>
 
 </messages>

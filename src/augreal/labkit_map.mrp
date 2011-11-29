@@ -11,24 +11,24 @@ Target Device  : xc2v6000
 Target Package : bf957
 Target Speed   : -4
 Mapper Version : virtex2 -- $Revision: 1.46.12.2 $
-Mapped Date    : Mon Nov 28 23:32:44 2011
+Mapped Date    : Tue Nov 29 16:41:10 2011
 
 Design Summary
 --------------
 Number of errors:      0
-Number of warnings:  254
+Number of warnings:  256
 Logic Utilization:
-  Total Number Slice Registers:         281 out of  67,584    1%
-    Number used as Flip Flops:          279
-    Number used as Latches:               2
-  Number of 4 input LUTs:               578 out of  67,584    1%
+  Total Number Slice Registers:         296 out of  67,584    1%
+    Number used as Flip Flops:          292
+    Number used as Latches:               4
+  Number of 4 input LUTs:               592 out of  67,584    1%
 Logic Distribution:
-  Number of occupied Slices:            418 out of  33,792    1%
-    Number of Slices containing only related logic:     418 out of     418 100%
-    Number of Slices containing unrelated logic:          0 out of     418   0%
+  Number of occupied Slices:            432 out of  33,792    1%
+    Number of Slices containing only related logic:     432 out of     432 100%
+    Number of Slices containing unrelated logic:          0 out of     432   0%
       *See NOTES below for an explanation of the effects of unrelated logic.
-  Total Number of 4 input LUTs:         641 out of  67,584    1%
-    Number used as logic:               555
+  Total Number of 4 input LUTs:         655 out of  67,584    1%
+    Number used as logic:               569
     Number used as a route-thru:         63
     Number used for Dual Port RAMs:      16
       (Two LUTs used per Dual Port RAM)
@@ -98,9 +98,16 @@ WARNING:LIT:162 - Only DFS outputs (CLKFX/FX180/CONCUR) of DCM symbol "vclk1"
    are routed, but CLKFB is not routed. Proper phase relationship of output
    clocks to CLKIN cannot be guaranteed.
 WARNING:LIT:176 - Clock buffer is designated to drive clock loads. BUFGMUX
-   symbol "physical_group_clock_25mhz/vclk4" (output signal=clock_25mhz) has a
-   mix of clock and non-clock loads. The non-clock loads are:
+   symbol "physical_group_analyzer4_clock_OBUF/vclk4" (output
+   signal=analyzer4_clock_OBUF) has a mix of clock and non-clock loads. The
+   non-clock loads are:
    Pin CLR of vga/vga_out_pixel_clock
+WARNING:PhysDesignRules:372 - Gated clock. Clock net fvh<0> is sourced by a
+   combinatorial pin. This is not good design practice. Use the CE pin to
+   control the loading of data into the flip-flop.
+WARNING:PhysDesignRules:372 - Gated clock. Clock net fvh<1> is sourced by a
+   combinatorial pin. This is not good design practice. Use the CE pin to
+   control the loading of data into the flip-flop.
 WARNING:PhysDesignRules:367 - The signal <disp_data_in_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <tv_in_data_valid_IBUF> is incomplete.

@@ -1,3 +1,13 @@
+module synchronize(
+	input sig,
+	input reset,
+	output reg syncsig);
+	
+	always @(*) begin
+		if (sig) syncsig <= 1;
+		if (reset) syncsig <= 0;
+	end
+endmodule
 
 module ntsc_capture(
 		    input 	      clk, // the main system clock
@@ -40,19 +50,42 @@ module ntsc_capture(
 	wire v;
 	wire h;
 	
+	wire sv;
+	wire sh;
+	reg rh;
+	reg rv;
+	
+	synchronize syncv(.sig(v), .syncsig(sv), .reset(rv));
+	synchronize synch(.sig(h), .syncsig(sh), .reset(rh));
+	
 	reg pulseonce;
 	
 	assign f = fvh[2];
 	assign v = fvh[1];
 	assign h = fvh[0];
 
-   always @ (posedge clock_27mhz) begin
 
+   always @ (posedge tv_in_line_clock1) begin
+			rh <= 0;
+			rv <= 0;
+			
+		if (sv) begin
+			y <= ~f;
+			x <= 0;
+			rv <= 1;
+		end
+		
+		if (sh) begin
+			y <= y + 2;
+			x <= 0;
+			rh <= 1;
+		end
+	
       interesting_flag <= 0; // reset interesting flag
       
 			frame_flag <= 0;
 		
-			if (((y >= 480) | v) & f & ~pulseonce) begin
+			if (((y > 479) | v) & f & ~pulseonce) begin
 				frame_flag <= 1;
 				pulseonce <= 1;
 			end
@@ -60,24 +93,10 @@ module ntsc_capture(
 			if (~f) begin
 				pulseonce <= 0;
 			end
-				
       
       if (dv) begin
 
-			frame_flag <= (((y >= 480) | v) & f);
-		      // if vsync
-      if (v) begin
-	 // reset coordinates
-	 x <= 0;
-	 y <= ~f; // if even field (f=1), start at y=0. if f=0, y=1;
-      end
-
-      // if hsync
-      if (h) begin
-	 x <= 0; // reset x coordinate
-	 y <= y + 2;
-      end	 
-	 if (y <= 480) begin // above 480 lines are blanked
+	 if (y < 480 && x < 640) begin // above 480 lines are blanked
 	    if (state == 0) begin
 	       ntsc_pixels[17:10] <= ycrcb[29:22];
 	       ntsc_pixels[9:5] <= ycrcb[19:15];
@@ -144,7 +163,9 @@ module ntsc_capture(
 	    
 	    
 	 
-	 end // if (y <= 480)
+	 end else begin
+		ntsc_flag <= 0;
+		end
       end // if (dv)
 
       if (reset) begin
