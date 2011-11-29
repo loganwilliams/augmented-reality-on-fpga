@@ -1,5 +1,10 @@
-MO adv7185init NULL ntsc_capture.v vlg68/adv7185init.bin 1322510960
-MO i2c NULL ntsc_capture.v vlg1E/i2c.bin 1322510960
-MO ntsc_decode NULL ntsc_capture.v vlg63/ntsc__decode.bin 1322510960
-MO labkit NULL labkit.v vlg7B/labkit.bin 1322510960
-MO ntsc_capture NULL ntsc_capture.v vlg0F/ntsc__capture.bin 1322510960
+MO memory_interface NULL memory_interface.v vlg25/memory__interface.bin 1322534820
+MO adv7185init NULL ntsc_capture.v vlg68/adv7185init.bin 1322536327
+MO xvga NULL vga_write.v vlg02/xvga.bin 1322534820
+MO ramclock NULL labkit.v vlg24/ramclock.bin 1322536327
+MO i2c NULL ntsc_capture.v vlg1E/i2c.bin 1322536327
+MO ntsc_decode NULL ntsc_capture.v vlg63/ntsc__decode.bin 1322536327
+MO labkit NULL labkit.v vlg7B/labkit.bin 1322536327
+MO ycbcr2rgb NULL ycbcr2rgb.v vlg74/ycbcr2rgb.bin 1322534820
+MO vga_write NULL vga_write.v vlg00/vga__write.bin 1322534820
+MO ntsc_capture NULL ntsc_capture.v vlg0F/ntsc__capture.bin 1322536327

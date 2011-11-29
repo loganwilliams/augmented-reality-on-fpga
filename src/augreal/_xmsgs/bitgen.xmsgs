@@ -62,6 +62,21 @@
 <msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">tv_in_ycrcb&lt;4&gt;_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
 </msg>
 
+<msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">tv_in_ycrcb&lt;5&gt;_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">tv_in_ycrcb&lt;6&gt;_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">tv_in_ycrcb&lt;7&gt;_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">tv_in_ycrcb&lt;8&gt;_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
+<msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">tv_in_ycrcb&lt;9&gt;_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
 <msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">ram1_data&lt;10&gt;_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
 </msg>
 
@@ -267,9 +282,6 @@
 </msg>
 
 <msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">switch&lt;7&gt;_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
-</msg>
-
-<msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">clock_feedback_in_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
 </msg>
 
 <msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">daughtercard&lt;11&gt;_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
@@ -960,6 +972,9 @@
 </msg>
 
 <msg type="warning" file="PhysDesignRules" num="367" delta="unknown" >The signal &lt;<arg fmt="%s" index="1">user4&lt;9&gt;_IBUF</arg>&gt; is incomplete. The signal does not drive any load pins in the design.
+</msg>
+
+<msg type="info" file="PhysDesignRules" num="772" delta="unknown" >To achieve optimal frequency synthesis performance with the CLKFX and CLKFX180 outputs of the DCM comp <arg fmt="%s" index="1">vclk1</arg>, consult the device Interactive Data Sheet.
 </msg>
 
 </messages>

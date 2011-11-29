@@ -1,3 +1,6 @@
+`default_nettype none
+`include "params.v"
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // 6.111 FPGA Labkit -- Template Toplevel Module
@@ -197,6 +200,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    // ac97_sdata_in is an input
 
    // VGA Output
+	
    assign vga_out_red = 8'h0;
    assign vga_out_green = 8'h0;
    assign vga_out_blue = 8'h0;
@@ -205,7 +209,26 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    assign vga_out_pixel_clock = 1'b0;
    assign vga_out_hsync = 1'b0;
    assign vga_out_vsync = 1'b0;
-
+	
+	// generate 65 mhz clock
+   wire clock_65mhz_unbuf,clock_65mhz;
+   DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf));
+   // synthesis attribute CLKFX_DIVIDE of vclk1 is 10
+   // synthesis attribute CLKFX_MULTIPLY of vclk1 is 24
+   // synthesis attribute CLK_FEEDBACK of vclk1 is NONE
+   // synthesis attribute CLKIN_PERIOD of vclk1 is 37
+   BUFG vclk2(.O(clock_65mhz),.I(clock_65mhz_unbuf));
+  
+   // generate 25 mhz clock
+   wire clock_25mhz_unbuf,clock_25mhz;
+   DCM vclk3(.CLKIN(clock_27mhz),.CLKFX(clock_25mhz_unbuf));
+   // synthesis attribute CLKFX_DIVIDE of vclk3 is 15
+   // synthesis attribute CLKFX_MULTIPLY of vclk3 is 14
+   // synthesis attribute CLK_FEEDBACK of vclk3 is NONE
+   // synthesis attribute CLKIN_PERIOD of vclk3 is 37
+   BUFG vclk4(.O(clock_25mhz),.I(clock_25mhz_unbuf));
+  
+  
    // Video Output
    assign tv_out_ycrcb = 10'h0;
    assign tv_out_reset_b = 1'b0;
@@ -222,30 +245,40 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    assign tv_in_fifo_read = 1'b0;
    assign tv_in_fifo_clock = 1'b0;
    assign tv_in_iso = 1'b0;
-	assign tv_in_clock = clock_65mhz;
+	assign tv_in_clock = clock_27mhz;
    // tv_in_ycrcb, tv_in_data_valid, tv_in_line_clock1, tv_in_line_clock2, 
    // tv_in_aef, tv_in_hff, and tv_in_aff are inputs
    
    // SRAMs
-   assign ram0_data = 36'hZ;
-   assign ram0_address = 19'h0;
+	/*************************************
+	******* SRAM BLOCK *******************
+	**************************************/
    assign ram0_adv_ld = 1'b0;
-   assign ram0_clk = 1'b0;
-   assign ram0_cen_b = 1'b1;
-   assign ram0_ce_b = 1'b1;
-   assign ram0_oe_b = 1'b1;
-   assign ram0_we_b = 1'b1;
+   assign ram0_cen_b = 1'b0;
+   assign ram0_ce_b = 1'b0;
+   assign ram0_oe_b = 1'b0;
    assign ram0_bwe_b = 4'hF;
-   assign ram1_data = 36'hZ; 
-   assign ram1_address = 19'h0;
+	
    assign ram1_adv_ld = 1'b0;
-   assign ram1_clk = 1'b0;
-   assign ram1_cen_b = 1'b1;
-   assign ram1_ce_b = 1'b1;
-   assign ram1_oe_b = 1'b1;
-   assign ram1_we_b = 1'b1;
+   assign ram1_cen_b = 1'b0;
+   assign ram1_ce_b = 1'b0;
+   assign ram1_oe_b = 1'b0;
    assign ram1_bwe_b = 4'hF;
-   assign clock_feedback_out = 1'b0;
+	
+	assign ram0_address = 19'b0;
+	assign ram1_address = 19'b0;
+   
+	
+	
+	wire locked;
+	wire weirdclock;
+	
+	ramclock rc(.ref_clock(clock_65mhz), .fpga_clock(weirdclock),
+					.ram0_clock(ram0_clk), 
+					.ram1_clock(ram1_clk),   //uncomment if ram1 is used
+					.clock_feedback_in(clock_feedback_in),
+					.clock_feedback_out(clock_feedback_out), .locked(locked));
+	
    // clock_feedback_in is an input
    
    // Flash ROM
@@ -302,7 +335,6 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    //assign analyzer1_clock = 1'b1;
 
    assign analyzer2_data = 16'h0;
-   assign analyzer2_clock = 1'b1;
 
    assign analyzer4_data = 16'h0;
    assign analyzer4_clock = 1'b1;
@@ -321,30 +353,113 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	         .A0(1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1));
   defparam reset_sr.INIT = 16'hFFFF;
   
-	// generate 65 mhz clock
-   wire clock_65mhz_unbuf,clock_65mhz;
-   DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf));
-   // synthesis attribute CLKFX_DIVIDE of vclk1 is 10
-   // synthesis attribute CLKFX_MULTIPLY of vclk1 is 24
-   // synthesis attribute CLK_FEEDBACK of vclk1 is NONE
-   // synthesis attribute CLKIN_PERIOD of vclk1 is 37
-   BUFG vclk2(.O(clock_65mhz),.I(clock_65mhz_unbuf));
 
-
-  
   wire [35:0] ntsc_pixels;
   wire ntsc_flag;
   wire frame_flag;
 	wire dv;
+		wire [2:0] fvh;
+	wire [9:0] nx;
+	wire [8:0] ny;
 
-	ntsc_capture ntsc(.clk(clock_65mhz), .clock_27mhz(clock_27mhz), .reset(reset), .tv_in_reset_b(tv_in_reset_b),
+	ntsc_capture ntsc(.clk(clock_27mhz), .clock_27mhz(clock_27mhz), .reset(reset), .tv_in_reset_b(tv_in_reset_b),
 		.tv_in_i2c_clock(tv_in_i2c_clock), .tv_in_i2c_data(tv_in_i2c_data),
 		.tv_in_line_clock1(tv_in_line_clock1), .tv_in_ycrcb(tv_in_ycrcb),
-		.ntsc_pixels(ntsc_pixels), .ntsc_flag(ntsc_flag), .frame_flag(frame_flag), .dv(dv));
+		.ntsc_pixels(ntsc_pixels), .ntsc_flag(ntsc_flag), .frame_flag(frame_flag), .dv(dv), .fvh(fvh), .x(nx), .y(ny));
+	
+	wire done_ntsc;
+	wire vga_flag;
+	wire done_vga;
+	wire [23:0] vga_pixel;
+	wire ram0_we;
+	wire ram1_we;
+
+	
+	/*memory_interface mi(.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag), .ntsc_flag(ntsc_flag),
+		.ntsc_pixel(ntsc_pixels), .done_ntsc(done_ntsc), .vga_flag(vga_flag), .done_vga(done_vga), .vga_pixel(vga_pixel),
+		.mem0_addr(ram0_address), .mem1_addr(ram1_address), .mem0_read(ram0_data), .mem1_read(ram1_data), .mem0_write(ram0_data), 
+		.mem1_write(ram1_data), .mem0_wr(ram0_we), .mem1_wr(ram1_we));
+		*/
+	assign ram0_we_b = ~ram0_we;
+	assign ram1_we_b = ~ram1_we;
 		
-		assign analyzer1_data = {frame_flag, ntsc_flag, ntsc_pixels[13:0]};
-		assign analyzer3_data = {dv, tv_in_ycrcb[19:5]};
+	/*vga_write vga(.clock(clock_65mhz), .vclock(clock_25mhz), .reset(reset), .frame_flag(frame_flag), .vga_pixel(vga_pixel),
+						.done_vga(done_vga), .vga_flag(vga_flag), .vga_out_red(vga_out_red), .vga_out_green(vga_out_green), .vga_out_blue(vga_out_blue),
+						.vga_out_sync_b(vga_out_sync_b), .vga_out_blank_b(vga_out_blank_b), .vga_out_pixel_clock(vga_out_pixel_clock),
+						.vga_out_hsync(vga_out_hsync), .vga_out_vsync(vga_out_vsync));
+		*/
+		assign analyzer1_data = {frame_flag, ntsc_flag, dv, vga_flag, done_vga, done_ntsc, ram0_address[2:0], ram1_address[2:0], 4'b0000};
+		assign analyzer3_data = {fvh, ntsc_pixels[3:0], nx[2:0], ny[8:0], 1'b0};
 		assign analyzer3_clock = clock_27mhz;
 		assign analyzer1_clock = clock_27mhz;
+		assign analyzer2_clock = clock_27mhz;
 
+endmodule
+
+// ramclock module
+module ramclock(ref_clock, fpga_clock, ram0_clock, ram1_clock, 
+	        clock_feedback_in, clock_feedback_out, locked);
+   
+   input ref_clock;                 // Reference clock input
+   output fpga_clock;               // Output clock to drive FPGA logic
+   output ram0_clock, ram1_clock;   // Output clocks for each RAM chip
+   input  clock_feedback_in;        // Output to feedback trace
+   output clock_feedback_out;       // Input from feedback trace
+   output locked;                   // Indicates that clock outputs are stable
+   
+   wire  ref_clk, fpga_clk, ram_clk, fb_clk, lock1, lock2, dcm_reset, ram_clock;
+
+   ////////////////////////////////////////////////////////////////////////////
+   
+   //To force ISE to compile the ramclock, this line has to be removed.
+   //IBUFG ref_buf (.O(ref_clk), .I(ref_clock));
+	
+	assign ref_clk = ref_clock;
+   
+   BUFG int_buf (.O(fpga_clock), .I(fpga_clk));
+
+   DCM int_dcm (.CLKFB(fpga_clock),
+		.CLKIN(ref_clk),
+		.RST(dcm_reset),
+		.CLK0(fpga_clk),
+		.LOCKED(lock1));
+   // synthesis attribute DLL_FREQUENCY_MODE of int_dcm is "LOW"
+   // synthesis attribute DUTY_CYCLE_CORRECTION of int_dcm is "TRUE"
+   // synthesis attribute STARTUP_WAIT of int_dcm is "FALSE"
+   // synthesis attribute DFS_FREQUENCY_MODE of int_dcm is "LOW"
+   // synthesis attribute CLK_FEEDBACK of int_dcm  is "1X"
+   // synthesis attribute CLKOUT_PHASE_SHIFT of int_dcm is "NONE"
+   // synthesis attribute PHASE_SHIFT of int_dcm is 0
+   
+   BUFG ext_buf (.O(ram_clock), .I(ram_clk));
+   
+   IBUFG fb_buf (.O(fb_clk), .I(clock_feedback_in));
+   
+   DCM ext_dcm (.CLKFB(fb_clk), 
+		    .CLKIN(ref_clk), 
+		    .RST(dcm_reset),
+		    .CLK0(ram_clk),
+		    .LOCKED(lock2));
+   // synthesis attribute DLL_FREQUENCY_MODE of ext_dcm is "LOW"
+   // synthesis attribute DUTY_CYCLE_CORRECTION of ext_dcm is "TRUE"
+   // synthesis attribute STARTUP_WAIT of ext_dcm is "FALSE"
+   // synthesis attribute DFS_FREQUENCY_MODE of ext_dcm is "LOW"
+   // synthesis attribute CLK_FEEDBACK of ext_dcm  is "1X"
+   // synthesis attribute CLKOUT_PHASE_SHIFT of ext_dcm is "NONE"
+   // synthesis attribute PHASE_SHIFT of ext_dcm is 0
+
+   SRL16 dcm_rst_sr (.D(1'b0), .CLK(ref_clk), .Q(dcm_reset),
+		     .A0(1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1));
+   // synthesis attribute init of dcm_rst_sr is "000F";
+   
+
+   OFDDRRSE ddr_reg0 (.Q(ram0_clock), .C0(ram_clock), .C1(~ram_clock),
+		      .CE (1'b1), .D0(1'b1), .D1(1'b0), .R(1'b0), .S(1'b0));
+   OFDDRRSE ddr_reg1 (.Q(ram1_clock), .C0(ram_clock), .C1(~ram_clock),
+		      .CE (1'b1), .D0(1'b1), .D1(1'b0), .R(1'b0), .S(1'b0));
+   OFDDRRSE ddr_reg2 (.Q(clock_feedback_out), .C0(ram_clock), .C1(~ram_clock),
+		      .CE (1'b1), .D0(1'b1), .D1(1'b0), .R(1'b0), .S(1'b0));
+
+   assign locked = lock1 && lock2;
+   
 endmodule

@@ -62,6 +62,21 @@
 <msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">tv_in_ycrcb&lt;4&gt;_IBUF</arg> has no load.  PAR will not attempt to route this signal.
 </msg>
 
+<msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">tv_in_ycrcb&lt;5&gt;_IBUF</arg> has no load.  PAR will not attempt to route this signal.
+</msg>
+
+<msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">tv_in_ycrcb&lt;6&gt;_IBUF</arg> has no load.  PAR will not attempt to route this signal.
+</msg>
+
+<msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">tv_in_ycrcb&lt;7&gt;_IBUF</arg> has no load.  PAR will not attempt to route this signal.
+</msg>
+
+<msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">tv_in_ycrcb&lt;8&gt;_IBUF</arg> has no load.  PAR will not attempt to route this signal.
+</msg>
+
+<msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">tv_in_ycrcb&lt;9&gt;_IBUF</arg> has no load.  PAR will not attempt to route this signal.
+</msg>
+
 <msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">ram1_data&lt;10&gt;_IBUF</arg> has no load.  PAR will not attempt to route this signal.
 </msg>
 
@@ -267,9 +282,6 @@
 </msg>
 
 <msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">switch&lt;7&gt;_IBUF</arg> has no load.  PAR will not attempt to route this signal.
-</msg>
-
-<msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">clock_feedback_in_IBUF</arg> has no load.  PAR will not attempt to route this signal.
 </msg>
 
 <msg type="warning" file="Par" num="288" delta="unknown" >The signal <arg fmt="%s" index="1">daughtercard&lt;11&gt;_IBUF</arg> has no load.  PAR will not attempt to route this signal.
@@ -964,11 +976,11 @@
 
 <msg type="info" file="Timing" num="2761" delta="unknown" >N/A entries in the Constraints list may indicate that the constraint does not cover any paths or that it has no requested value.</msg>
 
-<msg type="warning" file="Par" num="283" delta="unknown" >There are <arg fmt="%d" index="1">318</arg> loadless signals in this design. This design will cause Bitgen to issue DRC warnings.
+<msg type="warning" file="Par" num="283" delta="unknown" >There are <arg fmt="%d" index="1">322</arg> loadless signals in this design. This design will cause Bitgen to issue DRC warnings.
 
 </msg>
 
-<msg type="warning" file="ParHelpers" num="361" delta="unknown" >There are <arg fmt="%d" index="1">318</arg> loadless signals in this design. This design will cause Bitgen to issue DRC warnings.
+<msg type="warning" file="ParHelpers" num="361" delta="unknown" >There are <arg fmt="%d" index="1">322</arg> loadless signals in this design. This design will cause Bitgen to issue DRC warnings.
 
 </msg>
 

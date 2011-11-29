@@ -1,5 +1,5 @@
 NUM_USER_FILES
-3
+7
 s
 user_file_1
 ntsc_capture.v
@@ -9,4 +9,16 @@ labkit.v
 s
 user_file_3
 labkit.ucf
+s
+user_file_4
+vga_write.v
+s
+user_file_5
+ycbcr2rgb.v
+s
+user_file_6
+params.v
+s
+user_file_7
+memory_interface.v
 s

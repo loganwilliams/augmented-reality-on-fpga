@@ -11,29 +11,31 @@ Target Device  : xc2v6000
 Target Package : bf957
 Target Speed   : -4
 Mapper Version : virtex2 -- $Revision: 1.46.12.2 $
-Mapped Date    : Mon Nov 28 15:09:46 2011
+Mapped Date    : Mon Nov 28 22:12:33 2011
 
 Design Summary
 --------------
 Number of errors:      0
-Number of warnings:  320
+Number of warnings:  325
 Logic Utilization:
-  Number of Slice Flip Flops:           157 out of  67,584    1%
-  Number of 4 input LUTs:               166 out of  67,584    1%
+  Number of Slice Flip Flops:           138 out of  67,584    1%
+  Number of 4 input LUTs:               168 out of  67,584    1%
 Logic Distribution:
-  Number of occupied Slices:            148 out of  33,792    1%
-    Number of Slices containing only related logic:     148 out of     148 100%
-    Number of Slices containing unrelated logic:          0 out of     148   0%
+  Number of occupied Slices:            141 out of  33,792    1%
+    Number of Slices containing only related logic:     141 out of     141 100%
+    Number of Slices containing unrelated logic:          0 out of     141   0%
       *See NOTES below for an explanation of the effects of unrelated logic.
-  Total Number of 4 input LUTs:         174 out of  67,584    1%
-    Number used as logic:               165
+  Total Number of 4 input LUTs:         176 out of  67,584    1%
+    Number used as logic:               166
     Number used as a route-thru:          8
-    Number used as Shift registers:       1
+    Number used as Shift registers:       2
   Number of bonded IOBs:                576 out of     684   84%
-  Number of BUFGMUXs:                     3 out of      16   18%
+    IOB Flip Flops:                       6
+  Number of BUFGMUXs:                     5 out of      16   31%
+  Number of DCMs:                         2 out of      12   16%
 
 Peak Memory Usage:  471 MB
-Total REAL time to MAP completion:  4 secs 
+Total REAL time to MAP completion:  2 secs 
 Total CPU time to MAP completion:   2 secs 
 
 NOTES:
@@ -77,7 +79,7 @@ Section 1 - Errors
 Section 2 - Warnings
 --------------------
 WARNING:LIT:243 - Logical network user3<28>_IBUF has no load.
-WARNING:LIT:395 - The above warning message base_net_load_rule is repeated 317
+WARNING:LIT:395 - The above warning message base_net_load_rule is repeated 321
    more times for the following (max. 5 shown):
    user3<4>_IBUF,
    user3<29>_IBUF,
@@ -85,6 +87,9 @@ WARNING:LIT:395 - The above warning message base_net_load_rule is repeated 317
    user3<6>_IBUF,
    user3<7>_IBUF
    To see the details of these warning messages, please use the -detail switch.
+WARNING:LIT:162 - Only DFS outputs (CLKFX/FX180/CONCUR) of DCM symbol "vclk1"
+   are routed, but CLKFB is not routed. Proper phase relationship of output
+   clocks to CLKIN cannot be guaranteed.
 WARNING:PhysDesignRules:367 - The signal <ram1_data<0>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <ram1_data<1>_IBUF> is incomplete. The
@@ -120,6 +125,16 @@ WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<2>_IBUF> is incomplete.
 WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<3>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<4>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<5>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<6>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<7>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<8>_IBUF> is incomplete.
+   The signal does not drive any load pins in the design.
+WARNING:PhysDesignRules:367 - The signal <tv_in_ycrcb<9>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <ram1_data<10>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
@@ -259,8 +274,6 @@ WARNING:PhysDesignRules:367 - The signal <daughtercard<10>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <switch<7>_IBUF> is incomplete. The
    signal does not drive any load pins in the design.
-WARNING:PhysDesignRules:367 - The signal <clock_feedback_in_IBUF> is incomplete.
-   The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <daughtercard<11>_IBUF> is incomplete.
    The signal does not drive any load pins in the design.
 WARNING:PhysDesignRules:367 - The signal <daughtercard<20>_IBUF> is incomplete.
@@ -728,12 +741,15 @@ INFO:MapLib:562 - No environment variables are currently set.
 INFO:LIT:244 - All of the single ended outputs in this design are using slew
    rate limited output drivers. The delay on speed critical single ended outputs
    can be dramatically reduced by designating them as fast outputs.
+INFO:PhysDesignRules:772 - To achieve optimal frequency synthesis performance
+   with the CLKFX and CLKFX180 outputs of the DCM comp vclk1, consult the device
+   Interactive Data Sheet.
 
 Section 4 - Removed Logic Summary
 ---------------------------------
-   2 block(s) removed
-   3 block(s) optimized away
-   1 signal(s) removed
+   4 block(s) removed
+   4 block(s) optimized away
+   3 signal(s) removed
 
 Section 5 - Removed Logic
 -------------------------
@@ -748,9 +764,19 @@ To quickly locate the original cause for the removal of a chain of logic, look
 above the place where that logic is listed in the trimming report, then locate
 the lines that are least indented (begin at the leftmost edge).
 
-Loadless block "vclk2" (CKBUF) removed.
- The signal "clock_65mhz_unbuf" is loadless and has been removed.
-Unused block "vclk1" () removed.
+Loadless block "vclk4" (CKBUF) removed.
+ The signal "clock_25mhz_unbuf" is loadless and has been removed.
+
+The trimmed logic reported below is either:
+   1. part of a cycle
+   2. part of disabled logic
+   3. a side-effect of other trimmed logic
+
+The signal "rc/fpga_clk" is unused and has been removed.
+The signal "rc/fpga_clock" is unused and has been removed.
+ Unused block "rc/int_buf" (CKBUF) removed.
+Unused block "rc/int_dcm" () removed.
+Unused block "vclk3" () removed.
 
 Optimized Block(s):
 TYPE 		BLOCK
@@ -854,7 +880,7 @@ Section 6 - IOB Properties
 | clock2                             | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
 | clock_27mhz                        | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
 | clock_feedback_in                  | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
-| clock_feedback_out                 | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
+| clock_feedback_out                 | IOB              | OUTPUT    | LVDCI_33             |          |      | OUTDDR       |          |          |
 | daughtercard<0>                    | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
 | daughtercard<1>                    | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
 | daughtercard<2>                    | IOB              | INPUT     | LVTTL                |          |      |              |          |          |
@@ -990,7 +1016,7 @@ Section 6 - IOB Properties
 | ram0_bwe_b<3>                      | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
 | ram0_ce_b                          | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
 | ram0_cen_b                         | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
-| ram0_clk                           | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
+| ram0_clk                           | IOB              | OUTPUT    | LVDCI_33             |          |      | OUTDDR       |          |          |
 | ram0_data<0>                       | IOB              | INPUT     | LVDCI_33             |          |      |              |          |          |
 | ram0_data<1>                       | IOB              | INPUT     | LVDCI_33             |          |      |              |          |          |
 | ram0_data<2>                       | IOB              | INPUT     | LVDCI_33             |          |      |              |          |          |
@@ -1055,7 +1081,7 @@ Section 6 - IOB Properties
 | ram1_bwe_b<3>                      | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
 | ram1_ce_b                          | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
 | ram1_cen_b                         | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
-| ram1_clk                           | IOB              | OUTPUT    | LVDCI_33             |          |      |              |          |          |
+| ram1_clk                           | IOB              | OUTPUT    | LVDCI_33             |          |      | OUTDDR       |          |          |
 | ram1_data<0>                       | IOB              | INPUT     | LVDCI_33             |          |      |              |          |          |
 | ram1_data<1>                       | IOB              | INPUT     | LVDCI_33             |          |      |              |          |          |
 | ram1_data<2>                       | IOB              | INPUT     | LVDCI_33             |          |      |              |          |          |

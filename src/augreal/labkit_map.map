@@ -11,7 +11,7 @@ Target Device  : xc2v6000
 Target Package : bf957
 Target Speed   : -4
 Mapper Version : virtex2 -- $Revision: 1.46.12.2 $
-Mapped Date    : Mon Nov 28 15:09:46 2011
+Mapped Date    : Mon Nov 28 22:12:33 2011
 
 Mapping design into LUTs...
 Running directed packing...
@@ -23,24 +23,26 @@ Design Summary
 
 Design Summary:
 Number of errors:      0
-Number of warnings:  320
+Number of warnings:  325
 Logic Utilization:
-  Number of Slice Flip Flops:           157 out of  67,584    1%
-  Number of 4 input LUTs:               166 out of  67,584    1%
+  Number of Slice Flip Flops:           138 out of  67,584    1%
+  Number of 4 input LUTs:               168 out of  67,584    1%
 Logic Distribution:
-  Number of occupied Slices:            148 out of  33,792    1%
-    Number of Slices containing only related logic:     148 out of     148 100%
-    Number of Slices containing unrelated logic:          0 out of     148   0%
+  Number of occupied Slices:            141 out of  33,792    1%
+    Number of Slices containing only related logic:     141 out of     141 100%
+    Number of Slices containing unrelated logic:          0 out of     141   0%
       *See NOTES below for an explanation of the effects of unrelated logic.
-  Total Number of 4 input LUTs:         174 out of  67,584    1%
-    Number used as logic:               165
+  Total Number of 4 input LUTs:         176 out of  67,584    1%
+    Number used as logic:               166
     Number used as a route-thru:          8
-    Number used as Shift registers:       1
+    Number used as Shift registers:       2
   Number of bonded IOBs:                576 out of     684   84%
-  Number of BUFGMUXs:                     3 out of      16   18%
+    IOB Flip Flops:                       6
+  Number of BUFGMUXs:                     5 out of      16   31%
+  Number of DCMs:                         2 out of      12   16%
 
 Peak Memory Usage:  471 MB
-Total REAL time to MAP completion:  4 secs 
+Total REAL time to MAP completion:  2 secs 
 Total CPU time to MAP completion:   2 secs 
 
 NOTES:

@@ -1,6 +1,6 @@
 `default_nettype none
 // comment out when testing
-// `include "params.v"
+`include "params.v"
 // memory_interface
 // handles EVERYTHING ram related
 // actual ram modules are instantiated in top module

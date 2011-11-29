@@ -1,5 +1,5 @@
 //! **************************************************************************
-// Written by: Map K.39 on Mon Nov 28 15:09:49 2011
+// Written by: Map K.39 on Mon Nov 28 22:12:35 2011
 //! **************************************************************************
 
 SCHEMATIC START;
@@ -200,8 +200,8 @@ COMP "switch<5>" LOCATE = SITE "AC20" LEVEL 1;
 COMP "switch<6>" LOCATE = SITE "AE23" LEVEL 1;
 COMP "daughtercard<10>" LOCATE = SITE "E2" LEVEL 1;
 COMP "switch<7>" LOCATE = SITE "AD22" LEVEL 1;
-COMP "clock_feedback_in" LOCATE = SITE "AJ16" LEVEL 1;
 COMP "daughtercard<11>" LOCATE = SITE "D1" LEVEL 1;
+COMP "clock_feedback_in" LOCATE = SITE "AJ16" LEVEL 1;
 COMP "daughtercard<20>" LOCATE = SITE "E4" LEVEL 1;
 COMP "daughtercard<12>" LOCATE = SITE "D2" LEVEL 1;
 COMP "daughtercard<21>" LOCATE = SITE "D3" LEVEL 1;
@@ -579,7 +579,7 @@ COMP "tv_in_line_clock2" LOCATE = SITE "AD17" LEVEL 1;
 COMP "user4<9>" LOCATE = SITE "B19" LEVEL 1;
 COMP "ram0_adv_ld" LOCATE = SITE "V26" LEVEL 1;
 COMP "clock_feedback_out" LOCATE = SITE "AL28" LEVEL 1;
-NET "analyzer1_clock_OBUF1" BEL "analyzer1_clock_OBUF_BUFG.GCLKMUX"
+NET "analyzer2_clock_OBUF1" BEL "analyzer2_clock_OBUF_BUFG.GCLKMUX"
         USELOCALCONNECT;
 NET "tv_in_line_clock1_BUFGP/IBUFG" BEL "tv_in_line_clock1_BUFGP/BUFG.GCLKMUX"
         USELOCALCONNECT;

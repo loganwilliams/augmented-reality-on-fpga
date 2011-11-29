@@ -5,14 +5,14 @@ Parameter TMPDIR set to /afs/athena.mit.edu/user/l/o/loganw/Documents/6.111/augm
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.04 secs
+Total CPU time to Xst completion: 0.06 secs
  
 --> 
 Parameter xsthdpdir set to /afs/athena.mit.edu/user/l/o/loganw/Documents/6.111/augmented-reality-on-fpga/src/augreal/xst
 
 
 Total REAL time to Xst completion: 0.00 secs
-Total CPU time to Xst completion: 0.04 secs
+Total CPU time to Xst completion: 0.06 secs
  
 --> 
 Reading design: labkit.prj
@@ -114,8 +114,10 @@ Module <ntsc_capture> compiled
 Module <ntsc_decode> compiled
 Module <adv7185init> compiled
 Compiling verilog file "labkit.v" in library work
+Compiling verilog include file "params.v"
 Module <i2c> compiled
 Module <labkit> compiled
+Module <ramclock> compiled
 No errors in compilation
 Analysis of file <"labkit.prj"> succeeded.
  
@@ -124,6 +126,8 @@ Analysis of file <"labkit.prj"> succeeded.
 *                     Design Hierarchy Analysis                         *
 =========================================================================
 Analyzing hierarchy for module <labkit> in library <work>.
+
+Analyzing hierarchy for module <ramclock> in library <work>.
 
 Analyzing hierarchy for module <ntsc_capture> in library <work>.
 
@@ -150,10 +154,29 @@ Analyzing hierarchy for module <ntsc_decode> in library <work> with parameters.
 
 Analyzing hierarchy for module <i2c> in library <work>.
 
-WARNING:Xst:2591 - "labkit.v" line 326: attribute on instance <CLKFX_DIVIDE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 326: attribute on instance <CLKFX_MULTIPLY> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 326: attribute on instance <CLKIN_PERIOD> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
-WARNING:Xst:2591 - "labkit.v" line 326: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 215: attribute on instance <CLKFX_DIVIDE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 215: attribute on instance <CLKFX_MULTIPLY> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 215: attribute on instance <CLKIN_PERIOD> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 215: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 224: attribute on instance <CLKFX_DIVIDE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 224: attribute on instance <CLKFX_MULTIPLY> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 224: attribute on instance <CLKIN_PERIOD> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 224: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <CLKOUT_PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <DFS_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <DLL_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <DUTY_CYCLE_CORRECTION> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 421: attribute on instance <STARTUP_WAIT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <CLKOUT_PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <CLK_FEEDBACK> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <DFS_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <DLL_FREQUENCY_MODE> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <DUTY_CYCLE_CORRECTION> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <PHASE_SHIFT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 438: attribute on instance <STARTUP_WAIT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
+WARNING:Xst:2591 - "labkit.v" line 451: attribute on instance <INIT> overrides generic/parameter on entity. It is possible that simulator will not take this attribute into account.
 
 =========================================================================
 *                            HDL Analysis                               *
@@ -161,7 +184,6 @@ WARNING:Xst:2591 - "labkit.v" line 326: attribute on instance <CLK_FEEDBACK> ove
 Analyzing top module <labkit>.
 Module <labkit> is correct for synthesis.
  
-    Set user-defined property "INIT =  FFFF" for instance <reset_sr> in unit <labkit>.
     Set user-defined property "CLKDV_DIVIDE =  2.0000000000000000" for instance <vclk1> in unit <labkit>.
     Set user-defined property "CLKFX_DIVIDE =  10" for instance <vclk1> in unit <labkit>.
     Set user-defined property "CLKFX_MULTIPLY =  24" for instance <vclk1> in unit <labkit>.
@@ -178,43 +200,99 @@ Module <labkit> is correct for synthesis.
     Set user-defined property "PHASE_SHIFT =  0" for instance <vclk1> in unit <labkit>.
     Set user-defined property "SIM_MODE =  SAFE" for instance <vclk1> in unit <labkit>.
     Set user-defined property "STARTUP_WAIT =  FALSE" for instance <vclk1> in unit <labkit>.
+    Set user-defined property "CLKDV_DIVIDE =  2.0000000000000000" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "CLKFX_DIVIDE =  15" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "CLKFX_MULTIPLY =  14" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "CLKIN_DIVIDE_BY_2 =  FALSE" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "CLKIN_PERIOD =  37.0000000000000000" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "CLKOUT_PHASE_SHIFT =  NONE" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "CLK_FEEDBACK =  NONE" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "DESKEW_ADJUST =  SYSTEM_SYNCHRONOUS" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "DFS_FREQUENCY_MODE =  LOW" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "DLL_FREQUENCY_MODE =  LOW" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "DSS_MODE =  NONE" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "DUTY_CYCLE_CORRECTION =  TRUE" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "FACTORY_JF =  C080" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "PHASE_SHIFT =  0" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "SIM_MODE =  SAFE" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "STARTUP_WAIT =  FALSE" for instance <vclk3> in unit <labkit>.
+    Set user-defined property "INIT =  FFFF" for instance <reset_sr> in unit <labkit>.
+Analyzing module <ramclock> in library <work>.
+Module <ramclock> is correct for synthesis.
+ 
+    Set user-defined property "CLKDV_DIVIDE =  2.0000000000000000" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "CLKFX_DIVIDE =  1" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "CLKFX_MULTIPLY =  4" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "CLKIN_DIVIDE_BY_2 =  FALSE" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "CLKIN_PERIOD =  10.0000000000000000" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "CLKOUT_PHASE_SHIFT =  NONE" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "CLK_FEEDBACK =  1X" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "DESKEW_ADJUST =  SYSTEM_SYNCHRONOUS" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "DFS_FREQUENCY_MODE =  LOW" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "DLL_FREQUENCY_MODE =  LOW" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "DSS_MODE =  NONE" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "DUTY_CYCLE_CORRECTION =  TRUE" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "FACTORY_JF =  C080" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "PHASE_SHIFT =  0" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "SIM_MODE =  SAFE" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "STARTUP_WAIT =  FALSE" for instance <int_dcm> in unit <ramclock>.
+    Set user-defined property "CAPACITANCE =  DONT_CARE" for instance <fb_buf> in unit <ramclock>.
+    Set user-defined property "IBUF_DELAY_VALUE =  0" for instance <fb_buf> in unit <ramclock>.
+    Set user-defined property "IOSTANDARD =  DEFAULT" for instance <fb_buf> in unit <ramclock>.
+    Set user-defined property "CLKDV_DIVIDE =  2.0000000000000000" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "CLKFX_DIVIDE =  1" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "CLKFX_MULTIPLY =  4" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "CLKIN_DIVIDE_BY_2 =  FALSE" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "CLKIN_PERIOD =  10.0000000000000000" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "CLKOUT_PHASE_SHIFT =  NONE" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "CLK_FEEDBACK =  1X" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "DESKEW_ADJUST =  SYSTEM_SYNCHRONOUS" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "DFS_FREQUENCY_MODE =  LOW" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "DLL_FREQUENCY_MODE =  LOW" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "DSS_MODE =  NONE" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "DUTY_CYCLE_CORRECTION =  TRUE" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "FACTORY_JF =  C080" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "PHASE_SHIFT =  0" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "SIM_MODE =  SAFE" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "STARTUP_WAIT =  FALSE" for instance <ext_dcm> in unit <ramclock>.
+    Set user-defined property "INIT =  000F" for instance <dcm_rst_sr> in unit <ramclock>.
 Analyzing module <ntsc_capture> in library <work>.
 Module <ntsc_capture> is correct for synthesis.
  
 Analyzing module <adv7185init> in library <work>.
-"ntsc_capture.v" line 663: $display : ADV7185 Initialization values:
-WARNING:Xst:2326 - "ntsc_capture.v" line 664: Invalid escape sequence : %X.
-"ntsc_capture.v" line 664: $display :   Register 0:  0x%X 0
-WARNING:Xst:2326 - "ntsc_capture.v" line 665: Invalid escape sequence : %X.
-"ntsc_capture.v" line 665: $display :   Register 1:  0x%X128
-WARNING:Xst:2326 - "ntsc_capture.v" line 666: Invalid escape sequence : %X.
-"ntsc_capture.v" line 666: $display :   Register 2:  0x%X 4
+"ntsc_capture.v" line 666: $display : ADV7185 Initialization values:
 WARNING:Xst:2326 - "ntsc_capture.v" line 667: Invalid escape sequence : %X.
-"ntsc_capture.v" line 667: $display :   Register 3:  0x%X 0
+"ntsc_capture.v" line 667: $display :   Register 0:  0x%X 0
 WARNING:Xst:2326 - "ntsc_capture.v" line 668: Invalid escape sequence : %X.
-"ntsc_capture.v" line 668: $display :   Register 4:  0x%X12
+"ntsc_capture.v" line 668: $display :   Register 1:  0x%X128
 WARNING:Xst:2326 - "ntsc_capture.v" line 669: Invalid escape sequence : %X.
-"ntsc_capture.v" line 669: $display :   Register 5:  0x%X64
+"ntsc_capture.v" line 669: $display :   Register 2:  0x%X 4
 WARNING:Xst:2326 - "ntsc_capture.v" line 670: Invalid escape sequence : %X.
-"ntsc_capture.v" line 670: $display :   Register 7:  0x%X144
+"ntsc_capture.v" line 670: $display :   Register 3:  0x%X 0
 WARNING:Xst:2326 - "ntsc_capture.v" line 671: Invalid escape sequence : %X.
-"ntsc_capture.v" line 671: $display :   Register 8:  0x%X128
+"ntsc_capture.v" line 671: $display :   Register 4:  0x%X12
 WARNING:Xst:2326 - "ntsc_capture.v" line 672: Invalid escape sequence : %X.
-"ntsc_capture.v" line 672: $display :   Register 9:  0x%X140
+"ntsc_capture.v" line 672: $display :   Register 5:  0x%X64
 WARNING:Xst:2326 - "ntsc_capture.v" line 673: Invalid escape sequence : %X.
-"ntsc_capture.v" line 673: $display :   Register A:  0x%X 0
+"ntsc_capture.v" line 673: $display :   Register 7:  0x%X144
 WARNING:Xst:2326 - "ntsc_capture.v" line 674: Invalid escape sequence : %X.
-"ntsc_capture.v" line 674: $display :   Register B:  0x%X 0
+"ntsc_capture.v" line 674: $display :   Register 8:  0x%X128
 WARNING:Xst:2326 - "ntsc_capture.v" line 675: Invalid escape sequence : %X.
-"ntsc_capture.v" line 675: $display :   Register C:  0x%X48
+"ntsc_capture.v" line 675: $display :   Register 9:  0x%X140
 WARNING:Xst:2326 - "ntsc_capture.v" line 676: Invalid escape sequence : %X.
-"ntsc_capture.v" line 676: $display :   Register D:  0x%X136
+"ntsc_capture.v" line 676: $display :   Register A:  0x%X 0
 WARNING:Xst:2326 - "ntsc_capture.v" line 677: Invalid escape sequence : %X.
-"ntsc_capture.v" line 677: $display :   Register E:  0x%X 0
+"ntsc_capture.v" line 677: $display :   Register B:  0x%X 0
 WARNING:Xst:2326 - "ntsc_capture.v" line 678: Invalid escape sequence : %X.
-"ntsc_capture.v" line 678: $display :   Register F:  0x%X 0
+"ntsc_capture.v" line 678: $display :   Register C:  0x%X48
 WARNING:Xst:2326 - "ntsc_capture.v" line 679: Invalid escape sequence : %X.
-"ntsc_capture.v" line 679: $display :   Register 33: 0x%X227
+"ntsc_capture.v" line 679: $display :   Register D:  0x%X136
+WARNING:Xst:2326 - "ntsc_capture.v" line 680: Invalid escape sequence : %X.
+"ntsc_capture.v" line 680: $display :   Register E:  0x%X 0
+WARNING:Xst:2326 - "ntsc_capture.v" line 681: Invalid escape sequence : %X.
+"ntsc_capture.v" line 681: $display :   Register F:  0x%X 0
+WARNING:Xst:2326 - "ntsc_capture.v" line 682: Invalid escape sequence : %X.
+"ntsc_capture.v" line 682: $display :   Register 33: 0x%X227
 Module <adv7185init> is correct for synthesis.
  
     Set user-defined property "INIT =  0" for signal <clock_slow>.
@@ -249,18 +327,15 @@ Module <ntsc_decode> is correct for synthesis.
 
 Performing bidirectional port resolution...
 INFO:Xst:2561 - Always blocking tristate driving signal <flash_data> in unit <labkit> is removed.
-INFO:Xst:2561 - Always blocking tristate driving signal <ram0_data> in unit <labkit> is removed.
 INFO:Xst:2561 - Always blocking tristate driving signal <user1> in unit <labkit> is removed.
 INFO:Xst:2561 - Always blocking tristate driving signal <user2> in unit <labkit> is removed.
 INFO:Xst:2561 - Always blocking tristate driving signal <user3> in unit <labkit> is removed.
 INFO:Xst:2561 - Always blocking tristate driving signal <user4> in unit <labkit> is removed.
-INFO:Xst:2561 - Always blocking tristate driving signal <ram1_data> in unit <labkit> is removed.
 INFO:Xst:2561 - Always blocking tristate driving signal <daughtercard> in unit <labkit> is removed.
 INFO:Xst:2561 - Always blocking tristate driving signal <systemace_data> in unit <labkit> is removed.
 
 Synthesizing Unit <ntsc_decode>.
     Related source file is "ntsc_capture.v".
-WARNING:Xst:646 - Signal <state> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
     Found 1-bit register for signal <f>.
     Found 10-bit register for signal <cb>.
     Found 10-bit register for signal <cr>.
@@ -299,6 +374,11 @@ Synthesizing Unit <i2c>.
 Unit <i2c> synthesized.
 
 
+Synthesizing Unit <ramclock>.
+    Related source file is "labkit.v".
+Unit <ramclock> synthesized.
+
+
 Synthesizing Unit <adv7185init>.
     Related source file is "ntsc_capture.v".
     Found finite state machine <FSM_1> for signal <state>.
@@ -331,32 +411,32 @@ Unit <adv7185init> synthesized.
 Synthesizing Unit <ntsc_capture>.
     Related source file is "ntsc_capture.v".
 WARNING:Xst:647 - Input <clk> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
+WARNING:Xst:1305 - Output <fvh<2>> is never assigned. Tied to value 0.
 WARNING:Xst:647 - Input <tv_in_ycrcb<9:0>> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
 WARNING:Xst:646 - Signal <ycrcb<21:20>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <ycrcb<14:10>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 WARNING:Xst:646 - Signal <ycrcb<4:0>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
-WARNING:Xst:653 - Signal <fvh<2>> is used but never assigned. This sourceless signal will be automatically connected to value 0.
     Found 1-bit register for signal <ntsc_flag>.
     Found 1-bit register for signal <interesting_flag>.
     Found 36-bit register for signal <ntsc_pixels>.
     Found 2-bit register for signal <color>.
+    Found 10-bit register for signal <x>.
+    Found 9-bit register for signal <y>.
     Found 10-bit register for signal <interesting_x>.
     Found 9-bit register for signal <interesting_y>.
-    Found 10-bit comparator greatequal for signal <color$cmp_ge0000> created at line 121.
-    Found 10-bit comparator greatequal for signal <color$cmp_ge0001> created at line 121.
-    Found 10-bit comparator lessequal for signal <color$cmp_le0000> created at line 112.
-    Found 10-bit comparator lessequal for signal <color$cmp_le0001> created at line 103.
-    Found 9-bit comparator greater for signal <interesting_flag$cmp_gt0000> created at line 66.
-    Found 10-bit comparator greater for signal <interesting_flag$cmp_gt0001> created at line 94.
-    Found 10-bit comparator greater for signal <interesting_flag$cmp_gt0002> created at line 94.
-    Found 10-bit comparator less for signal <interesting_flag$cmp_lt0000> created at line 103.
-    Found 10-bit comparator less for signal <interesting_flag$cmp_lt0001> created at line 112.
+    Found 10-bit comparator greatequal for signal <color$cmp_ge0000> created at line 124.
+    Found 10-bit comparator greatequal for signal <color$cmp_ge0001> created at line 124.
+    Found 10-bit comparator lessequal for signal <color$cmp_le0000> created at line 115.
+    Found 10-bit comparator lessequal for signal <color$cmp_le0001> created at line 106.
+    Found 9-bit comparator greater for signal <interesting_flag$cmp_gt0000> created at line 69.
+    Found 10-bit comparator greater for signal <interesting_flag$cmp_gt0001> created at line 97.
+    Found 10-bit comparator greater for signal <interesting_flag$cmp_gt0002> created at line 97.
+    Found 10-bit comparator less for signal <interesting_flag$cmp_lt0000> created at line 106.
+    Found 10-bit comparator less for signal <interesting_flag$cmp_lt0001> created at line 115.
     Found 1-bit register for signal <state>.
-    Found 10-bit register for signal <x>.
-    Found 10-bit adder for signal <x$addsub0000> created at line 85.
-    Found 9-bit comparator lessequal for signal <x$cmp_le0000> created at line 66.
-    Found 9-bit register for signal <y>.
-    Found 9-bit adder for signal <y$addsub0000> created at line 62.
+    Found 10-bit adder for signal <x$addsub0000> created at line 88.
+    Found 9-bit comparator lessequal for signal <x$cmp_le0000> created at line 69.
+    Found 9-bit adder for signal <y$addsub0000> created at line 65.
     Summary:
 	inferred  79 D-type flip-flop(s).
 	inferred   2 Adder/Subtractor(s).
@@ -403,7 +483,6 @@ WARNING:Xst:647 - Input <systemace_irq> is never used. This port will be preserv
 WARNING:Xst:2565 - Inout <daughtercard<18>> is never assigned.
 WARNING:Xst:2565 - Inout <daughtercard<23>> is never assigned.
 WARNING:Xst:2565 - Inout <flash_data<0>> is never assigned.
-WARNING:Xst:647 - Input <clock_feedback_in> is never used. This port will be preserved and left unconnected if it belongs to a top-level block or it belongs to a sub-block and the hierarchy of this sub-block is preserved.
 WARNING:Xst:2565 - Inout <daughtercard<19>> is never assigned.
 WARNING:Xst:2565 - Inout <daughtercard<24>> is never assigned.
 WARNING:Xst:2565 - Inout <flash_data<1>> is never assigned.
@@ -672,7 +751,18 @@ WARNING:Xst:2565 - Inout <user3<31>> is never assigned.
 WARNING:Xst:2565 - Inout <user3<2>> is never assigned.
 WARNING:Xst:2565 - Inout <user3<27>> is never assigned.
 WARNING:Xst:2565 - Inout <user3<3>> is never assigned.
-WARNING:Xst:646 - Signal <ntsc_pixels<35:14>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:646 - Signal <weirdclock> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:1780 - Signal <vga_pixel> is never used or assigned. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:653 - Signal <vga_flag> is used but never assigned. This sourceless signal will be automatically connected to value 0.
+WARNING:Xst:653 - Signal <ram1_we> is used but never assigned. This sourceless signal will be automatically connected to value 0.
+WARNING:Xst:653 - Signal <ram0_we> is used but never assigned. This sourceless signal will be automatically connected to value 0.
+WARNING:Xst:646 - Signal <nx<9:3>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:646 - Signal <ntsc_pixels<35:4>> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:646 - Signal <locked> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:646 - Signal <fvh> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
+WARNING:Xst:653 - Signal <done_vga> is used but never assigned. This sourceless signal will be automatically connected to value 0.
+WARNING:Xst:653 - Signal <done_ntsc> is used but never assigned. This sourceless signal will be automatically connected to value 0.
+WARNING:Xst:646 - Signal <clock_25mhz> is assigned but never used. This unconnected signal will be trimmed during the optimization process.
 Unit <labkit> synthesized.
 
 
@@ -926,6 +1016,17 @@ WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_30> of sequential type is unconnected 
 WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_33> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_34> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_35> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_3> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_4> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_5> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_6> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_7> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_9> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_10> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_8> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_11> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_12> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_13> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_14> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_15> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/ntsc_pixels_16> of sequential type is unconnected in block <labkit>.
@@ -939,15 +1040,14 @@ WARNING:Xst:2677 - Node <ntsc/x_6> of sequential type is unconnected in block <l
 WARNING:Xst:2677 - Node <ntsc/x_5> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/x_4> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/x_3> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_2> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_1> of sequential type is unconnected in block <labkit>.
-WARNING:Xst:2677 - Node <ntsc/x_0> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/interesting_flag> of sequential type is unconnected in block <labkit>.
 
 Optimizing unit <labkit> ...
 
 Optimizing unit <ntsc_decode> ...
 WARNING:Xst:2677 - Node <ntsc/decode/f> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/cb_9> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/cb_8> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/cb_4> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/cb_3> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/cb_2> of sequential type is unconnected in block <labkit>.
@@ -957,8 +1057,17 @@ WARNING:Xst:2677 - Node <ntsc/decode/y_9> of sequential type is unconnected in b
 WARNING:Xst:2677 - Node <ntsc/decode/y_8> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/y_7> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/y_6> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/y_5> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/y_4> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/y_3> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/y_2> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/y_1> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/y_0> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/cr_9> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/cr_8> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/cr_7> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/cr_6> of sequential type is unconnected in block <labkit>.
+WARNING:Xst:2677 - Node <ntsc/decode/cr_5> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/cr_4> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/cr_3> of sequential type is unconnected in block <labkit>.
 WARNING:Xst:2677 - Node <ntsc/decode/cr_2> of sequential type is unconnected in block <labkit>.
@@ -975,8 +1084,8 @@ Final Macro Processing ...
 Final Register Report
 
 Macro Statistics
-# Registers                                            : 157
- Flip-Flops                                            : 157
+# Registers                                            : 138
+ Flip-Flops                                            : 138
 
 =========================================================================
 
@@ -1005,42 +1114,43 @@ Design Statistics
 # IOs                              : 576
 
 Cell Usage :
-# BELS                             : 223
+# BELS                             : 225
 #      GND                         : 1
-#      INV                         : 12
+#      INV                         : 13
 #      LUT1                        : 8
-#      LUT2                        : 12
+#      LUT2                        : 13
 #      LUT2_D                      : 1
-#      LUT2_L                      : 2
+#      LUT2_L                      : 1
 #      LUT3                        : 26
-#      LUT3_D                      : 2
-#      LUT3_L                      : 6
-#      LUT4                        : 92
-#      LUT4_D                      : 4
+#      LUT3_D                      : 1
+#      LUT3_L                      : 7
+#      LUT4                        : 93
+#      LUT4_D                      : 3
 #      LUT4_L                      : 11
 #      MUXCY                       : 21
-#      MUXF5                       : 8
+#      MUXF5                       : 9
 #      VCC                         : 1
 #      XORCY                       : 16
-# FlipFlops/Latches                : 157
-#      FDE                         : 54
+# FlipFlops/Latches                : 141
+#      FDE                         : 32
 #      FDR                         : 62
-#      FDRE                        : 31
+#      FDRE                        : 34
 #      FDRS                        : 6
 #      FDRSE                       : 2
 #      FDS                         : 2
-# Shift Registers                  : 1
-#      SRL16                       : 1
-# Clock Buffers                    : 4
-#      BUFG                        : 3
+#      OFDDRRSE                    : 3
+# Shift Registers                  : 2
+#      SRL16                       : 2
+# Clock Buffers                    : 7
+#      BUFG                        : 6
 #      BUFGP                       : 1
-# IO Buffers                       : 257
-#      IBUF                        : 15
-#      IBUFG                       : 1
-#      OBUF                        : 240
+# IO Buffers                       : 250
+#      IBUF                        : 10
+#      IBUFG                       : 2
+#      OBUF                        : 237
 #      OBUFT                       : 1
-# DCMs                             : 1
-#      DCM                         : 1
+# DCMs                             : 4
+#      DCM                         : 4
 =========================================================================
 
 Device utilization summary:
@@ -1048,15 +1158,15 @@ Device utilization summary:
 
 Selected Device : 2v6000bf957-4 
 
- Number of Slices:                      119  out of  33792     0%  
- Number of Slice Flip Flops:            157  out of  67584     0%  
- Number of 4 input LUTs:                177  out of  67584     0%  
-    Number used as logic:               176
-    Number used as Shift registers:       1
+ Number of Slices:                      107  out of  33792     0%  
+ Number of Slice Flip Flops:            141  out of  67584     0%  
+ Number of 4 input LUTs:                179  out of  67584     0%  
+    Number used as logic:               177
+    Number used as Shift registers:       2
  Number of IOs:                         576
- Number of bonded IOBs:                 258  out of    684    37%  
- Number of GCLKs:                         4  out of     16    25%  
- Number of DCMs:                          1  out of     12     8%  
+ Number of bonded IOBs:                 254  out of    684    37%  
+ Number of GCLKs:                         7  out of     16    43%  
+ Number of DCMs:                          4  out of     12    33%  
 
 ---------------------------
 Partition Resource Summary:
@@ -1076,13 +1186,14 @@ NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
 
 Clock Information:
 ------------------
------------------------------------+------------------------+-------+
-Clock Signal                       | Clock buffer(FF name)  | Load  |
------------------------------------+------------------------+-------+
-clock_27mhz                        | IBUFG+BUFG             | 43    |
-ntsc/adv7185/clock_slow1           | BUFG                   | 96    |
-tv_in_line_clock1                  | BUFGP                  | 19    |
------------------------------------+------------------------+-------+
+-----------------------------------+----------------------------+-------+
+Clock Signal                       | Clock buffer(FF name)      | Load  |
+-----------------------------------+----------------------------+-------+
+clock_27mhz                        | IBUFG+BUFG                 | 35    |
+clock_27mhz                        | vclk1:CLKFX+rc/ext_dcm:CLK0| 7     |
+ntsc/adv7185/clock_slow1           | BUFG                       | 96    |
+tv_in_line_clock1                  | BUFGP                      | 8     |
+-----------------------------------+----------------------------+-------+
 
 Asynchronous Control Signals Information:
 ----------------------------------------
@@ -1092,10 +1203,10 @@ Timing Summary:
 ---------------
 Speed Grade: -4
 
-   Minimum period: 5.425ns (Maximum Frequency: 184.332MHz)
-   Minimum input arrival time before clock: 8.092ns
-   Maximum output required time after clock: 8.079ns
-   Maximum combinational path delay: 6.523ns
+   Minimum period: 5.460ns (Maximum Frequency: 183.167MHz)
+   Minimum input arrival time before clock: 8.081ns
+   Maximum output required time after clock: 7.745ns
+   Maximum combinational path delay: 6.545ns
 
 Timing Detail:
 --------------
@@ -1103,10 +1214,10 @@ All values displayed in nanoseconds (ns)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'clock_27mhz'
-  Clock period: 5.425ns (frequency: 184.332MHz)
-  Total number of paths / destination ports: 427 / 74
+  Clock period: 5.460ns (frequency: 183.167MHz)
+  Total number of paths / destination ports: 380 / 72
 -------------------------------------------------------------------------
-Delay:               5.425ns (Levels of Logic = 1)
+Delay:               5.460ns (Levels of Logic = 1)
   Source:            reset_sr (FF)
   Destination:       ntsc/adv7185/reset_count_1 (FF)
   Source Clock:      clock_27mhz rising
@@ -1116,29 +1227,29 @@ Delay:               5.425ns (Levels of Logic = 1)
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     SRL16:CLK->Q         16   2.901   1.035  reset_sr (ntsc/adv7185/reset_count_cst)
+     SRL16:CLK->Q         19   2.901   1.069  reset_sr (ntsc/adv7185/reset_count_cst)
      LUT3:I2->O            5   0.439   0.771  ntsc/adv7185/Mcount_reset_count_val1 (ntsc/adv7185/Mcount_reset_count_val)
      FDR:R                     0.280          ntsc/adv7185/reset_count_0
     ----------------------------------------
-    Total                      5.425ns (3.620ns logic, 1.805ns route)
-                                       (66.7% logic, 33.3% route)
+    Total                      5.460ns (3.620ns logic, 1.840ns route)
+                                       (66.3% logic, 33.7% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'ntsc/adv7185/clock_slow1'
-  Clock period: 5.302ns (frequency: 188.608MHz)
+  Clock period: 5.325ns (frequency: 187.793MHz)
   Total number of paths / destination ports: 520 / 122
 -------------------------------------------------------------------------
-Delay:               5.302ns (Levels of Logic = 8)
-  Source:            ntsc/adv7185/state_FSM_FFd21 (FF)
+Delay:               5.325ns (Levels of Logic = 8)
+  Source:            ntsc/adv7185/state_FSM_FFd24 (FF)
   Destination:       ntsc/adv7185/data_7 (FF)
   Source Clock:      ntsc/adv7185/clock_slow1 rising
   Destination Clock: ntsc/adv7185/clock_slow1 rising
 
-  Data Path: ntsc/adv7185/state_FSM_FFd21 to ntsc/adv7185/data_7
+  Data Path: ntsc/adv7185/state_FSM_FFd24 to ntsc/adv7185/data_7
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDRE:C->Q             2   0.568   0.987  ntsc/adv7185/state_FSM_FFd21 (ntsc/adv7185/state_FSM_FFd21)
+     FDRE:C->Q             3   0.568   1.010  ntsc/adv7185/state_FSM_FFd24 (ntsc/adv7185/state_FSM_FFd24)
      LUT4:I0->O            1   0.439   0.000  ntsc/adv7185/data_or0000_wg_lut<1> (ntsc/adv7185/data_or0000_wg_lut<1>)
      MUXCY:S->O            1   0.298   0.000  ntsc/adv7185/data_or0000_wg_cy<1> (ntsc/adv7185/data_or0000_wg_cy<1>)
      MUXCY:CI->O           1   0.053   0.000  ntsc/adv7185/data_or0000_wg_cy<2> (ntsc/adv7185/data_or0000_wg_cy<2>)
@@ -1149,15 +1260,15 @@ Delay:               5.302ns (Levels of Logic = 8)
      LUT3:I1->O            1   0.439   0.000  ntsc/adv7185/data_mux0000<0>34 (ntsc/adv7185/data_mux0000<0>)
      FDE:D                     0.370          ntsc/adv7185/data_7
     ----------------------------------------
-    Total                      5.302ns (3.268ns logic, 2.034ns route)
-                                       (61.6% logic, 38.4% route)
+    Total                      5.325ns (3.268ns logic, 2.057ns route)
+                                       (61.4% logic, 38.6% route)
 
 =========================================================================
 Timing constraint: Default period analysis for Clock 'tv_in_line_clock1'
-  Clock period: 4.425ns (frequency: 225.989MHz)
-  Total number of paths / destination ports: 118 / 19
+  Clock period: 4.402ns (frequency: 227.169MHz)
+  Total number of paths / destination ports: 63 / 8
 -------------------------------------------------------------------------
-Delay:               4.425ns (Levels of Logic = 4)
+Delay:               4.402ns (Levels of Logic = 4)
   Source:            ntsc/decode/current_state_3 (FF)
   Destination:       ntsc/decode/current_state_2 (FF)
   Source Clock:      tv_in_line_clock1 rising
@@ -1167,21 +1278,21 @@ Delay:               4.425ns (Levels of Logic = 4)
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDE:C->Q             14   0.568   1.186  ntsc/decode/current_state_3 (ntsc/decode/current_state_3)
-     LUT4:I1->O            1   0.439   0.000  ntsc/decode/current_state_mux0000<2>80_F (N65)
+     FDE:C->Q             13   0.568   1.162  ntsc/decode/current_state_3 (ntsc/decode/current_state_3)
+     LUT4:I1->O            1   0.439   0.000  ntsc/decode/current_state_mux0000<2>80_F (N75)
      MUXF5:I0->O           1   0.436   0.551  ntsc/decode/current_state_mux0000<2>80 (ntsc/decode/current_state_mux0000<2>80)
-     LUT3:I2->O            1   0.439   0.000  ntsc/decode/current_state_mux0000<2>1111_F (N63)
+     LUT3:I2->O            1   0.439   0.000  ntsc/decode/current_state_mux0000<2>1111_F (N73)
      MUXF5:I0->O           1   0.436   0.000  ntsc/decode/current_state_mux0000<2>1111 (ntsc/decode/current_state_mux0000<2>)
      FDE:D                     0.370          ntsc/decode/current_state_2
     ----------------------------------------
-    Total                      4.425ns (2.688ns logic, 1.737ns route)
-                                       (60.7% logic, 39.3% route)
+    Total                      4.402ns (2.688ns logic, 1.714ns route)
+                                       (61.1% logic, 38.9% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'clock_27mhz'
-  Total number of paths / destination ports: 36 / 18
+  Total number of paths / destination ports: 42 / 21
 -------------------------------------------------------------------------
-Offset:              4.391ns (Levels of Logic = 3)
+Offset:              4.402ns (Levels of Logic = 3)
   Source:            tv_in_ycrcb<17> (PAD)
   Destination:       ntsc/y_7 (FF)
   Destination Clock: clock_27mhz rising
@@ -1190,19 +1301,19 @@ Offset:              4.391ns (Levels of Logic = 3)
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O            18   0.825   1.309  tv_in_ycrcb_17_IBUF (tv_in_ycrcb_17_IBUF)
-     LUT2:I0->O            3   0.439   1.010  ntsc/decode/_AUX_6<1>1 (ntsc/fvh<1>)
-     LUT4:I0->O            1   0.439   0.000  ntsc/y_mux0000<7>2 (ntsc/y_mux0000<7>)
+     IBUF:I->O            17   0.825   1.297  tv_in_ycrcb_17_IBUF (tv_in_ycrcb_17_IBUF)
+     LUT2:I0->O            4   0.439   1.032  ntsc/decode/_AUX_6<1>1 (ntsc/fvh<1>)
+     LUT4:I0->O            1   0.439   0.000  ntsc/y_mux0000<7>1 (ntsc/y_mux0000<7>)
      FDRE:D                    0.370          ntsc/y_7
     ----------------------------------------
-    Total                      4.391ns (2.073ns logic, 2.318ns route)
-                                       (47.2% logic, 52.8% route)
+    Total                      4.402ns (2.073ns logic, 2.329ns route)
+                                       (47.1% logic, 52.9% route)
 
 =========================================================================
 Timing constraint: Default OFFSET IN BEFORE for Clock 'tv_in_line_clock1'
-  Total number of paths / destination ports: 194 / 19
+  Total number of paths / destination ports: 183 / 8
 -------------------------------------------------------------------------
-Offset:              8.092ns (Levels of Logic = 7)
+Offset:              8.081ns (Levels of Logic = 7)
   Source:            tv_in_ycrcb<17> (PAD)
   Destination:       ntsc/decode/current_state_1 (FF)
   Destination Clock: tv_in_line_clock1 rising
@@ -1211,16 +1322,16 @@ Offset:              8.092ns (Levels of Logic = 7)
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUF:I->O            18   0.825   1.308  tv_in_ycrcb_17_IBUF (tv_in_ycrcb_17_IBUF)
+     IBUF:I->O            17   0.825   1.297  tv_in_ycrcb_17_IBUF (tv_in_ycrcb_17_IBUF)
      LUT4:I0->O            1   0.439   0.557  ntsc/decode/current_state_cmp_eq002210 (ntsc/decode/current_state_cmp_eq002210)
-     LUT4:I3->O            2   0.439   0.741  ntsc/decode/current_state_cmp_eq002217_SW0 (N45)
+     LUT4:I3->O            2   0.439   0.741  ntsc/decode/current_state_cmp_eq002217_SW0 (N53)
      LUT4:I3->O            7   0.439   0.856  ntsc/decode/current_state_cmp_eq002217 (ntsc/decode/current_state_cmp_eq0022)
      LUT4:I3->O            1   0.439   0.803  ntsc/decode/current_state_mux0000<3>64 (ntsc/decode/current_state_mux0000<3>64)
-     LUT4:I0->O            1   0.439   0.000  ntsc/decode/current_state_mux0000<3>97_F (N31)
+     LUT4:I0->O            1   0.439   0.000  ntsc/decode/current_state_mux0000<3>97_F (N39)
      MUXF5:I0->O           1   0.436   0.000  ntsc/decode/current_state_mux0000<3>97 (ntsc/decode/current_state_mux0000<3>)
      FDE:D                     0.370          ntsc/decode/current_state_1
     ----------------------------------------
-    Total                      8.092ns (3.826ns logic, 4.266ns route)
+    Total                      8.081ns (3.826ns logic, 4.255ns route)
                                        (47.3% logic, 52.7% route)
 
 =========================================================================
@@ -1244,49 +1355,49 @@ Offset:              5.630ns (Levels of Logic = 1)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'clock_27mhz'
-  Total number of paths / destination ports: 15 / 15
+  Total number of paths / destination ports: 19 / 19
 -------------------------------------------------------------------------
-Offset:              5.446ns (Levels of Logic = 1)
-  Source:            ntsc/ntsc_flag (FF)
-  Destination:       analyzer1_data<14> (PAD)
+Offset:              5.746ns (Levels of Logic = 1)
+  Source:            ntsc/y_1 (FF)
+  Destination:       analyzer3_data<2> (PAD)
   Source Clock:      clock_27mhz rising
 
-  Data Path: ntsc/ntsc_flag to analyzer1_data<14>
+  Data Path: ntsc/y_1 to analyzer3_data<2>
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDE:C->Q              1   0.568   0.517  ntsc/ntsc_flag (ntsc/ntsc_flag)
-     OBUF:I->O                 4.361          analyzer1_data_14_OBUF (analyzer1_data<14>)
+     FDRE:C->Q             7   0.568   0.816  ntsc/y_1 (ntsc/y_1)
+     OBUF:I->O                 4.361          analyzer3_data_2_OBUF (analyzer3_data<2>)
     ----------------------------------------
-    Total                      5.446ns (4.929ns logic, 0.517ns route)
-                                       (90.5% logic, 9.5% route)
+    Total                      5.746ns (4.929ns logic, 0.816ns route)
+                                       (85.8% logic, 14.2% route)
 
 =========================================================================
 Timing constraint: Default OFFSET OUT AFTER for Clock 'tv_in_line_clock1'
   Total number of paths / destination ports: 5 / 1
 -------------------------------------------------------------------------
-Offset:              8.079ns (Levels of Logic = 3)
-  Source:            ntsc/decode/current_state_0 (FF)
-  Destination:       analyzer3_data<15> (PAD)
+Offset:              7.745ns (Levels of Logic = 3)
+  Source:            ntsc/decode/current_state_3 (FF)
+  Destination:       analyzer1_data<13> (PAD)
   Source Clock:      tv_in_line_clock1 rising
 
-  Data Path: ntsc/decode/current_state_0 to analyzer3_data<15>
+  Data Path: ntsc/decode/current_state_3 to analyzer1_data<13>
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     FDE:C->Q             11   0.568   1.194  ntsc/decode/current_state_0 (ntsc/decode/current_state_0)
-     LUT4_D:I0->LO         1   0.439   0.308  ntsc/decode/y_enable_SW0 (N72)
-     LUT2:I1->O            5   0.439   0.771  ntsc/decode/y_enable (dv)
-     OBUF:I->O                 4.361          analyzer3_data_15_OBUF (analyzer3_data<15>)
+     FDE:C->Q             13   0.568   1.240  ntsc/decode/current_state_3 (ntsc/decode/current_state_3)
+     LUT4:I0->O            1   0.439   0.000  ntsc/decode/y_enable1 (ntsc/decode/y_enable)
+     MUXF5:I0->O           2   0.436   0.701  ntsc/decode/y_enable_f5 (dv)
+     OBUF:I->O                 4.361          analyzer1_data_13_OBUF (analyzer1_data<13>)
     ----------------------------------------
-    Total                      8.079ns (5.807ns logic, 2.272ns route)
-                                       (71.9% logic, 28.1% route)
+    Total                      7.745ns (5.804ns logic, 1.941ns route)
+                                       (74.9% logic, 25.1% route)
 
 =========================================================================
 Timing constraint: Default path analysis
-  Total number of paths / destination ports: 18 / 18
+  Total number of paths / destination ports: 4 / 4
 -------------------------------------------------------------------------
-Delay:               6.523ns (Levels of Logic = 2)
+Delay:               6.545ns (Levels of Logic = 2)
   Source:            clock_27mhz (PAD)
   Destination:       tv_in_clock (PAD)
 
@@ -1294,24 +1405,24 @@ Delay:               6.523ns (Levels of Logic = 2)
                                 Gate     Net
     Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
     ----------------------------------------  ------------
-     IBUFG:I->O            4   1.414   0.747  clock_27mhz_IBUFG (analyzer1_clock_OBUF1)
+     IBUFG:I->O            5   1.414   0.771  clock_27mhz_IBUFG (analyzer2_clock_OBUF1)
      OBUF:I->O                 4.361          tv_in_clock_OBUF (tv_in_clock)
     ----------------------------------------
-    Total                      6.523ns (5.775ns logic, 0.747ns route)
-                                       (88.5% logic, 11.5% route)
+    Total                      6.545ns (5.775ns logic, 0.771ns route)
+                                       (88.2% logic, 11.8% route)
 
 =========================================================================
 
 
-Total REAL time to Xst completion: 7.00 secs
-Total CPU time to Xst completion: 6.81 secs
+Total REAL time to Xst completion: 8.00 secs
+Total CPU time to Xst completion: 6.95 secs
  
 --> 
 
 
-Total memory usage is 465508 kilobytes
+Total memory usage is 466540 kilobytes
 
 Number of errors   :    0 (   0 filtered)
-Number of warnings :  467 (   0 filtered)
-Number of infos    :    9 (   0 filtered)
+Number of warnings :  514 (   0 filtered)
+Number of infos    :    7 (   0 filtered)
 

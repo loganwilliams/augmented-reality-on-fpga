@@ -15,14 +15,17 @@ module ntsc_capture(
 		    output reg [8:0]  interesting_y, // its y location
 		    output reg 	      interesting_flag, // a flag that indicates the data is good
 		    output 	      frame_flag,
-			 output dv); // a flag that indicates when a new frame begins
+			 output dv,
+			 output [2:0] fvh,
+			 output reg [9:0] x,
+			 output reg [8:0] y); // a flag that indicates when a new frame begins
 
    adv7185init adv7185(.reset(reset), .clock_27mhz(clock_27mhz), .source(1'b0),
 		       .tv_in_reset_b(tv_in_reset_b), .tv_in_i2c_clock(tv_in_i2c_clock),
 		       .tv_in_i2c_data(tv_in_i2c_data));
 
    wire [29:0] 			      ycrcb;
-   wire [2:0] 			      fvh;
+   //wire [2:0] 			      fvh;
 
    // this module decodes the data and outputs the ycrcb pair
    ntsc_decode decode(.clk(tv_in_line_clock1), .reset(reset),
@@ -30,8 +33,8 @@ module ntsc_capture(
 		      .v(fvh[1]), .h(fvh[0]), .data_valid(dv));
 
    reg 				      state = 0;
-   reg [9:0] 			      x = 0;
-   reg [8:0] 			      y = 0;
+   //reg [9:0] 			      x = 0;
+   //reg [8:0] 			      y = 0;
 	
 	wire f;
 	wire v;
@@ -220,7 +223,7 @@ module ntsc_decode(clk, reset, tv_in_ycrcb, ycrcb, f, v, h, data_valid);
    reg [9:0] 	cr = 10'h000; // chrominance
    reg [9:0] 	cb = 10'h000; // more chrominance
    
-   assign 	state = current_state;
+   //assign 	state = current_state;
    
    always @ (posedge clk)
      begin

@@ -1,7 +1,7 @@
 Release 10.1.03 - par K.39 (lin64)
 Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
 
-Mon Nov 28 15:10:34 2011
+Mon Nov 28 22:13:16 2011
 
 
 INFO: The IO information is provided in three file formats as part of the Place and Route (PAR) process.  These formats are:
@@ -385,7 +385,7 @@ Pinout by Pin Number:
 |AL25      |flash_address<22>   |IOB      |IO_L27N_5/VREF_5      |OUTPUT   |LVTTL*     |5             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
 |AL26      |switch<1>           |IOB      |IO_L27P_5             |INPUT    |LVTTL*     |5             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
 |AL27      |analyzer4_data<6>   |IOB      |IO_L19N_5             |OUTPUT   |LVTTL*     |5             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
-|AL28      |clock_feedback_out  |IOB      |IO_L19P_5             |OUTPUT   |LVDCI_33   |5             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
+|AL28      |clock_feedback_out  |IOB      |IO_L19P_5             |OUTPUT   |LVDCI_33   |5             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AL29      |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |AL30      |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |B1        |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
@@ -882,7 +882,7 @@ Pinout by Pin Number:
 |U27       |ram0_bwe_b<1>       |IOB      |IO_L77N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |U28       |ram0_data<9>        |IOB      |IO_L93N_6/VREF_6      |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
 |U29       |ram0_data<10>       |IOB      |IO_L78N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|U30       |ram0_clk            |IOB      |IO_L95N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
+|U30       |ram0_clk            |IOB      |IO_L95N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |U31       |ram0_we_b           |IOB      |IO_L96N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |V1        |ram1_bwe_b<2>       |IOB      |IO_L93P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |V2        |ram1_data<17>       |IOB      |IO_L91P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
@@ -954,7 +954,7 @@ Pinout by Pin Number:
 |Y6        |ram1_address<13>    |IOB      |IO_L73P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |Y7        |ram1_address<2>     |IOB      |IO_L67N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |Y8        |ram1_address<1>     |IOB      |IO_L45N_3/VREF_3      |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|Y9        |ram1_clk            |IOB      |IO_L48P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
+|Y9        |ram1_clk            |IOB      |IO_L48P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |Y10       |                    |DIFFS    |IO_L27N_3/VREF_3      |UNUSED   |           |3             |          |         |           |         |       |          |         |           |                |
 |Y11       |                    |         |VCCO_3                |         |           |3             |          |         |           |         |3.30   |          |         |           |                |
 |Y12       |                    |         |VCCINT                |         |           |              |          |         |           |         |1.5    |          |         |           |                |

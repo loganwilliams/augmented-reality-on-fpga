@@ -1,4 +1,4 @@
-//`include "params.v"
+`include "params.v"
 `default_nettype none
 
 module vga_write
