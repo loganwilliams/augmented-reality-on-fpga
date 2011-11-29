@@ -3,32 +3,32 @@
 
 module pt_fetcher(
 		  // STANDARD INPUTS
-		  input 		       clock,
-		  input 		       reset,
+		  input 	    clock,
+		  input 	    reset,
 		  // TO AND FROM PROJECTIVE_TRANSFORM
-		  input 		       pt_flag,
-		  input [9:0]       pt_x,
-		  input [8:0]      pt_y,
-		  input [17:0]       pt_pixel,
-		  output  		       done_pt,
+		  input 	    pt_flag,
+		  input [9:0] 	    pt_x,
+		  input [8:0] 	    pt_y,
+		  input [17:0] 	    pt_pixel,
+		  output 	    done_pt,
 		  // TO AND FROM MEMORY_INTERFACE
-		  input [35:0] 	       ptf_pixel_read,
-		  input 		       done_ptf,
+		  input [35:0] 	    ptf_pixel_read,
+		  input 	    done_ptf,
 		  output reg [9:0]  ptf_x,
-		  output reg [8:0] ptf_y,
-		  output reg 		       ptf_flag,
-		  output reg 		       ptf_wr,
-		  output reg [35:0]    ptf_pixel_write);
+		  output reg [8:0]  ptf_y,
+		  output reg 	    ptf_flag,
+		  output reg 	    ptf_wr,
+		  output reg [35:0] ptf_pixel_write);
    
 
-   reg [17:0] 				       pt_pixel_buffer [0:1];
-   reg [9:0] 				       pt_pixel_x [0:1];
-   reg [8:0] 				       pt_pixel_y [0:1];
-   reg 					       haspixel;
-   reg [1:0] state;
+   reg [17:0] 			    pt_pixel_buffer [0:1];
+   reg [9:0] 			    pt_pixel_x [0:1];
+   reg [8:0] 			    pt_pixel_y [0:1];
+   reg 				    haspixel;
+   reg [1:0] 			    state;
    
 
-  assign done_pt = done_ptf & (~state[1]);
+   assign done_pt = done_ptf & (~state[1]);
 
    always @(posedge clock) begin
       if (reset) begin
