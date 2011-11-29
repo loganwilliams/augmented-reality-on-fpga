@@ -25,11 +25,10 @@ module memory_interface
 		output reg [`LOG_MEM-1:0] lpf_pixel_read,
 		// PROJECTIVE_TRANSFORM
 		input pt_flag,
-		input pt_wr,
 		input [`LOG_WIDTH-1:0] pt_x,
 		input [`LOG_HEIGHT-1:0] pt_y,
-		input [`LOG_TRUNC-1:0] pt_pixel_write,
-		output reg done_pt,
+		input [`LOG_TRUNC-1:0] pt_pixel,
+		output done_pt,
 		// VGA_WRITE
 		input vga_flag,
 		output reg done_vga,
@@ -56,10 +55,20 @@ module memory_interface
 	parameter NTSC = 4'b1000;
 	parameter VGA  = 4'b0100;
 	parameter LPF  = 4'b0010;
-	parameter PT   = 4'd0001;
+	parameter PTF  = 4'd0001;
 	parameter NONE = 4'd0000;
 	parameter LOG_ORD = 4;
 	/****************************/
+
+	// PT_FETCHER
+	wire ptf_flag;
+	wire ptf_wr;
+	wire [`LOG_WIDTH-1:0] ptf_x;
+	wire [`LOG_HEIGHT-1:0] ptf_y;
+	wire [`LOG_MEM-1:0] ptf_pixel_write;
+	reg done_ptf;
+	reg [`LOG_MEM-1:0] ptf_pixel_read;
+	// INSTANTIATE pt_fetcher here
 
 	// BLOCK OF SRAM IMAGE IS IN
 	reg capt_mem_block;
@@ -80,7 +89,7 @@ module memory_interface
 	reg [`LOG_ADDR-1:0] ntsc_addr;
 	reg [`LOG_ADDR-1:0] vga_addr;
 	reg [`LOG_ADDR-1:0] lpf_addr;
-	reg [`LOG_ADDR-1:0] pt_addr;
+	reg [`LOG_ADDR-1:0] ptf_addr;
 	reg [`LOG_ADDR-1:0] next_ntsc_addr;
 	reg [`LOG_ADDR-1:0] next_vga_addr;
 
@@ -109,10 +118,11 @@ module memory_interface
 	reg [LOG_ORD-1:0] mem0_next_read;
 	reg [LOG_ORD-1:0] mem1_next_read;
 
-	// PREVIOUS LPF AND VGA READ VALUES
-	// (for stable vga_pixel and lpf_pixel_read)
+	// PREVIOUS LPF, VGA, AND PTF READ VALUES
+	// (for stable vga_pixel, lpf_pixel_read, and ptf_pixel_read)
 	reg [`LOG_MEM-1:0] prev_vga_pixel;
 	reg [`LOG_MEM-1:0] prev_lpf_pixel_read;
+	reg [`LOG_MEM-1:0] prev_ptf_pixel_read;
 
 	always @(*) begin
 		// shifting
@@ -152,11 +162,11 @@ module memory_interface
 			mem0_wr = lpf_wr;
 			mem0_done = LPF;
 		end
-		else if (!nexd_mem_block && pt_flag) begin
-			mem0_addr = pt_addr;
-			mem0_write = pt_pixel_write;
-			mem0_wr = pt_wr;
-			mem0_done = PT;
+		else if (!nexd_mem_block && ptf_flag) begin
+			mem0_addr = ptf_addr;
+			mem0_write = ptf_pixel_write;
+			mem0_wr = ptf_wr;
+			mem0_done = PTF;
 		end 
 		else begin // nothing's happening
 			mem0_addr = 0;
@@ -182,11 +192,11 @@ module memory_interface
 			mem1_wr = lpf_wr;
 			mem1_done = LPF;
 		end
-		else if (nexd_mem_block && pt_flag) begin
-			mem1_addr = pt_addr;
-			mem1_write = pt_pixel_write;
-			mem1_wr = pt_wr;
-			mem1_done = PT;
+		else if (nexd_mem_block && ptf_flag) begin
+			mem1_addr = ptf_addr;
+			mem1_write = ptf_pixel_write;
+			mem1_wr = ptf_wr;
+			mem1_done = PTF;
 		end
 		else begin // nothing's happening
 			mem1_addr = 0;
@@ -199,16 +209,21 @@ module memory_interface
 		done_ntsc = mem0_done[3] || mem1_done[3];
 		done_vga  = mem0_done[2] || mem1_done[2];
 		done_lpf  = mem0_done[1] || mem1_done[1];
-		done_pt   = mem0_done[0] || mem1_done[0];
+		done_ptf  = mem0_done[0] || mem1_done[0];
 
 		// assign read value to corresponding member of queue
 		mem0_next_read = mem0_read_queue[QUEUE_LENGTH*LOG_ORD-1:(QUEUE_LENGTH-1)*LOG_ORD];
 		mem1_next_read = mem1_read_queue[QUEUE_LENGTH*LOG_ORD-1:(QUEUE_LENGTH-1)*LOG_ORD];
 		
-		// LPF's turn
+		// LPF's turn in the queue
 		if (mem0_next_read == LPF) lpf_pixel_read = mem0_read;
 		else if (mem1_next_read == LPF) lpf_pixel_read = mem1_read;
 		else lpf_pixel_read = prev_lpf_pixel_read;
+
+		// PTF's turn
+		if (mem0_next_read == PTF) ptf_pixel_read = mem0_read;
+		else if (mem1_next_read == PTF) ptf_pixel_real = mem1_read;
+		else ptf_pixel_read = prev_ptf_pixel_read;
 
 		// VGA's turn
 		if (mem0_next_read == VGA) vga_pixel = mem0_read;
@@ -222,16 +237,18 @@ module memory_interface
 		// add new queue members, if any
 		if (mem0_done == VGA) next_mem0_read_queue[LOG_ORD-1:0] = VGA;
 		else if (mem0_done == LPF && !lpf_wr) next_mem0_read_queue[LOG_ORD-1:0] = LPF;
+		else if (mem0_done == PTF && !ptf_wr) next_mem0_read_queue[LOG_ORD-1:0] = PTF;
 		else next_mem0_read_queue[LOG_ORD-1:0] = NONE;
 
 		if (mem1_done == VGA) next_mem1_read_queue[LOG_ORD-1:0] = VGA;
 		else if (mem1_done == LPF && !lpf_wr) next_mem1_read_queue[LOG_ORD-1:0] = LPF;
+		else if (mem1_done == PTF && !ptf_wr) next_mem1_read_queue[LOG_ORD-1:0] = PTF;
 		else next_mem1_read_queue[LOG_ORD-1:0] = NONE;
 
-		// set addresses of LPF and PT from (x,y) coordinates
+		// set addresses of LPF and PTF from (x,y) coordinates
 		// addr = y*(image_width/2) + lpf_x/2 + loc*(image_width*image_height/2)
 		lpf_addr = (`IMAGE_WIDTH_D2 * lpf_y) + lpf_x[`LOG_WIDTH-1:1] + (proc_mem_loc * `IMAGE_LENGTH);
-		pt_addr = (`IMAGE_WIDTH_D2 * pt_y) + pt_x[`LOG_WIDTH-1:1] + (nexd_mem_loc * `IMAGE_LENGTH);
+		ptf_addr = (`IMAGE_WIDTH_D2 * ptf_y) + ptf_x[`LOG_WIDTH-1:1] + (nexd_mem_loc * `IMAGE_LENGTH);
 
 		// set next addresses of NTSC and VGA
 		// set to starting address at the start of each frame or when the FPGA is reset
@@ -263,6 +280,7 @@ module memory_interface
 		// retain previous output pixel values
 		prev_vga_pixel <= vga_pixel;
 		prev_lpf_pixel_read <= lpf_pixel_read;
+		prev_ptf_pixel_read <= ptf_pixel_read;
 	end
 endmodule
 
