@@ -65,6 +65,7 @@ module vga_write
 
 	// clock states - used for fetching
 	reg [1:0] state;
+	// TODO reg waiting_for_frame_flag;
 	parameter REQUESTING = 2'd0;
 	parameter STANDING_BY = 2'd1;
 	parameter READING = 2'd2;
@@ -121,7 +122,10 @@ module vga_write
 	wire [`LOG_TRUNC-1:0] pixel_out;
 	extract4 #(.S(`LOG_MEM)) tuple(pixels, trunc_vindex, pixel_tuple);
 	assign pixel_out = (vindex[0] == 0) ? pixel_tuple[2*`LOG_TRUNC-1:`LOG_TRUNC] : pixel_tuple[`LOG_TRUNC-1:0];
-	ycbcr2rgb converter(.y({pixel_out[17:12],2'b00}), .cb({pixel_out[11:6],2'b00}), .cr({pixel_out[5:0],2'b00}), .r(vga_out_red), .g(vga_out_green), .b(vga_out_blue));
+	// ycbcr2rgb converter(.y({pixel_out[17:12],2'b00}), .cb({pixel_out[11:6],2'b00}), .cr({pixel_out[5:0],2'b00}), .r(vga_out_red), .g(vga_out_green), .b(vga_out_blue));
+	assign vga_out_red = {pixel_out[17:12], 2'b00};
+	assign vga_out_green = {pixel_out[17:12], 2'b00};
+	assign vga_out_blue = {pixel_out[17:12], 2'b00};
 	// output
 	always @(*) begin
 		if (vstate == STEADY_STATE) begin
