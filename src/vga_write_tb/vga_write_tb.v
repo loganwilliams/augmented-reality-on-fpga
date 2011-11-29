@@ -24,6 +24,7 @@ initial begin
 	$dumpvars;
 	clock = 0;
 	vclock = 0;
+	frame_flag = 0;
 	reset = 1;
 	#25 reset = 0;
 end
@@ -33,7 +34,7 @@ always @(posedge clock) begin
 	else if (vga_flag) count <= count+2;
 	else count <= count;
 
-	if (count == 18'd30000) begin
+	if (count == 18'd262142) begin
 		$stop;
 	end
 end

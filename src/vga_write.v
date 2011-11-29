@@ -63,7 +63,7 @@ module vga_write
 		out_of_bounds = hcounts[cindex] >= 640 || vcounts[cindex] >= 480;
 		// whether to request a pixel from memory; !out_of_bounds prevents
 		// excessive requesting
-		vga_flag = (!reset && (trunc_vindex - trunc_cindex) >= 1 && !out_of_bounds && state == REQUESTING);
+		vga_flag = (!reset && !frame_flag && (trunc_vindex - trunc_cindex) > 1 && !out_of_bounds && state == REQUESTING);
 	end
 
 	/***** READING FROM MEMORY_INTERFACE ******/
