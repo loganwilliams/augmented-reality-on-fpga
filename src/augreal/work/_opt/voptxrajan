@@ -1,0 +1,52 @@
+m255
+K3
+13
+cModel Technology
+Z0 d/afs/athena.mit.edu/user/l/o/loganw/Documents/6.111/augmented-reality-on-fpga/src/augreal
+T_opt
+Z1 VX;amB>QWb1_eU]^PPIaj73
+Z2 04 15 4 work test_ntsc_clean fast 0
+Z3 04 4 4 work glbl fast 0
+Z4 =1-f04da20f1003-4ed549f2-43d46-9a6
+Z5 o-quiet -auto_acc_if_foreign -work work -L xilinxcorelib_ver -L unisims_ver -L unimacro_ver
+Z6 OE;O;6.4a;39
+vglbl
+Z7 IB;@1jEXmEfQXL`;Kf0IBZ3
+Z8 VnN]4Gon>inod6>M^M2[SV1
+Z9 w1202685744
+Z10 8/afs/csail.mit.edu/proj/redsocs/Xilinx10.1/ISE/verilog/src/glbl.v
+Z11 F/afs/csail.mit.edu/proj/redsocs/Xilinx10.1/ISE/verilog/src/glbl.v
+L0 5
+Z12 OE;L;6.4a;39
+r1
+31
+Z13 o+acc -L mtiAvm -L mtiOvm -L mtiUPF
+Z14 !s100 T?5S;>bN`@zG_25]R_4A33
+!s85 0
+vntsc_clean
+Z15 Ic_]iZdlAWZ_^inl7bJe311
+Z16 V0_<DlAEW5d@:mYlE[SGn91
+Z17 w1322600939
+Z18 Fntsc_clean.v
+Z19 8test_ntsc_clean.v
+Z20 Ftest_ntsc_clean.v
+L0 2
+R12
+r1
+31
+R13
+Z21 !s100 ;GaE^CTU[Zhzd3;4Ne<zB2
+!s85 0
+vtest_ntsc_clean
+Z22 I:CXlQ6j<C4<g0khKf7_?D1
+Z23 VVP8I3FjY4LYk_BB8]3hk^1
+R17
+R19
+R20
+L0 26
+R12
+r1
+31
+R13
+Z24 !s100 Q:5G4]]6ZnPQ=a??TXSae1
+!s85 0

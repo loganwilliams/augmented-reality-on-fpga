@@ -1,0 +1,38 @@
+# //  ModelSim SE 6.4a Aug 28 2008 Linux 2.6.32-35-generic
+# //
+# //  Copyright 1991-2008 Mentor Graphics Corporation
+# //              All Rights Reserved.
+# //
+# //  THIS WORK CONTAINS TRADE SECRET AND 
+# //  PROPRIETARY INFORMATION WHICH IS THE PROPERTY
+# //  OF MENTOR GRAPHICS CORPORATION OR ITS LICENSORS
+# //  AND IS SUBJECT TO LICENSE TERMS.
+# //
+# do {test_ntsc_clean.fdo} 
+# ** Warning: (vlib-34) Library already exists at "work".
+# Model Technology ModelSim SE vlog 6.4a Compiler 2008.08 Aug 28 2008
+# -- Compiling module ntsc_clean
+# -- Compiling module test_ntsc_clean
+# 
+# Top level modules:
+# 	test_ntsc_clean
+# Model Technology ModelSim SE vlog 6.4a Compiler 2008.08 Aug 28 2008
+# -- Compiling module glbl
+# 
+# Top level modules:
+# 	glbl
+# vsim -L xilinxcorelib_ver -L unisims_ver -L unimacro_ver -lib work -t 1ps test_ntsc_clean glbl 
+# ** Note: (vsim-3812) Design is being optimized...
+# Loading work.test_ntsc_clean(fast)
+# Loading work.ntsc_clean(fast)
+# Loading work.glbl(fast)
+# .main_pane.mdi.interior.cs.vm.paneset.cli_0.wf.clip.cs.pw.wf
+# .main_pane.workspace.interior.cs.nb.canvas.notebook.cs.page2.cs
+# .main_pane.signals.interior.cs
+# Can't move the Now cursor.
+force -freeze sim:/test_ntsc_clean/clock_65mhz 1 0, 0 {50 ps} -r 100
+run 1000ns
+force -freeze sim:/test_ntsc_clean/ntsc_pixels 00000000111111000000000000000000000 0
+force -freeze sim:/test_ntsc_clean/ntsc_flag 1 0
+run 200ns
+run 20ps
