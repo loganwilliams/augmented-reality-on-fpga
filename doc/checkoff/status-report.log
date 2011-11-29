@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2010.7.21)  22 NOV 2011 15:41
+This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010) (format=pdflatex 2010.7.21)  22 NOV 2011 21:47
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -239,11 +239,11 @@ Overfull \hbox (27.18236pt too wide) in paragraph at lines 33--34
 Here is how much of TeX's memory you used:
  2444 strings out of 493747
  33721 string characters out of 3143546
- 95388 words of memory out of 3000000
+ 94388 words of memory out of 3000000
  5713 multiletter control sequences out of 15000+200000
  9012 words of font info for 34 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 38i,7n,23p,440b,201s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 38i,7n,23p,476b,201s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2010/texmf-dist/fonts/type1/
 public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2010/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2010/texmf-dist/fonts/type1/pu
@@ -252,7 +252,7 @@ ic/amsfonts/cm/cmr12.pfb></usr/local/texlive/2010/texmf-dist/fonts/type1/public
 /amsfonts/cm/cmr17.pfb></usr/local/texlive/2010/texmf-dist/fonts/type1/public/a
 msfonts/cm/cmtt10.pfb></usr/local/texlive/2010/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmtt12.pfb>
-Output written on status-report.pdf (3 pages, 90786 bytes).
+Output written on status-report.pdf (3 pages, 91672 bytes).
 PDF statistics:
  42 PDF objects out of 1000 (max. 8388607)
  29 compressed objects within 1 object stream

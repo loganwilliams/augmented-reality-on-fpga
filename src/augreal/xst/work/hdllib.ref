@@ -1,0 +1,5 @@
+MO adv7185init NULL ntsc_capture.v vlg68/adv7185init.bin 1322510960
+MO i2c NULL ntsc_capture.v vlg1E/i2c.bin 1322510960
+MO ntsc_decode NULL ntsc_capture.v vlg63/ntsc__decode.bin 1322510960
+MO labkit NULL labkit.v vlg7B/labkit.bin 1322510960
+MO ntsc_capture NULL ntsc_capture.v vlg0F/ntsc__capture.bin 1322510960

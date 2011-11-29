@@ -1,0 +1,320 @@
+Release 10.1.03 ngdbuild K.39 (lin64)
+Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
+
+Command Line:
+/afs/csail.mit.edu/proj/redsocs/Xilinx10.1/ISE/bin/lin64/unwrapped/ngdbuild -ise
+/afs/athena.mit.edu/user/l/o/loganw/Documents/6.111/augmented-reality-on-fpga/sr
+c/augreal/augreal.ise -intstyle ise -dd _ngo -aul -nt timestamp -i -p
+xc2v6000-bf957-4 labkit.ngc labkit.ngd
+
+Reading NGO file
+"/afs/athena.mit.edu/user/l/o/loganw/Documents/6.111/augmented-reality-on-fpga/s
+rc/augreal/labkit.ngc" ...
+Reading in constraint information from 'labkit.ucf'...
+Gathering constraint information from source properties...
+Done.
+
+Resolving constraint associations...
+Checking Constraint Associations...
+INFO:ConstraintSystem:59 - Constraint <NET "flash_address<24>" LOC="al7";>
+   [labkit.ucf(335)]: NET "flash_address<24>" not found.  Please verify that:
+   1. The specified design element actually exists in the original design.
+   2. The specified object is spelled correctly in the constraint source file.
+
+Done...
+Checking Partitions ...
+
+Checking expanded design ...
+WARNING:NgdBuild:470 - bidirect pad net 'user3<28>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<4>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<29>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<5>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<6>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<7>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<8>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<9>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<10>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<10>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<11>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<11>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<12>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<12>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<13>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<13>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<14>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<14>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<15>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<20>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<15>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<21>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<16>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<22>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<17>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<18>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<23>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<0>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<19>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<24>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<1>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<10>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<25>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<30>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<2>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<11>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<31>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<26>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<3>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<12>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<32>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<27>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<4>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<13>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<33>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<28>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<5>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<0>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<14>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<34>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<29>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<6>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<1>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<15>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<20>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<40>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<35>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<7>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<2>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<21>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<16>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<41>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<36>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<8>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<0>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<3>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<17>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<22>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<37>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<42>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'flash_data<9>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<1>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<4>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<23>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<18>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<38>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<43>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<2>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<5>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<24>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<19>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<39>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<3>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<6>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<30>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<25>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<4>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<7>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<26>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<31>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<5>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<8>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<27>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<6>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<9>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<28>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<7>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<29>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<8>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<9>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<0>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<10>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<1>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<11>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<2>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<12>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<3>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<13>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<4>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<14>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<5>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<20>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<15>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<6>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<0>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<16>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<21>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<10>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<7>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<1>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<22>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<17>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<11>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<8>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<2>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<23>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<18>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<12>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'daughtercard<9>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<3>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<19>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<24>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<13>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<0>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<4>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<30>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<25>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<14>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<1>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<5>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<26>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<31>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<20>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<2>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<15>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<6>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<27>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<3>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<16>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<21>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<7>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<28>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<22>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<4>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<17>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<8>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<10>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user4<29>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<23>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<5>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<18>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<9>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<0>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<11>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<10>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<24>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<6>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<19>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<1>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<12>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<11>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<7>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<25>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<30>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<13>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<2>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<12>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<31>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<8>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<26>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<3>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<14>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<13>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<32>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<9>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<27>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<4>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<15>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<20>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<14>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<28>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<33>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<0>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<16>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<5>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<21>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<20>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<15>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<29>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<34>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<1>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<17>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<6>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<22>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<21>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<16>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<35>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<2>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<18>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<7>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<23>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<22>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<17>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<3>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<10>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<24>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<8>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<19>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<23>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<18>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<4>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<11>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<25>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user2<9>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<30>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<24>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<19>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<5>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<12>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<26>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<31>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<25>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<30>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<6>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<13>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<27>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<31>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<26>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<7>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<14>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<28>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<32>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<27>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<8>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'systemace_data<15>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user1<29>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<28>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<33>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram1_data<9>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<34>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<29>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'ram0_data<35>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<10>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<11>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<12>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<13>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<14>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<20>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<15>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<21>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<16>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<22>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<17>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<23>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<18>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<24>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<19>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<0>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<30>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<25>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<1>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<26>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<31>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<2>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<27>' has no legal driver
+WARNING:NgdBuild:470 - bidirect pad net 'user3<3>' has no legal driver
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+NGDBUILD Design Results Summary:
+  Number of errors:     0
+  Number of warnings: 276
+
+Total memory usage is 219352 kilobytes
+
+Writing NGD file "labkit.ngd" ...
+
+Writing NGDBUILD log file "labkit.bld"...
