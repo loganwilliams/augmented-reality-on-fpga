@@ -200,7 +200,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    // ac97_sdata_in is an input
 
    // VGA Output
-	
+	/*
    assign vga_out_red = 8'h0;
    assign vga_out_green = 8'h0;
    assign vga_out_blue = 8'h0;
@@ -209,7 +209,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    assign vga_out_pixel_clock = 1'b0;
    assign vga_out_hsync = 1'b0;
    assign vga_out_vsync = 1'b0;
-	
+	*/
 	// generate 65 mhz clock
    wire clock_65mhz_unbuf,clock_65mhz;
    DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf));
@@ -265,8 +265,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    assign ram1_oe_b = 1'b0;
    assign ram1_bwe_b = 4'hF;
 	
-	assign ram0_address = 19'b0;
-	assign ram1_address = 19'b0;
+	//assign ram0_address = 19'b0;
+	//assign ram1_address = 19'b0;
    
 	
 	
@@ -370,26 +370,26 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire done_ntsc;
 	wire vga_flag;
 	wire done_vga;
-	wire [23:0] vga_pixel;
+	wire [17:0] vga_pixel;
 	wire ram0_we;
 	wire ram1_we;
 
 	
-	/*memory_interface mi(.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag), .ntsc_flag(ntsc_flag),
+	memory_interface mi(.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag), .ntsc_flag(ntsc_flag),
 		.ntsc_pixel(ntsc_pixels), .done_ntsc(done_ntsc), .vga_flag(vga_flag), .done_vga(done_vga), .vga_pixel(vga_pixel),
 		.mem0_addr(ram0_address), .mem1_addr(ram1_address), .mem0_read(ram0_data), .mem1_read(ram1_data), .mem0_write(ram0_data), 
 		.mem1_write(ram1_data), .mem0_wr(ram0_we), .mem1_wr(ram1_we));
-		*/
+		
 	assign ram0_we_b = ~ram0_we;
 	assign ram1_we_b = ~ram1_we;
 		
-	/*vga_write vga(.clock(clock_65mhz), .vclock(clock_25mhz), .reset(reset), .frame_flag(frame_flag), .vga_pixel(vga_pixel),
+	vga_write vga(.clock(clock_65mhz), .vclock(clock_25mhz), .reset(reset), .frame_flag(frame_flag), .vga_pixel(vga_pixel),
 						.done_vga(done_vga), .vga_flag(vga_flag), .vga_out_red(vga_out_red), .vga_out_green(vga_out_green), .vga_out_blue(vga_out_blue),
 						.vga_out_sync_b(vga_out_sync_b), .vga_out_blank_b(vga_out_blank_b), .vga_out_pixel_clock(vga_out_pixel_clock),
 						.vga_out_hsync(vga_out_hsync), .vga_out_vsync(vga_out_vsync));
-		*/
+		
 		assign analyzer1_data = {frame_flag, ntsc_flag, dv, vga_flag, done_vga, done_ntsc, ram0_address[2:0], ram1_address[2:0], 4'b0000};
-		assign analyzer3_data = {fvh, ntsc_pixels[3:0], nx[2:0], ny[8:0], 1'b0};
+		assign analyzer3_data = {fvh, ntsc_pixels[3:0], ny[8:0]};
 		assign analyzer3_clock = clock_27mhz;
 		assign analyzer1_clock = clock_27mhz;
 		assign analyzer2_clock = clock_27mhz;

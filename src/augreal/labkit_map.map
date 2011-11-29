@@ -11,7 +11,7 @@ Target Device  : xc2v6000
 Target Package : bf957
 Target Speed   : -4
 Mapper Version : virtex2 -- $Revision: 1.46.12.2 $
-Mapped Date    : Mon Nov 28 22:12:33 2011
+Mapped Date    : Mon Nov 28 23:32:44 2011
 
 Mapping design into LUTs...
 Running directed packing...
@@ -23,27 +23,34 @@ Design Summary
 
 Design Summary:
 Number of errors:      0
-Number of warnings:  325
+Number of warnings:  254
 Logic Utilization:
-  Number of Slice Flip Flops:           138 out of  67,584    1%
-  Number of 4 input LUTs:               168 out of  67,584    1%
+  Total Number Slice Registers:         281 out of  67,584    1%
+    Number used as Flip Flops:          279
+    Number used as Latches:               2
+  Number of 4 input LUTs:               578 out of  67,584    1%
 Logic Distribution:
-  Number of occupied Slices:            141 out of  33,792    1%
-    Number of Slices containing only related logic:     141 out of     141 100%
-    Number of Slices containing unrelated logic:          0 out of     141   0%
+  Number of occupied Slices:            418 out of  33,792    1%
+    Number of Slices containing only related logic:     418 out of     418 100%
+    Number of Slices containing unrelated logic:          0 out of     418   0%
       *See NOTES below for an explanation of the effects of unrelated logic.
-  Total Number of 4 input LUTs:         176 out of  67,584    1%
-    Number used as logic:               166
-    Number used as a route-thru:          8
-    Number used as Shift registers:       2
+  Total Number of 4 input LUTs:         641 out of  67,584    1%
+    Number used as logic:               555
+    Number used as a route-thru:         63
+    Number used for Dual Port RAMs:      16
+      (Two LUTs used per Dual Port RAM)
+    Number used as 16x1 RAMs:             3
+    Number used as Shift registers:       4
   Number of bonded IOBs:                576 out of     684   84%
-    IOB Flip Flops:                       6
-  Number of BUFGMUXs:                     5 out of      16   31%
-  Number of DCMs:                         2 out of      12   16%
+    IOB Flip Flops:                       7
+    IOB Latches:                         72
+  Number of MULT18X18s:                   5 out of     144    3%
+  Number of BUFGMUXs:                     7 out of      16   43%
+  Number of DCMs:                         3 out of      12   25%
 
-Peak Memory Usage:  471 MB
-Total REAL time to MAP completion:  2 secs 
-Total CPU time to MAP completion:   2 secs 
+Peak Memory Usage:  479 MB
+Total REAL time to MAP completion:  3 secs 
+Total CPU time to MAP completion:   3 secs 
 
 NOTES:
 

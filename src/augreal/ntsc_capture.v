@@ -14,7 +14,7 @@ module ntsc_capture(
 		    output reg [9:0]  interesting_x, // its x locaiton
 		    output reg [8:0]  interesting_y, // its y location
 		    output reg 	      interesting_flag, // a flag that indicates the data is good
-		    output 	      frame_flag,
+		    output 	  reg    frame_flag,
 			 output dv,
 			 output [2:0] fvh,
 			 output reg [9:0] x,
@@ -30,7 +30,7 @@ module ntsc_capture(
    // this module decodes the data and outputs the ycrcb pair
    ntsc_decode decode(.clk(tv_in_line_clock1), .reset(reset),
 		      .tv_in_ycrcb(tv_in_ycrcb[19:10]), .ycrcb(ycrcb),
-		      .v(fvh[1]), .h(fvh[0]), .data_valid(dv));
+		      .v(fvh[1]), .h(fvh[0]), .data_valid(dv), .f(fvh[2]));
 
    reg 				      state = 0;
    //reg [9:0] 			      x = 0;
@@ -40,19 +40,32 @@ module ntsc_capture(
 	wire v;
 	wire h;
 	
+	reg pulseonce;
+	
 	assign f = fvh[2];
 	assign v = fvh[1];
 	assign h = fvh[0];
 
-   // frame flag should be high after we have finished capturing
-   // the even part of the interlaced frame
-   assign frame_flag = ((y >= 480) | v) & f;
-   
    always @ (posedge clock_27mhz) begin
 
       interesting_flag <= 0; // reset interesting flag
       
-      // if vsync
+			frame_flag <= 0;
+		
+			if (((y >= 480) | v) & f & ~pulseonce) begin
+				frame_flag <= 1;
+				pulseonce <= 1;
+			end
+				
+			if (~f) begin
+				pulseonce <= 0;
+			end
+				
+      
+      if (dv) begin
+
+			frame_flag <= (((y >= 480) | v) & f);
+		      // if vsync
       if (v) begin
 	 // reset coordinates
 	 x <= 0;
@@ -64,8 +77,6 @@ module ntsc_capture(
 	 x <= 0; // reset x coordinate
 	 y <= y + 2;
       end	 
-      
-      if (dv) begin
 	 if (y <= 480) begin // above 480 lines are blanked
 	    if (state == 0) begin
 	       ntsc_pixels[17:10] <= ycrcb[29:22];

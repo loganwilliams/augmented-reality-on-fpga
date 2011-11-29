@@ -1,7 +1,7 @@
 Release 10.1.03 - par K.39 (lin64)
 Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
 
-Mon Nov 28 22:13:16 2011
+Mon Nov 28 23:33:33 2011
 
 
 INFO: The IO information is provided in three file formats as part of the Place and Route (PAR) process.  These formats are:
@@ -49,15 +49,15 @@ Pinout by Pin Number:
 |A28       |user4<31>           |IOB      |IO_L06N_0             |INPUT    |LVTTL*     |0             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
 |A29       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |A30       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
-|AA1       |ram1_data<10>       |IOB      |IO_L68N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AA2       |ram1_data<11>       |IOB      |IO_L53N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AA3       |ram1_data<4>        |IOB      |IO_L50N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AA4       |ram1_data<3>        |IOB      |IO_L52N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AA5       |ram1_data<5>        |IOB      |IO_L72P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AA1       |ram1_data<10>       |IOB      |IO_L68N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AA2       |ram1_data<11>       |IOB      |IO_L53N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AA3       |ram1_data<4>        |IOB      |IO_L50N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AA4       |ram1_data<3>        |IOB      |IO_L52N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AA5       |ram1_data<5>        |IOB      |IO_L72P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AA6       |ram1_we_b           |IOB      |IO_L54N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AA7       |ram1_address<12>    |IOB      |IO_L67P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AA8       |ram1_address<3>     |IOB      |IO_L45P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|AA9       |ram1_data<35>       |IOB      |IO_L23N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AA9       |ram1_data<35>       |IOB      |IO_L23N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AA10      |                    |DIFFM    |IO_L27P_3             |UNUSED   |           |3             |          |         |           |         |       |          |         |           |                |
 |AA11      |                    |         |VCCINT                |         |           |              |          |         |           |         |1.5    |          |         |           |                |
 |AA12      |                    |         |VCCO_4                |         |           |4             |          |         |           |         |3.30   |          |         |           |                |
@@ -73,22 +73,22 @@ Pinout by Pin Number:
 |AA22      |                    |DIFFM    |IO_L19P_6             |UNUSED   |           |6             |          |         |           |         |       |          |         |           |                |
 |AA23      |                    |DIFFM    |IO_L44P_6             |UNUSED   |           |6             |          |         |           |         |       |          |         |           |                |
 |AA24      |ram0_address<2>     |IOB      |IO_L25N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|AA25      |ram0_data<26>       |IOB      |IO_L48P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AA25      |ram0_data<26>       |IOB      |IO_L48P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AA26      |ram0_address<3>     |IOB      |IO_L51P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|AA27      |ram0_data<8>        |IOB      |IO_L50N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AA28      |ram0_data<16>       |IOB      |IO_L46N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AA27      |ram0_data<8>        |IOB      |IO_L50N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AA28      |ram0_data<16>       |IOB      |IO_L46N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AA29      |                    |DIFFM    |IO_L70P_6             |UNUSED   |           |6             |          |         |           |         |       |          |         |           |                |
-|AA30      |ram0_data<2>        |IOB      |IO_L67N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AA31      |ram0_data<1>        |IOB      |IO_L69N_6/VREF_6      |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AB1       |ram1_data<12>       |IOB      |IO_L68P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AB2       |ram1_data<13>       |IOB      |IO_L53P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AA30      |ram0_data<2>        |IOB      |IO_L67N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AA31      |ram0_data<1>        |IOB      |IO_L69N_6/VREF_6      |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AB1       |ram1_data<12>       |IOB      |IO_L68P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AB2       |ram1_data<13>       |IOB      |IO_L53P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AB3       |ram1_address<18>    |IOB      |IO_L50P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AB4       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |AB5       |                    |DIFFS    |IO_L49N_3             |UNUSED   |           |3             |          |         |           |         |       |          |         |           |                |
 |AB6       |                    |         |VCCO_3                |         |           |3             |          |         |           |         |3.30   |          |         |           |                |
 |AB7       |ram1_address<11>    |IOB      |IO_L43N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AB8       |ram1_address<4>     |IOB      |IO_L20N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|AB9       |ram1_data<26>       |IOB      |IO_L23P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AB9       |ram1_data<26>       |IOB      |IO_L23P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AB10      |                    |DIFFS    |IO_L05N_3             |UNUSED   |           |3             |          |         |           |         |       |          |         |           |                |
 |AB11      |                    |DIFFM    |IO_L05P_3             |UNUSED   |           |3             |          |         |           |         |       |          |         |           |                |
 |AB12      |button3             |IOB      |IO_L22N_4             |INPUT    |LVTTL*     |4             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
@@ -104,23 +104,23 @@ Pinout by Pin Number:
 |AB22      |                    |DIFFM    |IO_L04P_6             |UNUSED   |           |6             |          |         |           |         |       |          |         |           |                |
 |AB23      |                    |DIFFS    |IO_L04N_6             |UNUSED   |           |6             |          |         |           |         |       |          |         |           |                |
 |AB24      |ram0_address<5>     |IOB      |IO_L25P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|AB25      |ram0_data<35>       |IOB      |IO_L27N_6/VREF_6      |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AB25      |ram0_data<35>       |IOB      |IO_L27N_6/VREF_6      |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AB26      |                    |         |VCCO_6                |         |           |6             |          |         |           |         |3.30   |          |         |           |                |
 |AB27      |ram0_address<10>    |IOB      |IO_L50P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AB28      |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |AB29      |ram0_address<1>     |IOB      |IO_L49N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|AB30      |ram0_data<4>        |IOB      |IO_L67P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AB31      |ram0_data<3>        |IOB      |IO_L69P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AC1       |ram1_data<14>       |IOB      |IO_L47N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AC2       |ram1_data<15>       |IOB      |IO_L44N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AC3       |ram1_data<7>        |IOB      |IO_L46N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AC4       |ram1_data<6>        |IOB      |IO_L52P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AB30      |ram0_data<4>        |IOB      |IO_L67P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AB31      |ram0_data<3>        |IOB      |IO_L69P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AC1       |ram1_data<14>       |IOB      |IO_L47N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AC2       |ram1_data<15>       |IOB      |IO_L44N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AC3       |ram1_data<7>        |IOB      |IO_L46N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AC4       |ram1_data<6>        |IOB      |IO_L52P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AC5       |ram1_address<17>    |IOB      |IO_L49P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AC6       |ram1_address<10>    |IOB      |IO_L54P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AC7       |                    |DIFFM    |IO_L43P_3             |UNUSED   |           |3             |          |         |           |         |       |          |         |           |                |
 |AC8       |ram1_address<5>     |IOB      |IO_L20P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AC9       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
-|AC10      |vga_out_pixel_clock |IOB      |IO_L19N_4             |OUTPUT   |LVTTL*     |4             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
+|AC10      |vga_out_pixel_clock |IOB      |IO_L19N_4             |OUTPUT   |LVTTL*     |4             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |YES        |NONE            |
 |AC11      |vga_out_vsync       |IOB      |IO_L19P_4             |OUTPUT   |LVTTL*     |4             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
 |AC12      |vga_out_green<0>    |IOB      |IO_L67N_4             |OUTPUT   |LVTTL*     |4             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
 |AC13      |vga_out_hsync       |IOB      |IO_L67P_4             |OUTPUT   |LVTTL*     |4             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
@@ -140,13 +140,13 @@ Pinout by Pin Number:
 |AC27      |ram0_address<11>    |IOB      |IO_L47N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AC28      |                    |DIFFM    |IO_L46P_6             |UNUSED   |           |6             |          |         |           |         |       |          |         |           |                |
 |AC29      |                    |DIFFM    |IO_L49P_6             |UNUSED   |           |6             |          |         |           |         |       |          |         |           |                |
-|AC30      |ram0_data<6>        |IOB      |IO_L45N_6/VREF_6      |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AC31      |ram0_data<5>        |IOB      |IO_L52N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AD1       |ram1_data<16>       |IOB      |IO_L47P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AC30      |ram0_data<6>        |IOB      |IO_L45N_6/VREF_6      |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AC31      |ram0_data<5>        |IOB      |IO_L52N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AD1       |ram1_data<16>       |IOB      |IO_L47P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AD2       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |AD3       |ram1_address<9>     |IOB      |IO_L46P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AD4       |ram1_address<8>     |IOB      |IO_L22N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|AD5       |ram1_data<18>       |IOB      |IO_L21N_3/VREF_3      |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AD5       |ram1_data<18>       |IOB      |IO_L21N_3/VREF_3      |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AD6       |                    |DIFFS    |IO_L03N_3/VREF_3      |UNUSED   |           |3             |          |         |           |         |       |          |         |           |                |
 |AD7       |ram1_address<0>     |IOB      |IO_L03P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AD8       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
@@ -166,18 +166,18 @@ Pinout by Pin Number:
 |AD22      |switch<7>           |IOB      |IO_L26P_5             |INPUT    |LVTTL*     |5             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
 |AD23      |                    |DIFFS    |IO_L05N_5/VRP_5       |UNUSED   |           |5             |          |         |TERMINATION|         |       |          |         |           |                |
 |AD24      |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
-|AD25      |ram0_data<27>       |IOB      |IO_L20P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AD25      |ram0_data<27>       |IOB      |IO_L20P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AD26      |ram0_address<13>    |IOB      |IO_L22P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AD27      |ram0_address<12>    |IOB      |IO_L47P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AD28      |ram0_address<16>    |IOB      |IO_L24N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AD29      |ram0_address<15>    |IOB      |IO_L23N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AD30      |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
-|AD31      |ram0_data<7>        |IOB      |IO_L52P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AE1       |ram1_data<27>       |IOB      |IO_L25N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AE2       |ram1_data<28>       |IOB      |IO_L44P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AD31      |ram0_data<7>        |IOB      |IO_L52P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AE1       |ram1_data<27>       |IOB      |IO_L25N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AE2       |ram1_data<28>       |IOB      |IO_L44P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AE3       |                    |         |VCCO_3                |         |           |3             |          |         |           |         |3.30   |          |         |           |                |
-|AE4       |ram1_data<20>       |IOB      |IO_L22P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AE5       |ram1_data<19>       |IOB      |IO_L21P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AE4       |ram1_data<20>       |IOB      |IO_L22P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AE5       |ram1_data<19>       |IOB      |IO_L21P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AE6       |                    |DIFFS    |IO_L02N_3/VRP_3       |UNUSED   |           |3             |          |         |TERMINATION|         |       |          |         |           |                |
 |AE7       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |AE8       |vga_out_red<6>      |IOB      |IO_L04N_4/VREF_4      |OUTPUT   |LVTTL*     |4             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
@@ -200,14 +200,14 @@ Pinout by Pin Number:
 |AE25      |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |AE26      |                    |DIFFM    |IO_L02P_6/VRN_6       |UNUSED   |           |6             |          |         |TERMINATION|         |       |          |         |           |                |
 |AE27      |                    |DIFFS    |IO_L02N_6/VRP_6       |UNUSED   |           |6             |          |         |TERMINATION|         |       |          |         |           |                |
-|AE28      |ram0_data<28>       |IOB      |IO_L24P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AE28      |ram0_data<28>       |IOB      |IO_L24P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AE29      |                    |         |VCCO_6                |         |           |6             |          |         |           |         |3.30   |          |         |           |                |
-|AE30      |ram0_data<19>       |IOB      |IO_L45P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AE31      |ram0_data<18>       |IOB      |IO_L43N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AF1       |ram1_data<29>       |IOB      |IO_L25P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AF2       |ram1_data<30>       |IOB      |IO_L24N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AF3       |ram1_data<21>       |IOB      |IO_L04N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AF4       |ram1_data<22>       |IOB      |IO_L06N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AE30      |ram0_data<19>       |IOB      |IO_L45P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AE31      |ram0_data<18>       |IOB      |IO_L43N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AF1       |ram1_data<29>       |IOB      |IO_L25P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AF2       |ram1_data<30>       |IOB      |IO_L24N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AF3       |ram1_data<21>       |IOB      |IO_L04N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AF4       |ram1_data<22>       |IOB      |IO_L06N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AF5       |                    |DIFFM    |IO_L02P_3/VRN_3       |UNUSED   |           |3             |          |         |TERMINATION|         |       |          |         |           |                |
 |AF6       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |AF7       |                    |DIFFS    |IO_L02N_4/D0          |UNUSED   |           |4             |          |         |           |         |       |          |         |           |                |
@@ -230,15 +230,15 @@ Pinout by Pin Number:
 |AF24      |analyzer4_data<8>   |IOB      |IO_L03P_5/D5/ALT_VRN_5|OUTPUT   |LVTTL*     |5             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
 |AF25      |analyzer4_data<10>  |IOB      |IO_L02P_5/D7          |OUTPUT   |LVTTL*     |5             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
 |AF26      |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
-|AF27      |ram0_data<31>       |IOB      |IO_L01P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AF28      |ram0_data<29>       |IOB      |IO_L01N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AF29      |ram0_data<30>       |IOB      |IO_L23P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AF30      |ram0_data<21>       |IOB      |IO_L21N_6/VREF_6      |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AF31      |ram0_data<20>       |IOB      |IO_L43P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AG1       |ram1_data<31>       |IOB      |IO_L19N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AG2       |ram1_data<32>       |IOB      |IO_L24P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AG3       |ram1_data<23>       |IOB      |IO_L04P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AG4       |ram1_data<24>       |IOB      |IO_L06P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AF27      |ram0_data<31>       |IOB      |IO_L01P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AF28      |ram0_data<29>       |IOB      |IO_L01N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AF29      |ram0_data<30>       |IOB      |IO_L23P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AF30      |ram0_data<21>       |IOB      |IO_L21N_6/VREF_6      |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AF31      |ram0_data<20>       |IOB      |IO_L43P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AG1       |ram1_data<31>       |IOB      |IO_L19N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AG2       |ram1_data<32>       |IOB      |IO_L24P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AG3       |ram1_data<23>       |IOB      |IO_L04P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AG4       |ram1_data<24>       |IOB      |IO_L06P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AG5       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |AG6       |                    |         |DONE                  |         |           |              |          |         |           |         |       |          |         |           |                |
 |AG7       |analyzer4_data<15>  |IOB      |IO_L02P_4/D1          |OUTPUT   |LVTTL*     |4             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
@@ -262,13 +262,13 @@ Pinout by Pin Number:
 |AG25      |tv_in_reset_b       |IOB      |IO_L21P_5             |OUTPUT   |LVDCI_33   |5             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |AG26      |                    |         |M2                    |         |           |              |          |         |           |         |       |          |         |           |                |
 |AG27      |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
-|AG28      |ram0_data<33>       |IOB      |IO_L05P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AG29      |ram0_data<32>       |IOB      |IO_L05N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AG30      |ram0_data<23>       |IOB      |IO_L21P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AG31      |ram0_data<22>       |IOB      |IO_L06N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AH1       |ram1_data<33>       |IOB      |IO_L19P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AH2       |ram1_data<34>       |IOB      |IO_L01N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AH3       |ram1_data<25>       |IOB      |IO_L01P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AG28      |ram0_data<33>       |IOB      |IO_L05P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AG29      |ram0_data<32>       |IOB      |IO_L05N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AG30      |ram0_data<23>       |IOB      |IO_L21P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AG31      |ram0_data<22>       |IOB      |IO_L06N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AH1       |ram1_data<33>       |IOB      |IO_L19P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AH2       |ram1_data<34>       |IOB      |IO_L01N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AH3       |ram1_data<25>       |IOB      |IO_L01P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AH4       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |AH5       |                    |         |PWRDWN_B              |         |           |              |          |         |           |         |       |          |         |           |                |
 |AH6       |vga_out_green<4>    |IOB      |IO_L06N_4             |OUTPUT   |LVTTL*     |4             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
@@ -294,9 +294,9 @@ Pinout by Pin Number:
 |AH26      |tv_in_ycrcb<10>     |IOB      |IO_L04P_5/VREF_5      |INPUT    |LVTTL*     |5             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
 |AH27      |                    |         |M0                    |         |           |              |          |         |           |         |       |          |         |           |                |
 |AH28      |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
-|AH29      |ram0_data<34>       |IOB      |IO_L03P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AH30      |ram0_data<25>       |IOB      |IO_L03N_6/VREF_6      |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|AH31      |ram0_data<24>       |IOB      |IO_L06P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|AH29      |ram0_data<34>       |IOB      |IO_L03P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AH30      |ram0_data<25>       |IOB      |IO_L03N_6/VREF_6      |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|AH31      |ram0_data<24>       |IOB      |IO_L06P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |AJ1       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |AJ2       |                    |         |VCCAUX                |         |           |              |          |         |           |         |3.3    |          |         |           |                |
 |AJ3       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
@@ -880,14 +880,14 @@ Pinout by Pin Number:
 |U25       |ram0_cen_b          |IOB      |IO_L72N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |U26       |ram0_bwe_b<3>       |IOB      |IO_L92P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |U27       |ram0_bwe_b<1>       |IOB      |IO_L77N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|U28       |ram0_data<9>        |IOB      |IO_L93N_6/VREF_6      |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|U29       |ram0_data<10>       |IOB      |IO_L78N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|U28       |ram0_data<9>        |IOB      |IO_L93N_6/VREF_6      |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|U29       |ram0_data<10>       |IOB      |IO_L78N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |U30       |ram0_clk            |IOB      |IO_L95N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |U31       |ram0_we_b           |IOB      |IO_L96N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |V1        |ram1_bwe_b<2>       |IOB      |IO_L93P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|V2        |ram1_data<17>       |IOB      |IO_L91P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|V2        |ram1_data<17>       |IOB      |IO_L91P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |V3        |                    |         |VCCO_3                |         |           |3             |          |         |           |         |3.30   |          |         |           |                |
-|V4        |ram1_data<8>        |IOB      |IO_L77P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|V4        |ram1_data<8>        |IOB      |IO_L77P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |V5        |ram1_cen_b          |IOB      |IO_L75N_3/VREF_3      |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |V6        |ram1_address<15>    |IOB      |IO_L95P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |V7        |analyzer4_data<2>   |IOB      |IO_L78P_3             |OUTPUT   |LVTTL*     |3             |12        |SLOW     |NONE**     |         |       |LOCATED   |         |NO         |NONE            |
@@ -911,13 +911,13 @@ Pinout by Pin Number:
 |V25       |ram0_oe_b           |IOB      |IO_L72P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |V26       |ram0_adv_ld         |IOB      |IO_L68N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |V27       |ram0_bwe_b<0>       |IOB      |IO_L77P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|V28       |ram0_data<11>       |IOB      |IO_L93P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|V28       |ram0_data<11>       |IOB      |IO_L93P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |V29       |                    |         |VCCO_6                |         |           |6             |          |         |           |         |3.30   |          |         |           |                |
 |V30       |                    |DIFFM    |IO_L95P_6             |UNUSED   |           |6             |          |         |           |         |       |          |         |           |                |
 |V31       |ram0_address<18>    |IOB      |IO_L96P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |W1        |                    |DIFFS    |IO_L76N_3             |UNUSED   |           |3             |          |         |           |         |       |          |         |           |                |
 |W2        |                    |DIFFS    |IO_L74N_3             |UNUSED   |           |3             |          |         |           |         |       |          |         |           |                |
-|W3        |ram1_data<0>        |IOB      |IO_L71N_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|W3        |ram1_data<0>        |IOB      |IO_L71N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |W4        |ram1_address<6>     |IOB      |IO_L70N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |W5        |ram1_oe_b           |IOB      |IO_L75P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |W6        |ram1_address<14>    |IOB      |IO_L73N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
@@ -942,14 +942,14 @@ Pinout by Pin Number:
 |W25       |                    |         |GND                   |         |           |              |          |         |           |         |       |          |         |           |                |
 |W26       |ram0_ce_b           |IOB      |IO_L68P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |W27       |ram0_bwe_b<2>       |IOB      |IO_L54N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|W28       |ram0_data<12>       |IOB      |IO_L73N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|W29       |ram0_data<13>       |IOB      |IO_L78P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|W28       |ram0_data<12>       |IOB      |IO_L73N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|W29       |ram0_data<13>       |IOB      |IO_L78P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |W30       |ram0_address<8>     |IOB      |IO_L75N_6/VREF_6      |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |W31       |ram0_address<17>    |IOB      |IO_L76N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |Y1        |                    |DIFFM    |IO_L76P_3             |UNUSED   |           |3             |          |         |           |         |       |          |         |           |                |
-|Y2        |ram1_data<9>        |IOB      |IO_L74P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|Y3        |ram1_data<2>        |IOB      |IO_L71P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|Y4        |ram1_data<1>        |IOB      |IO_L70P_3             |INPUT    |LVDCI_33   |3             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|Y2        |ram1_data<9>        |IOB      |IO_L74P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|Y3        |ram1_data<2>        |IOB      |IO_L71P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|Y4        |ram1_data<1>        |IOB      |IO_L70P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |Y5        |ram1_adv_ld         |IOB      |IO_L72N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |Y6        |ram1_address<13>    |IOB      |IO_L73P_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |Y7        |ram1_address<2>     |IOB      |IO_L67N_3             |OUTPUT   |LVDCI_33   |3             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
@@ -972,10 +972,10 @@ Pinout by Pin Number:
 |Y24       |                    |DIFFM    |IO_L71P_6             |UNUSED   |           |6             |          |         |           |         |       |          |         |           |                |
 |Y25       |ram0_address<6>     |IOB      |IO_L48N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 |Y26       |ram0_address<7>     |IOB      |IO_L51N_6/VREF_6      |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
-|Y27       |ram0_data<17>       |IOB      |IO_L54P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|Y28       |ram0_data<14>       |IOB      |IO_L73P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|Y29       |ram0_data<15>       |IOB      |IO_L70N_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
-|Y30       |ram0_data<0>        |IOB      |IO_L75P_6             |INPUT    |LVDCI_33   |6             |          |         |           |NONE     |       |LOCATED   |         |NO         |NONE            |
+|Y27       |ram0_data<17>       |IOB      |IO_L54P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|Y28       |ram0_data<14>       |IOB      |IO_L73P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|Y29       |ram0_data<15>       |IOB      |IO_L70N_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
+|Y30       |ram0_data<0>        |IOB      |IO_L75P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |YES        |DRIVER          |
 |Y31       |ram0_address<9>     |IOB      |IO_L76P_6             |OUTPUT   |LVDCI_33   |6             |          |NONE*    |NONE**     |         |       |LOCATED   |         |NO         |DRIVER          |
 +----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 

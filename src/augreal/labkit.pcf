@@ -1,5 +1,5 @@
 //! **************************************************************************
-// Written by: Map K.39 on Mon Nov 28 22:12:35 2011
+// Written by: Map K.39 on Mon Nov 28 23:32:46 2011
 //! **************************************************************************
 
 SCHEMATIC START;
@@ -77,14 +77,14 @@ COMP "ram1_data<17>" LOCATE = SITE "V2" LEVEL 1;
 COMP "ram1_data<34>" LOCATE = SITE "AH2" LEVEL 1;
 COMP "ram1_data<26>" LOCATE = SITE "AB9" LEVEL 1;
 COMP "ram1_data<18>" LOCATE = SITE "AD5" LEVEL 1;
+COMP "systemace_data<0>" LOCATE = SITE "R28" LEVEL 1;
 COMP "ram1_data<35>" LOCATE = SITE "AA9" LEVEL 1;
 COMP "ram1_data<27>" LOCATE = SITE "AE1" LEVEL 1;
 COMP "ram1_data<19>" LOCATE = SITE "AE5" LEVEL 1;
-COMP "systemace_data<0>" LOCATE = SITE "R28" LEVEL 1;
-COMP "ram1_data<28>" LOCATE = SITE "AE2" LEVEL 1;
 COMP "systemace_data<1>" LOCATE = SITE "R29" LEVEL 1;
-COMP "ram1_data<29>" LOCATE = SITE "AF1" LEVEL 1;
+COMP "ram1_data<28>" LOCATE = SITE "AE2" LEVEL 1;
 COMP "systemace_data<2>" LOCATE = SITE "P28" LEVEL 1;
+COMP "ram1_data<29>" LOCATE = SITE "AF1" LEVEL 1;
 COMP "systemace_data<3>" LOCATE = SITE "N28" LEVEL 1;
 COMP "systemace_data<4>" LOCATE = SITE "N29" LEVEL 1;
 COMP "systemace_data<5>" LOCATE = SITE "M28" LEVEL 1;
@@ -290,10 +290,10 @@ COMP "ram0_data<34>" LOCATE = SITE "AH29" LEVEL 1;
 COMP "ram0_data<26>" LOCATE = SITE "AA25" LEVEL 1;
 COMP "ram0_data<18>" LOCATE = SITE "AE31" LEVEL 1;
 COMP "ram0_ce_b" LOCATE = SITE "W26" LEVEL 1;
+COMP "rs232_rts" LOCATE = SITE "R3" LEVEL 1;
 COMP "ram0_data<35>" LOCATE = SITE "AB25" LEVEL 1;
 COMP "ram0_data<27>" LOCATE = SITE "AD25" LEVEL 1;
 COMP "ram0_data<19>" LOCATE = SITE "AE30" LEVEL 1;
-COMP "rs232_rts" LOCATE = SITE "R3" LEVEL 1;
 COMP "systemace_mpbrdy" LOCATE = SITE "L31" LEVEL 1;
 COMP "rs232_txd" LOCATE = SITE "P4" LEVEL 1;
 COMP "ram0_data<28>" LOCATE = SITE "AE28" LEVEL 1;
@@ -580,8 +580,6 @@ COMP "user4<9>" LOCATE = SITE "B19" LEVEL 1;
 COMP "ram0_adv_ld" LOCATE = SITE "V26" LEVEL 1;
 COMP "clock_feedback_out" LOCATE = SITE "AL28" LEVEL 1;
 NET "analyzer2_clock_OBUF1" BEL "analyzer2_clock_OBUF_BUFG.GCLKMUX"
-        USELOCALCONNECT;
-NET "tv_in_line_clock1_BUFGP/IBUFG" BEL "tv_in_line_clock1_BUFGP/BUFG.GCLKMUX"
         USELOCALCONNECT;
 SCHEMATIC END;
 

@@ -1,11 +1,11 @@
 Release 10.1.03 - par K.39 (lin64)
 Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
 
-Mon Nov 28 22:13:17 2011
+Mon Nov 28 23:33:34 2011
 
 All signals are completely routed.
 
-WARNING:ParHelpers:361 - There are 322 loadless signals in this design. This design will cause Bitgen to issue DRC
+WARNING:ParHelpers:361 - There are 250 loadless signals in this design. This design will cause Bitgen to issue DRC
    warnings.
 
    ac97_bit_clock_IBUF
@@ -87,78 +87,6 @@ WARNING:ParHelpers:361 - There are 322 loadless signals in this design. This des
    keyboard_data_IBUF
    mouse_clock_IBUF
    mouse_data_IBUF
-   ram0_data<0>_IBUF
-   ram0_data<10>_IBUF
-   ram0_data<11>_IBUF
-   ram0_data<12>_IBUF
-   ram0_data<13>_IBUF
-   ram0_data<14>_IBUF
-   ram0_data<15>_IBUF
-   ram0_data<16>_IBUF
-   ram0_data<17>_IBUF
-   ram0_data<18>_IBUF
-   ram0_data<19>_IBUF
-   ram0_data<1>_IBUF
-   ram0_data<20>_IBUF
-   ram0_data<21>_IBUF
-   ram0_data<22>_IBUF
-   ram0_data<23>_IBUF
-   ram0_data<24>_IBUF
-   ram0_data<25>_IBUF
-   ram0_data<26>_IBUF
-   ram0_data<27>_IBUF
-   ram0_data<28>_IBUF
-   ram0_data<29>_IBUF
-   ram0_data<2>_IBUF
-   ram0_data<30>_IBUF
-   ram0_data<31>_IBUF
-   ram0_data<32>_IBUF
-   ram0_data<33>_IBUF
-   ram0_data<34>_IBUF
-   ram0_data<35>_IBUF
-   ram0_data<3>_IBUF
-   ram0_data<4>_IBUF
-   ram0_data<5>_IBUF
-   ram0_data<6>_IBUF
-   ram0_data<7>_IBUF
-   ram0_data<8>_IBUF
-   ram0_data<9>_IBUF
-   ram1_data<0>_IBUF
-   ram1_data<10>_IBUF
-   ram1_data<11>_IBUF
-   ram1_data<12>_IBUF
-   ram1_data<13>_IBUF
-   ram1_data<14>_IBUF
-   ram1_data<15>_IBUF
-   ram1_data<16>_IBUF
-   ram1_data<17>_IBUF
-   ram1_data<18>_IBUF
-   ram1_data<19>_IBUF
-   ram1_data<1>_IBUF
-   ram1_data<20>_IBUF
-   ram1_data<21>_IBUF
-   ram1_data<22>_IBUF
-   ram1_data<23>_IBUF
-   ram1_data<24>_IBUF
-   ram1_data<25>_IBUF
-   ram1_data<26>_IBUF
-   ram1_data<27>_IBUF
-   ram1_data<28>_IBUF
-   ram1_data<29>_IBUF
-   ram1_data<2>_IBUF
-   ram1_data<30>_IBUF
-   ram1_data<31>_IBUF
-   ram1_data<32>_IBUF
-   ram1_data<33>_IBUF
-   ram1_data<34>_IBUF
-   ram1_data<35>_IBUF
-   ram1_data<3>_IBUF
-   ram1_data<4>_IBUF
-   ram1_data<5>_IBUF
-   ram1_data<6>_IBUF
-   ram1_data<7>_IBUF
-   ram1_data<8>_IBUF
-   ram1_data<9>_IBUF
    rs232_cts_IBUF
    rs232_rxd_IBUF
    switch<0>_IBUF
