@@ -186,214 +186,280 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		 analyzer4_data;
    output analyzer1_clock, analyzer2_clock, analyzer3_clock, analyzer4_clock;
 
-   ////////////////////////////////////////////////////////////////////////////
-   //
-   // I/O Assignments
-   //
-   ////////////////////////////////////////////////////////////////////////////
-   
-   // Audio Input and Output
-   assign beep= 1'b0;
-   assign audio_reset_b = 1'b0;
-   assign ac97_synch = 1'b0;
-   assign ac97_sdata_out = 1'b0;
-   // ac97_sdata_in is an input
-
-   // VGA Output
-	
-   assign vga_out_red = 8'h0;
-   assign vga_out_green = 8'h0;
-   assign vga_out_blue = 8'h0;
-   assign vga_out_sync_b = 1'b1;
-   assign vga_out_blank_b = 1'b1;
-   assign vga_out_pixel_clock = 1'b0;
-   assign vga_out_hsync = 1'b0;
-   assign vga_out_vsync = 1'b0;
+	////////////////////////////////////////////////////////////////////////////
+	//
+	// Clock Assignments
+	//
+	//////////////////////////////////////////////////////////////////////////// 
 	
 	// generate 65 mhz clock
-   wire clock_65mhz_unbuf,clock_65mhz;
-   DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf));
-   // synthesis attribute CLKFX_DIVIDE of vclk1 is 10
-   // synthesis attribute CLKFX_MULTIPLY of vclk1 is 24
-   // synthesis attribute CLK_FEEDBACK of vclk1 is NONE
-   // synthesis attribute CLKIN_PERIOD of vclk1 is 37
-   BUFG vclk2(.O(clock_65mhz),.I(clock_65mhz_unbuf));
+	wire clock_65mhz_unbuf,clock_65mhz;
+	DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf));
+	// synthesis attribute CLKFX_DIVIDE of vclk1 is 10
+	// synthesis attribute CLKFX_MULTIPLY of vclk1 is 24
+	// synthesis attribute CLK_FEEDBACK of vclk1 is NONE
+	// synthesis attribute CLKIN_PERIOD of vclk1 is 37
+	BUFG vclk2(.O(clock_65mhz),.I(clock_65mhz_unbuf));
   
-   // generate 25 mhz clock
-   wire clock_25mhz_unbuf,clock_25mhz;
-   DCM vclk3(.CLKIN(clock_27mhz),.CLKFX(clock_25mhz_unbuf));
-   // synthesis attribute CLKFX_DIVIDE of vclk3 is 15
-   // synthesis attribute CLKFX_MULTIPLY of vclk3 is 14
-   // synthesis attribute CLK_FEEDBACK of vclk3 is NONE
-   // synthesis attribute CLKIN_PERIOD of vclk3 is 37
-   BUFG vclk4(.O(clock_25mhz),.I(clock_25mhz_unbuf));
-  
-  
-   // Video Output
-   assign tv_out_ycrcb = 10'h0;
-   assign tv_out_reset_b = 1'b0;
-   assign tv_out_clock = 1'b0;
-   assign tv_out_i2c_clock = 1'b0;
-   assign tv_out_i2c_data = 1'b0;
-   assign tv_out_pal_ntsc = 1'b0;
-   assign tv_out_hsync_b = 1'b1;
-   assign tv_out_vsync_b = 1'b1;
-   assign tv_out_blank_b = 1'b1;
-   assign tv_out_subcar_reset = 1'b0;
-   
-   // Video Input
-   assign tv_in_fifo_read = 1'b0;
-   assign tv_in_fifo_clock = 1'b0;
-   assign tv_in_iso = 1'b0;
-	assign tv_in_clock = clock_27mhz;
-   // tv_in_ycrcb, tv_in_data_valid, tv_in_line_clock1, tv_in_line_clock2, 
-   // tv_in_aef, tv_in_hff, and tv_in_aff are inputs
-   
-   // SRAMs
-	/*************************************
-	******* SRAM BLOCK *******************
-	**************************************/
-   assign ram0_adv_ld = 1'b0;
-   assign ram0_cen_b = 1'b0;
-   assign ram0_ce_b = 1'b0;
-   assign ram0_oe_b = 1'b0;
-   assign ram0_bwe_b = 4'hF;
-	
-   assign ram1_adv_ld = 1'b0;
-   assign ram1_cen_b = 1'b0;
-   assign ram1_ce_b = 1'b0;
-   assign ram1_oe_b = 1'b0;
-   assign ram1_bwe_b = 4'hF;
-	
-	assign ram0_address = 19'b0;
-	assign ram1_address = 19'b0;
-   
-	
-	
+	// generate 25 mhz clock
+	wire clock_25mhz_unbuf,clock_25mhz;
+	DCM vclk3(.CLKIN(clock_27mhz),.CLKFX(clock_25mhz_unbuf));
+	// synthesis attribute CLKFX_DIVIDE of vclk3 is 15
+	// synthesis attribute CLKFX_MULTIPLY of vclk3 is 14
+	// synthesis attribute CLK_FEEDBACK of vclk3 is NONE
+	// synthesis attribute CLKIN_PERIOD of vclk3 is 37
+	BUFG vclk4(.O(clock_25mhz),.I(clock_25mhz_unbuf));
+
 	wire locked;
-	wire weirdclock;
-	
+	wire weirdclock; // TODO: decide what to do with this clock	
 	ramclock rc(.ref_clock(clock_65mhz), .fpga_clock(weirdclock),
-					.ram0_clock(ram0_clk), 
-					.ram1_clock(ram1_clk),   //uncomment if ram1 is used
-					.clock_feedback_in(clock_feedback_in),
-					.clock_feedback_out(clock_feedback_out), .locked(locked));
+				.ram0_clock(ram0_clk), .ram1_clock(ram1_clk),
+				.clock_feedback_in(clock_feedback_in),
+				.clock_feedback_out(clock_feedback_out), .locked(locked));
+
+	////////////////////////////////////////////////////////////////////////////
+	//
+	// I/O Assignments
+	//
+	////////////////////////////////////////////////////////////////////////////
+
+	// Audio Input and Output
+	assign beep= 1'b0;
+	assign audio_reset_b = 1'b0;
+	assign ac97_synch = 1'b0;
+	assign ac97_sdata_out = 1'b0;
+	// ac97_sdata_in is an input
+
+	// Video Output
+	assign tv_out_ycrcb = 10'h0;
+	assign tv_out_reset_b = 1'b0;
+	assign tv_out_clock = 1'b0;
+	assign tv_out_i2c_clock = 1'b0;
+	assign tv_out_i2c_data = 1'b0;
+	assign tv_out_pal_ntsc = 1'b0;
+	assign tv_out_hsync_b = 1'b1;
+	assign tv_out_vsync_b = 1'b1;
+	assign tv_out_blank_b = 1'b1;
+	assign tv_out_subcar_reset = 1'b0;
+
+	// SRAMs
+	// clock_feedback_in is an input
+
+	// Flash ROM
+	assign flash_data = 16'hZ;
+	assign flash_address = 24'h0;
+	assign flash_ce_b = 1'b1;
+	assign flash_oe_b = 1'b1;
+	assign flash_we_b = 1'b1;
+	assign flash_reset_b = 1'b0;
+	assign flash_byte_b = 1'b1;
+	// flash_sts is an input
+
+	// RS-232 Interface
+	assign rs232_txd = 1'b1;
+	assign rs232_rts = 1'b1;
+	// rs232_rxd and rs232_cts are inputs
+
+	// PS/2 Ports
+	// mouse_clock, mouse_data, keyboard_clock, and keyboard_data are inputs
+
+	// LED Displays
+	assign disp_blank = 1'b1;
+	assign disp_clock = 1'b0;
+	assign disp_rs = 1'b0;
+	assign disp_ce_b = 1'b1;
+	assign disp_reset_b = 1'b0;
+	assign disp_data_out = 1'b0;
+	// disp_data_in is an input
+
+	// Buttons, Switches, and Individual LEDs
+	assign led = 8'hFF;
+	// button0, button1, button2, button3, button_enter, button_right,
+	// button_left, button_down, button_up, and switches are inputs
+
+	// User I/Os
+	assign user1 = 32'hZ;
+	assign user2 = 32'hZ;
+	assign user3 = 32'hZ;
+	assign user4 = 32'hZ;
+
+	// Daughtercard Connectors
+	assign daughtercard = 44'hZ;
+
+	// SystemACE Microprocessor Port
+	assign systemace_data = 16'hZ;
+	assign systemace_address = 7'h0;
+	assign systemace_ce_b = 1'b1;
+	assign systemace_we_b = 1'b1;
+	assign systemace_oe_b = 1'b1;
+	// systemace_irq and systemace_mpbrdy are inputs
+
+   	//////////////////////////////////////////////////////////////////////////
+	//
+	// Reset Generation
+	//
+	// A shift register primitive is used to generate an active-high reset
+	// signal that remains high for 16 clock cycles after configuration finishes
+	// and the FPGA's internal clocks begin toggling.
+	//
+	////////////////////////////////////////////////////////////////////////////
+	wire reset;
+	SRL16 reset_sr(.D(1'b0), .CLK(clock_27mhz), .Q(reset),
+		 		   .A0(1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1));
+	defparam reset_sr.INIT = 16'hFFFF;
 	
-   // clock_feedback_in is an input
-   
-   // Flash ROM
-   assign flash_data = 16'hZ;
-   assign flash_address = 24'h0;
-   assign flash_ce_b = 1'b1;
-   assign flash_oe_b = 1'b1;
-   assign flash_we_b = 1'b1;
-   assign flash_reset_b = 1'b0;
-   assign flash_byte_b = 1'b1;
-   // flash_sts is an input
+   	//////////////////////////////////////////////////////////////////////////
+	//
+	// OUR MODULES: ntsc_capture
+	// 				memory_interface
+	// 				lpf
+	// 				projective_transform,
+	//
+	////////////////////////////////////////////////////////////////////////////
 
-   // RS-232 Interface
-   assign rs232_txd = 1'b1;
-   assign rs232_rts = 1'b1;
-   // rs232_rxd and rs232_cts are inputs
+	wire frame_flag;
+	wire done_ntsc;
+	wire done_pt;
+	wire done_lpf;
+	wire done_vga;
+	wire ntsc_flag;
+	wire pt_flag;
+	wire lpf_flag;
+	wire vga_flag;
+	wire [35:0] ntsc_pixel;
+	wire [17:0] vga_pixel;
 
-   // PS/2 Ports
-   // mouse_clock, mouse_data, keyboard_clock, and keyboard_data are inputs
 
-   // LED Displays
-   assign disp_blank = 1'b1;
-   assign disp_clock = 1'b0;
-   assign disp_rs = 1'b0;
-   assign disp_ce_b = 1'b1;
-   assign disp_reset_b = 1'b0;
-   assign disp_data_out = 1'b0;
-   // disp_data_in is an input
-
-   // Buttons, Switches, and Individual LEDs
-   assign led = 8'hFF;
-   // button0, button1, button2, button3, button_enter, button_right,
-   // button_left, button_down, button_up, and switches are inputs
-
-   // User I/Os
-   assign user1 = 32'hZ;
-   assign user2 = 32'hZ;
-   assign user3 = 32'hZ;
-   assign user4 = 32'hZ;
-
-   // Daughtercard Connectors
-   assign daughtercard = 44'hZ;
-
-   // SystemACE Microprocessor Port
-   assign systemace_data = 16'hZ;
-   assign systemace_address = 7'h0;
-   assign systemace_ce_b = 1'b1;
-   assign systemace_we_b = 1'b1;
-   assign systemace_oe_b = 1'b1;
-   // systemace_irq and systemace_mpbrdy are inputs
-
-   // Logic Analyzer
-   //assign analyzer1_data = 16'h0;
-   //assign analyzer1_clock = 1'b1;
-
-   assign analyzer2_data = 16'h0;
-
-   assign analyzer4_data = 16'h0;
-   assign analyzer4_clock = 1'b1;
-			    
-////////////////////////////////////////////////////////////////////////////
-  //
-  // Reset Generation
-  //
-  // A shift register primitive is used to generate an active-high reset
-  // signal that remains high for 16 clock cycles after configuration finishes
-  // and the FPGA's internal clocks begin toggling.
-  //
-  ////////////////////////////////////////////////////////////////////////////
-  wire reset;
-  SRL16 reset_sr(.D(1'b0), .CLK(clock_27mhz), .Q(reset),
-	         .A0(1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1));
-  defparam reset_sr.INIT = 16'hFFFF;
   
+	/*************************************
+	******* NTSC BLOCK *******************
+	**************************************/
 
-  wire [35:0] ntsc_pixels;
-  wire ntsc_flag;
-  wire frame_flag;
+	// tv_in_ycrcb, tv_in_data_valid, tv_in_line_clock1, tv_in_line_clock2, 
+	// tv_in_aef, tv_in_hff, and tv_in_aff are inputs
+	
+	// use below if NOT using ntsc_capture
+	/*assign tv_in_i2c_clock = 1'b0;
+	assign tv_in_fifo_read = 1'b0;
+	assign tv_in_fifo_clock = 1'b0;
+	assign tv_in_iso = 1'b0;
+	assign tv_in_reset_b = 1'b0;
+	assign tv_in_clock = 1'b0;
+	assign tv_in_i2c_data = 1'bZ;*/
+	// use above if NOT using ntsc_capture
+
+   	// use below if using ntsc_capture	
+	assign tv_in_fifo_read = 1'b0;
+	assign tv_in_fifo_clock = 1'b0;
+	assign tv_in_iso = 1'b0;
+	assign tv_in_clock = clock_27mhz;
+
 	wire dv;
-		wire [2:0] fvh;
+	wire [2:0] fvh;
 	wire [9:0] nx;
 	wire [8:0] ny;
 
-	ntsc_capture ntsc(.clk(clock_27mhz), .clock_27mhz(clock_27mhz), .reset(reset), .tv_in_reset_b(tv_in_reset_b),
-		.tv_in_i2c_clock(tv_in_i2c_clock), .tv_in_i2c_data(tv_in_i2c_data),
-		.tv_in_line_clock1(tv_in_line_clock1), .tv_in_ycrcb(tv_in_ycrcb),
-		.ntsc_pixels(ntsc_pixels), .ntsc_flag(ntsc_flag), .frame_flag(frame_flag), .dv(dv), .fvh(fvh), .x(nx), .y(ny));
+	ntsc_capture ntsc(.clk(clock_27mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
+					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
+					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
+					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixel), 
+					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag), .dv(dv), .fvh(fvh), 
+					  .x(nx), .y(ny));
+	// use above if using ntsc_capture
+
+	/*************************************
+	******* SRAM BLOCK *******************
+	**************************************/
+	// use below if not using memory_interface		
+	assign ram0_data = 36'hZ;
+	assign ram0_address = 19'h0;
+	assign ram0_adv_ld = 1'b0;
+	assign ram0_cen_b = 1'b1;
+	assign ram0_ce_b = 1'b1;
+	assign ram0_oe_b = 1'b1;
+	assign ram0_we_b = 1'b1;
+	assign ram0_bwe_b = 4'hF;
+	assign ram1_data = 36'hZ; 
+	assign ram1_address = 19'h0;
+	assign ram1_adv_ld = 1'b0;
+	assign ram1_cen_b = 1'b1;
+	assign ram1_ce_b = 1'b1;
+	assign ram1_oe_b = 1'b1;
+	assign ram1_we_b = 1'b1;
+	assign ram1_bwe_b = 4'hF;   
+	// use above if not using memory_interface
+
+	/*// use below if using memory_interface
+	assign ram0_adv_ld = 1'b0;
+	assign ram0_cen_b = 1'b0;
+	assign ram0_ce_b = 1'b0;
+	assign ram0_oe_b = 1'b0;
+	assign ram0_bwe_b = 4'hF;
+
+	assign ram1_adv_ld = 1'b0;
+	assign ram1_cen_b = 1'b0;
+	assign ram1_ce_b = 1'b0;
+	assign ram1_oe_b = 1'b0;
+	assign ram1_bwe_b = 4'hF;
 	
-	wire done_ntsc;
-	wire vga_flag;
-	wire done_vga;
-	wire [23:0] vga_pixel;
 	wire ram0_we;
 	wire ram1_we;
-
-	
-	/*memory_interface mi(.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag), .ntsc_flag(ntsc_flag),
-		.ntsc_pixel(ntsc_pixels), .done_ntsc(done_ntsc), .vga_flag(vga_flag), .done_vga(done_vga), .vga_pixel(vga_pixel),
-		.mem0_addr(ram0_address), .mem1_addr(ram1_address), .mem0_read(ram0_data), .mem1_read(ram1_data), .mem0_write(ram0_data), 
-		.mem1_write(ram1_data), .mem0_wr(ram0_we), .mem1_wr(ram1_we));
-		*/
 	assign ram0_we_b = ~ram0_we;
 	assign ram1_we_b = ~ram1_we;
-		
-	/*vga_write vga(.clock(clock_65mhz), .vclock(clock_25mhz), .reset(reset), .frame_flag(frame_flag), .vga_pixel(vga_pixel),
-						.done_vga(done_vga), .vga_flag(vga_flag), .vga_out_red(vga_out_red), .vga_out_green(vga_out_green), .vga_out_blue(vga_out_blue),
-						.vga_out_sync_b(vga_out_sync_b), .vga_out_blank_b(vga_out_blank_b), .vga_out_pixel_clock(vga_out_pixel_clock),
-						.vga_out_hsync(vga_out_hsync), .vga_out_vsync(vga_out_vsync));
-		*/
-		assign analyzer1_data = {frame_flag, ntsc_flag, dv, vga_flag, done_vga, done_ntsc, ram0_address[2:0], ram1_address[2:0], 4'b0000};
-		assign analyzer3_data = {fvh, ntsc_pixels[3:0], nx[2:0], ny[8:0], 1'b0};
-		assign analyzer3_clock = clock_27mhz;
-		assign analyzer1_clock = clock_27mhz;
-		assign analyzer2_clock = clock_27mhz;
 
+	memory_interface mi(.clock(clock_65mhz), 		.reset(reset), 				.frame_flag(frame_flag), 
+						.ntsc_flag(ntsc_flag),		.ntsc_pixel(ntsc_pixels), 	.done_ntsc(done_ntsc), 
+						.vga_flag(vga_flag), 		.done_vga(done_vga), 		.vga_pixel(vga_pixel),
+						.mem0_addr(ram0_address), 	.mem1_addr(ram1_address), 
+						.mem0_read(ram0_data), 		.mem1_read(ram1_data), 
+						.mem0_write(ram0_data), 	.mem1_write(ram1_data), 
+						.mem0_wr(ram0_we), 			.mem1_wr(ram1_we));
+	*/// use above if using memory_interface
+
+
+	/*************************************
+	*******  VGA BLOCK *******************
+	**************************************/
+   	// use below if not using vga
+	assign vga_out_red = 8'h0;
+	assign vga_out_green = 8'h0;
+	assign vga_out_blue = 8'h0;
+	assign vga_out_sync_b = 1'b1;
+	assign vga_out_blank_b = 1'b1;
+	assign vga_out_pixel_clock = 1'b0;
+	assign vga_out_hsync = 1'b0;
+	assign vga_out_vsync = 1'b0;
+	// use above if not using vga
+	
+	// use below if using vga
+	/*
+		vga_write vga(.clock(clock_65mhz), .vclock(clock_25mhz), .reset(reset), .frame_flag(frame_flag), .vga_pixel(vga_pixel),
+					.done_vga(done_vga), .vga_flag(vga_flag), .vga_out_red(vga_out_red), .vga_out_green(vga_out_green), .vga_out_blue(vga_out_blue),
+					.vga_out_sync_b(vga_out_sync_b), .vga_out_blank_b(vga_out_blank_b), .vga_out_pixel_clock(vga_out_pixel_clock),
+					.vga_out_hsync(vga_out_hsync), .vga_out_vsync(vga_out_vsync));
+	*/
+	// use above if using vga
+
+
+	/*************************************
+	******* LOGIC_ANALYZER ***************
+	**************************************/
+	// comment & uncomment below as necessary if not used
+	//assign analyzer1_clock = 1'b1;
+	//assign analyzer2_clock = 1'b1;
+	//assign analyzer3_clock = 1'b1;
+	assign analyzer4_clock = 1'b1;
+	//assign analyzer1_data = 16'h0;
+	assign analyzer2_data = 16'h0;
+	//assign analyzer3_data = 16'h0;
+	assign analyzer4_data = 16'h0;
+
+	// user-defined analyzers
+	assign analyzer1_clock = clock_27mhz;
+	assign analyzer2_clock = clock_27mhz;
+	assign analyzer3_clock = clock_27mhz;
+	assign analyzer1_data = {frame_flag, ntsc_flag, dv, vga_flag, done_vga, done_ntsc, ram0_address[2:0], ram1_address[2:0], 4'b0000};
+	assign analyzer3_data = {fvh, ntsc_pixels[3:0], nx[2:0], ny[8:0], 1'b0};
 endmodule
 
 // ramclock module
