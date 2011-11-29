@@ -1,4 +1,0 @@
-## Project Navigator simulation template: test_ntsc_clean_wave.fdo
-## You may edit this file to control your simulation.
-add wave *
-add wave /glbl/GSR

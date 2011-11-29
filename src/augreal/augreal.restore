@@ -836,9 +836,7 @@ proc restore { { project_dir "" } } {
   } "A problem occured while restoring project settings."
 
   set user_files { 
-      "labkit.ucf" 
       "labkit.v" 
-      "memory_interface.v" 
       "ntsc_capture.v" 
       "ntsc_clean.v" 
       "params.v" 
@@ -850,8 +848,7 @@ proc restore { { project_dir "" } } {
     AddUserFiles $iProjHelper $user_files
   } "A problem occured while restoring user files."
 
-  set imported_files { 
-      "labkit_guide.ncd"}
+  set imported_files {}
 
   set origination 2
 

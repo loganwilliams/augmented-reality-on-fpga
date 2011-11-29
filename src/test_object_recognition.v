@@ -1,3 +1,6 @@
+`include "object_recognition.v";
+`include "divider.v";
+
 module test_object_recognition();
    reg clk;
    reg [1:0] color;
@@ -18,13 +21,14 @@ module test_object_recognition();
    wire [8:0] d_y;
    wire       corners_flag;
 
-   int 	      i;
+   integer 	      i;
+   reg reset;
 
-   object_recoginition obrec(.clk(clk), .color(color), .interesting_x(ix),
+   object_recognition obrec(.clk(clk), .color(color), .interesting_x(ix),
 			     .interesting_y(iy), .interesting_flag(int_flag),
 			     .frame_flag(frame_flag), .m_x(m_x), .m_y(m_y),
 			     .a_x(a_x), .a_y(a_y), .b_x(b_x), .b_y(b_y), .c_x(c_x),
-			     .c_y(c_y), .d_x(d_x), .d_y(d_y), .corners_flag(corners_flag));
+			     .c_y(c_y), .d_x(d_x), .d_y(d_y), .corners_flag(corners_flag), .reset(reset));
 
    initial begin
       clk = 0;
@@ -36,11 +40,12 @@ module test_object_recognition();
 
    initial begin
       #20;
-
-      frame_flag = 1;
-
-      #20;
-
+      
+      reset = 1;
+      
+      #20
+      
+      reset = 0;
       frame_flag = 0;
 
       #20;
@@ -76,7 +81,7 @@ module test_object_recognition();
 
       frame_flag = 1;
 
-      while (~corners_flag);
+      #1000;
 
       $display("Average values:");
       $display("a_x: %d", a_x);

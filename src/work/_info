@@ -10,40 +10,95 @@ Z3 =1-00505695001e-4ed2b62d-f2047-5078
 Z4 o-quiet -auto_acc_if_foreign -work work +acc
 Z5 OE;O;6.4a;39
 T_opt1
-Z6 VR?o61^zf6RBIdKCc2YEz`0
-R2
-Z7 =1-00505695001f-4ed2d5b8-1db3-636b
-R4
-R5
-T_opt2
-Vo]2iU6:zX<9]VlUQ3GafF1
-R2
-Z8 =1-00505695001f-4ed2de8f-2edde-14a8
+Z6 VQ0B>SXQbbz[NJTHQeYbz02
+Z7 04 23 4 work test_object_recognition fast 0
+Z8 =1-f04da20f1003-4ed55e2c-1c099-c3d
 Z9 o-quiet -auto_acc_if_foreign -work work
 R5
-vpt_fetcher
-Z10 IP7BzgO=89bTn=XR<TQ43G2
-Z11 V;YH>QF1YnI@Pn[h8W70hY3
-Z12 w1322442373
-Z13 8pt_fetcher.v
-Z14 Fpt_fetcher.v
-L0 4
-Z15 OE;L;6.4a;39
+T_opt2
+VaEM:]N6J[>Of6J71i;`6_2
+R7
+Z10 =1-f04da20f1003-4ed562db-63361-cb4
+R4
+R5
+vdivider
+Z11 I9oPXZ_zDV085ILmaFzV7i2
+Z12 Va`^ZFIE_X7Ff9W]U9mdk`3
+Z13 w1322606798
+Z14 Fdivider.v
+Z15 8test_object_recognition.v
+Z16 Ftest_object_recognition.v
+L0 10
+Z17 OE;L;6.4a;39
 r1
 31
-Z16 o-L mtiAvm -L mtiOvm -L mtiUPF
-Z17 !s100 j0G5SdGfSU<D8^OP5[]jG3
+Z18 o-L mtiAvm -L mtiOvm -L mtiUPF
+Z19 !s100 VCdM;TLnYNl=cmlW20[=P3
+!s85 0
+vobject_recognition
+Z20 INN]Gzkako<X^`FMFlhf7G1
+Z21 VJToDzm3nPg2QaWJ4nc1IO0
+Z22 w1322607312
+Z23 Fobject_recognition.v
+R15
+R16
+L0 3
+R17
+r1
+31
+R18
+Z24 !s100 dWcKh3DYN=:KWdzfM1QJX2
+!s85 0
+vpt_fetcher
+Z25 IP7BzgO=89bTn=XR<TQ43G2
+Z26 V;YH>QF1YnI@Pn[h8W70hY3
+Z27 w1322442373
+Z28 8pt_fetcher.v
+Z29 Fpt_fetcher.v
+L0 4
+R17
+r1
+31
+R18
+Z30 !s100 j0G5SdGfSU<D8^OP5[]jG3
+!s85 0
+vsqrt
+Z31 IX9[8TJ58HSR42Cz2D96<l0
+Z32 V[UQnCHF8@ZOXmljfWki6@1
+R22
+R23
+R15
+R16
+Z33 L0 168
+R17
+r1
+31
+R18
+Z34 !s100 eLzVB=;mCQbZCK@mRI;YP0
+!s85 0
+vtest_object_recognition
+Z35 I]oaZnUaI]n[c@hX]daK>]1
+Z36 Vd77iOznGnPGklkL3e;k0K0
+R13
+R15
+R16
+L0 4
+R17
+r1
+31
+R18
+Z37 !s100 :VG]9;C@J]Ja2Gd_B>hBX1
 !s85 0
 vtest_pt_fetcher
-Z18 ISc7H>WIA;7D_oa`@:M33d0
-Z19 VBR>^I1hPhinVbMa26MXia3
-Z20 w1322440105
-Z21 8test_pt_fetcher.v
-Z22 Ftest_pt_fetcher.v
+Z38 ISc7H>WIA;7D_oa`@:M33d0
+Z39 VBR>^I1hPhinVbMa26MXia3
+Z40 w1322440105
+Z41 8test_pt_fetcher.v
+Z42 Ftest_pt_fetcher.v
 L0 1
-R15
+R17
 r1
 31
-R16
-Z23 !s100 7:7L:9UMi`JPLm5P_G21@0
+R18
+Z43 !s100 7:7L:9UMi`JPLm5P_G21@0
 !s85 0
