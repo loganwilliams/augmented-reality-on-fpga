@@ -32,7 +32,7 @@ module memory_interface
 		// VGA_WRITE
 		input vga_flag,
 		output reg done_vga,
-		output reg [`LOG_FULL-1:0] vga_pixel,
+		output reg [`LOG_MEM-1:0] vga_pixel,
 		// MEMORY
 		// MEM ADDRESSES
 		output reg [`LOG_ADDR-1:0] mem0_addr,
@@ -45,7 +45,10 @@ module memory_interface
 		output reg [`LOG_MEM-1:0] mem1_write,
 		// WR FLAGS
 		output reg mem0_wr,
-		output reg mem1_wr
+		output reg mem1_wr,
+		// TESTING
+		output [3:0] debug_blocks,
+		output [7:0] debug_locs
 	);
 
 	/******** PARAMETERS ********/
@@ -123,6 +126,10 @@ module memory_interface
 	reg [`LOG_MEM-1:0] prev_vga_pixel;
 	reg [`LOG_MEM-1:0] prev_lpf_pixel_read;
 	reg [`LOG_MEM-1:0] prev_ptf_pixel_read;
+
+	// DEBUG
+	assign debug_blocks = {capt_mem_block,disp_mem_block,2'b00};
+	assign debug_locs = {capt_mem_loc, disp_mem_loc, 2'b00};
 
 	always @(*) begin
 		// shifting
@@ -222,7 +229,7 @@ module memory_interface
 
 		// PTF's turn
 		if (mem0_next_read == PTF) ptf_pixel_read = mem0_read;
-		else if (mem1_next_read == PTF) ptf_pixel_real = mem1_read;
+		else if (mem1_next_read == PTF) ptf_pixel_read = mem1_read;
 		else ptf_pixel_read = prev_ptf_pixel_read;
 
 		// VGA's turn
