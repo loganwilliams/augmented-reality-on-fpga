@@ -1,4 +1,4 @@
-//`include "params.v"
+`include "params.v"
 `default_nettype none
 
 module vga_write
@@ -117,6 +117,10 @@ module vga_write
 	end
 	/****************************************/
 
+	reg vstate;
+	parameter STARTING_UP=1'b0;
+	parameter STEADY_STATE=1'b1;
+
 	/***** OUTPUT TO VGA CHIP *******/
 	wire [`LOG_MEM-1:0] pixel_tuple;
 	wire [`LOG_TRUNC-1:0] pixel_out;
@@ -131,7 +135,7 @@ module vga_write
 		if (vstate == STEADY_STATE) begin
 			vga_out_sync_b = 1'b1; // not used
 			vga_out_blank_b = ~blanks[vindex];
-			vga_out_pixel_clock = ~vclock; // TODO: verify whether inversion is necessary
+			vga_out_pixel_clock = vclock; // TODO: verify whether inversion is necessary
 			vga_out_hsync = hsyncs[vindex];
 			vga_out_vsync = vsyncs[vindex];
 		end
@@ -139,16 +143,12 @@ module vga_write
 		else begin
 			vga_out_sync_b = 1'bX;
 			vga_out_blank_b = 1'bX;
-			vga_out_pixel_clock = ~vclock;
+			vga_out_pixel_clock = vclock;
 			vga_out_hsync = 1'bX;
 			vga_out_vsync = 1'bX;
 		end
 	end
 	/********************************/
-
-	reg vstate;
-	parameter STARTING_UP=1'b0;
-	parameter STEADY_STATE=1'b1;
 
 	always @(posedge vclock) begin
 		if (reset) begin
