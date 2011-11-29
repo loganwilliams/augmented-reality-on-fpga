@@ -1,7 +1,7 @@
 Release 10.1.03 par K.39 (lin64)
 Copyright (c) 1995-2008 Xilinx, Inc.  All rights reserved.
 
-EECS-DIGITAL-24::  Tue Nov 29 16:41:27 2011
+EECS-DIGITAL-24::  Tue Nov 29 16:48:27 2011
 
 par -w -intstyle ise -ol std -t 1 labkit_map.ncd labkit.ncd labkit.pcf 
 
@@ -57,7 +57,7 @@ Device Utilization Summary:
       Number of LOCed IOBs                 576 out of 576   100%
 
    Number of MULT18X18s                      5 out of 144     3%
-   Number of SLICEs                        432 out of 33792   1%
+   Number of SLICEs                        440 out of 33792   1%
 
 
 Overall effort level (-ol):   Standard 
@@ -319,28 +319,28 @@ WARNING:Par:288 - The signal user4<9>_IBUF has no load.  PAR will not attempt to
 Starting Placer
 
 Phase 1.1
-Phase 1.1 (Checksum:14a46d2) REAL time: 2 secs 
+Phase 1.1 (Checksum:14a66e6) REAL time: 2 secs 
 
 Phase 2.7
-Phase 2.7 (Checksum:14a46d2) REAL time: 2 secs 
+Phase 2.7 (Checksum:14a66e6) REAL time: 2 secs 
 
 Phase 3.31
-Phase 3.31 (Checksum:14a46d2) REAL time: 2 secs 
+Phase 3.31 (Checksum:14a66e6) REAL time: 2 secs 
 
 Phase 4.2
 
 ......
 ..............
-Phase 4.2 (Checksum:14f43a8) REAL time: 3 secs 
+Phase 4.2 (Checksum:14f63bc) REAL time: 3 secs 
 
 Phase 5.30
-Phase 5.30 (Checksum:14f43a8) REAL time: 3 secs 
+Phase 5.30 (Checksum:14f63bc) REAL time: 3 secs 
 
 Phase 6.3
-Phase 6.3 (Checksum:14f43a8) REAL time: 3 secs 
+Phase 6.3 (Checksum:14f63bc) REAL time: 3 secs 
 
 Phase 7.5
-Phase 7.5 (Checksum:14f43a8) REAL time: 3 secs 
+Phase 7.5 (Checksum:14f63bc) REAL time: 3 secs 
 
 Phase 8.8
 ....................................
@@ -349,22 +349,22 @@ Phase 8.8
 .
 .
 .
-Phase 8.8 (Checksum:2348252) REAL time: 9 secs 
+Phase 8.8 (Checksum:238a457) REAL time: 9 secs 
 
 Phase 9.5
-Phase 9.5 (Checksum:2348252) REAL time: 9 secs 
+Phase 9.5 (Checksum:238a457) REAL time: 9 secs 
 
 Phase 10.18
-Phase 10.18 (Checksum:235acc4) REAL time: 10 secs 
+Phase 10.18 (Checksum:239bf57) REAL time: 10 secs 
 
 Phase 11.5
-Phase 11.5 (Checksum:235acc4) REAL time: 10 secs 
+Phase 11.5 (Checksum:239bf57) REAL time: 10 secs 
 
 Phase 12.27
-Phase 12.27 (Checksum:235acc4) REAL time: 10 secs 
+Phase 12.27 (Checksum:239bf57) REAL time: 10 secs 
 
 Phase 13.24
-Phase 13.24 (Checksum:235acc4) REAL time: 10 secs 
+Phase 13.24 (Checksum:239bf57) REAL time: 10 secs 
 
 REAL time consumed by placer: 10 secs 
 CPU  time consumed by placer: 10 secs 
@@ -376,29 +376,25 @@ Total CPU time to Placer completion: 10 secs
 
 Starting Router
 
-Phase 1: 3482 unrouted;       REAL time: 19 secs 
+Phase 1: 3506 unrouted;       REAL time: 19 secs 
 
-Phase 2: 2827 unrouted;       REAL time: 20 secs 
+Phase 2: 2854 unrouted;       REAL time: 20 secs 
 
-Phase 3: 538 unrouted;       REAL time: 21 secs 
+Phase 3: 508 unrouted;       REAL time: 21 secs 
 
-Phase 4: 538 unrouted; (43113)      REAL time: 21 secs 
+Phase 4: 508 unrouted; (18976)      REAL time: 21 secs 
 
-Phase 5: 547 unrouted; (0)      REAL time: 21 secs 
+Phase 5: 531 unrouted; (0)      REAL time: 21 secs 
 
-Phase 6: 0 unrouted; (128)      REAL time: 21 secs 
+Phase 6: 0 unrouted; (0)      REAL time: 21 secs 
 
-Phase 7: 0 unrouted; (128)      REAL time: 21 secs 
+Phase 7: 0 unrouted; (0)      REAL time: 21 secs 
 
-Phase 8: 0 unrouted; (128)      REAL time: 21 secs 
+Phase 8: 0 unrouted; (0)      REAL time: 21 secs 
 
-Phase 9: 0 unrouted; (0)      REAL time: 22 secs 
+Phase 9: 0 unrouted; (0)      REAL time: 21 secs 
 
 Phase 10: 0 unrouted; (0)      REAL time: 22 secs 
-
-Phase 11: 0 unrouted; (0)      REAL time: 22 secs 
-
-Phase 12: 0 unrouted; (0)      REAL time: 22 secs 
 
 WARNING:Route - CLK Net:analyzer1_clock_OBUF is being routed on general routing resources. Please consider using a
    dedicated clocking routing resource. For more information on clock routing resources, see the target architecture's
@@ -409,7 +405,7 @@ WARNING:Route - CLK Net:fvh<1> may have excessive skew because 1 CLK pins and 2 
    template.
 
 Total REAL time to Router completion: 22 secs 
-Total CPU time to Router completion: 22 secs 
+Total CPU time to Router completion: 21 secs 
 
 Partition Implementation Status
 -------------------------------
@@ -428,31 +424,31 @@ Generating Clock Report
 |        Clock Net    |   Resource   |Locked|Fanout|Net Skew(ns)|Max Delay(ns)|
 +---------------------+--------------+------+------+------------+-------------+
 |analyzer2_clock_OBUF |              |      |      |            |             |
-|                     |     BUFGMUX2S| No   |   45 |  0.174     |  2.309      |
+|                     |     BUFGMUX2S| No   |   47 |  0.146     |  2.276      |
 +---------------------+--------------+------+------+------------+-------------+
 |analyzer4_clock_OBUF |              |      |      |            |             |
-|                     |     BUFGMUX1P| No   |   31 |  0.275     |  2.408      |
+|                     |     BUFGMUX1P| No   |   31 |  0.282     |  2.408      |
 +---------------------+--------------+------+------+------------+-------------+
 |mi/mem1_write_and000 |              |      |      |            |             |
-|                   0 |     BUFGMUX0P| No   |   37 |  0.401     |  2.446      |
+|                   0 |     BUFGMUX0P| No   |   37 |  0.391     |  2.446      |
 +---------------------+--------------+------+------+------------+-------------+
 |        rc/ram_clock |     BUFGMUX6P| No   |    6 |  0.067     |  2.408      |
 +---------------------+--------------+------+------+------------+-------------+
 |mi/mem0_write_not000 |              |      |      |            |             |
-|                   1 |     BUFGMUX4S| No   |   37 |  0.401     |  2.446      |
+|                   1 |     BUFGMUX4S| No   |   37 |  0.391     |  2.446      |
 +---------------------+--------------+------+------+------------+-------------+
 |ntsc/adv7185/clock_s |              |      |      |            |             |
-|                 low |     BUFGMUX7P| No   |   61 |  0.077     |  2.244      |
+|                 low |     BUFGMUX7P| No   |   61 |  0.057     |  2.224      |
 +---------------------+--------------+------+------+------------+-------------+
 |analyzer3_clock_OBUF |              |      |      |            |             |
-|                     |     BUFGMUX5S| No   |   53 |  0.173     |  2.277      |
+|                     |     BUFGMUX5S| No   |   53 |  0.208     |  2.310      |
 +---------------------+--------------+------+------+------------+-------------+
 |analyzer1_clock_OBUF |              |      |      |            |             |
-|                     |         Local|      |   17 |  4.254     |  5.374      |
+|                     |         Local|      |   17 |  4.308     |  5.428      |
 +---------------------+--------------+------+------+------------+-------------+
-|              fvh<0> |         Local|      |    2 |  0.000     |  1.811      |
+|              fvh<0> |         Local|      |    2 |  0.000     |  1.656      |
 +---------------------+--------------+------+------+------------+-------------+
-|              fvh<1> |         Local|      |    3 |  0.000     |  1.200      |
+|              fvh<1> |         Local|      |    3 |  0.000     |  1.413      |
 +---------------------+--------------+------+------+------------+-------------+
 
 * Net Skew is the difference between the minimum and maximum routing
@@ -471,20 +467,20 @@ Asterisk (*) preceding a constraint indicates it was not met.
   Constraint                                |  Check  | Worst Case |  Best Case | Timing |   Timing   
                                             |         |    Slack   | Achievable | Errors |    Score   
 ------------------------------------------------------------------------------------------------------
-  Autotimespec constraint for clock net ana | SETUP   |         N/A|     9.056ns|     N/A|           0
-  lyzer2_clock_OBUF                         | HOLD    |     1.232ns|            |       0|           0
+  Autotimespec constraint for clock net ana | SETUP   |         N/A|     8.375ns|     N/A|           0
+  lyzer2_clock_OBUF                         | HOLD    |     1.236ns|            |       0|           0
 ------------------------------------------------------------------------------------------------------
-  Autotimespec constraint for clock net ana | SETUP   |         N/A|     5.414ns|     N/A|           0
-  lyzer1_clock_OBUF                         | HOLD    |     1.852ns|            |       0|           0
+  Autotimespec constraint for clock net ana | SETUP   |         N/A|     5.546ns|     N/A|           0
+  lyzer1_clock_OBUF                         | HOLD    |     1.971ns|            |       0|           0
 ------------------------------------------------------------------------------------------------------
-  Autotimespec constraint for clock net ana | SETUP   |         N/A|     6.093ns|     N/A|           0
-  lyzer4_clock_OBUF                         | HOLD    |     1.393ns|            |       0|           0
+  Autotimespec constraint for clock net ana | SETUP   |         N/A|     6.242ns|     N/A|           0
+  lyzer4_clock_OBUF                         | HOLD    |     1.367ns|            |       0|           0
 ------------------------------------------------------------------------------------------------------
-  Autotimespec constraint for clock net nts | SETUP   |         N/A|     4.858ns|     N/A|           0
-  c/adv7185/clock_slow                      | HOLD    |     1.296ns|            |       0|           0
+  Autotimespec constraint for clock net nts | SETUP   |         N/A|     4.694ns|     N/A|           0
+  c/adv7185/clock_slow                      | HOLD    |     1.329ns|            |       0|           0
 ------------------------------------------------------------------------------------------------------
-  Autotimespec constraint for clock net ana | SETUP   |         N/A|     8.303ns|     N/A|           0
-  lyzer3_clock_OBUF                         | HOLD    |     1.316ns|            |       0|           0
+  Autotimespec constraint for clock net ana | SETUP   |         N/A|     7.671ns|     N/A|           0
+  lyzer3_clock_OBUF                         | HOLD    |     1.332ns|            |       0|           0
 ------------------------------------------------------------------------------------------------------
 
 
@@ -495,8 +491,8 @@ Derived Constraints for analyzer2_clock_OBUF
 |           Constraint          | Requirement |-------------+-------------|-------------+-------------|-------------+-------------|
 |                               |             |   Direct    | Derivative  |   Direct    | Derivative  |   Direct    | Derivative  |
 +-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
-|analyzer2_clock_OBUF           |      9.961ns|      9.056ns|          N/A|            0|            0|          933|            0|
-| rc/ram_clk                    |      9.961ns|          N/A|          N/A|            0|            0|            0|            0|
+|analyzer2_clock_OBUF           |      9.212ns|      8.375ns|          N/A|            0|            0|         1072|            0|
+| rc/ram_clk                    |      9.212ns|          N/A|          N/A|            0|            0|            0|            0|
 +-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
 
 Derived Constraints for analyzer1_clock_OBUF
@@ -505,10 +501,10 @@ Derived Constraints for analyzer1_clock_OBUF
 |           Constraint          | Requirement |-------------+-------------|-------------+-------------|-------------+-------------|
 |                               |             |   Direct    | Derivative  |   Direct    | Derivative  |   Direct    | Derivative  |
 +-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
-|analyzer1_clock_OBUF           |      5.955ns|      5.414ns|          N/A|            0|            0|          220|            0|
-| clock_25mhz_unbuf             |      6.380ns|          N/A|          N/A|            0|            0|            0|            0|
-| clock_65mhz_unbuf             |      2.481ns|          N/A|          N/A|            0|            0|            0|            0|
-|  rc/ram_clk                   |      2.481ns|          N/A|          N/A|            0|            0|            0|            0|
+|analyzer1_clock_OBUF           |      6.100ns|      5.546ns|          N/A|            0|            0|          220|            0|
+| clock_25mhz_unbuf             |      6.536ns|          N/A|          N/A|            0|            0|            0|            0|
+| clock_65mhz_unbuf             |      2.542ns|          N/A|          N/A|            0|            0|            0|            0|
+|  rc/ram_clk                   |      2.542ns|          N/A|          N/A|            0|            0|            0|            0|
 +-------------------------------+-------------+-------------+-------------+-------------+-------------+-------------+-------------+
 
 All constraints were met.
@@ -522,7 +518,7 @@ All signals are completely routed.
 
 WARNING:Par:283 - There are 250 loadless signals in this design. This design will cause Bitgen to issue DRC warnings.
 
-Total REAL time to PAR completion: 33 secs 
+Total REAL time to PAR completion: 32 secs 
 Total CPU time to PAR completion: 27 secs 
 
 Peak Memory Usage:  590 MB
