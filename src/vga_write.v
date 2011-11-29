@@ -1,4 +1,4 @@
-`include "params.v"
+//`include "params.v"
 `default_nettype none
 
 module vga_write
@@ -38,17 +38,30 @@ module vga_write
 	assign trunc_cindex = cindex[2:1];
 
 	// vclock buffers
-	reg hsyncs[0:7];
-	reg vsyncs[0:7];
-	reg blanks[0:7];
-	reg [`LOG_HCOUNT-1:0] hcounts[0:7];
-	reg [`LOG_VCOUNT-1:0] vcounts[0:7];
+	reg [7:0] hsyncs;
+	reg [7:0] vsyncs;
+	reg [7:0] blanks;
+	reg [8*`LOG_HCOUNT-1:0] hcounts;
+	reg [8*`LOG_VCOUNT-1:0] vcounts;
 	// clock buffers
-	reg [`LOG_MEM-1:0] pixels[0:3];
+	reg [4*`LOG_MEM-1:0] pixels;
 
-	// indices for for loops
-	integer i;
-	integer j;
+	reg out_of_bounds;
+	reg [`LOG_MEM-1:0] next_pixel;
+
+	wire [7:0] ihsyncs;
+	wire [7:0] ivsyncs;
+	wire [7:0] iblanks;
+	wire [8*`LOG_HCOUNT-1:0] ihcounts;
+	wire [8*`LOG_VCOUNT-1:0] ivcounts;
+	wire [4*`LOG_MEM-1:0] ipixels;
+
+	insert8 #(.S(1)) insert_hsyncs(hsyncs, hsync, vindex, ihsyncs);
+	insert8 #(.S(1)) insert_vsyncs(vsyncs, vsync, vindex, ivsyncs);
+	insert8 #(.S(1)) insert_blanks(blanks, blank, vindex, iblanks);
+	insert8 #(.S(`LOG_HCOUNT)) insert_hcounts(hcounts, hcount, vindex, ihcounts);
+	insert8 #(.S(`LOG_VCOUNT)) insert_vcounts(vcounts, vcount, vindex, ivcounts);
+	insert4 #(.S(`LOG_MEM)) insert_pixels(pixels, next_pixel, trunc_cindex, ipixels);
 
 	// clock states - used for fetching
 	reg [1:0] state;
@@ -57,13 +70,17 @@ module vga_write
 	parameter READING = 2'd2;
 	parameter OUT_OF_BOUNDS = 2'd3;
 
-	reg out_of_bounds;
+	wire [`LOG_HCOUNT-1:0] chcount;
+	wire [`LOG_VCOUNT-1:0] cvcount;
+	extract8 #(.S(`LOG_HCOUNT)) exth(.x(hcounts), .i(cindex), .y(chcount));
+	extract8 #(.S(`LOG_VCOUNT)) extv(.x(vcounts), .i(cindex), .y(cvcount));
 	always @(*) begin
 		// is the current requested pixel outside of screen bounds?
-		out_of_bounds = hcounts[cindex] >= 640 || vcounts[cindex] >= 480;
+		out_of_bounds = chcount >= 640 || cvcount >= 480;
 		// whether to request a pixel from memory; !out_of_bounds prevents
 		// excessive requesting
 		vga_flag = (!reset && !frame_flag && (trunc_vindex - trunc_cindex) > 1 && !out_of_bounds && state == REQUESTING);
+		next_pixel = (out_of_bounds) ? `LOG_MEM'd0 : vga_pixel;
 	end
 
 	/***** READING FROM MEMORY_INTERFACE ******/
@@ -77,26 +94,22 @@ module vga_write
 				else state <= state;
 			end
 			STANDING_BY: state <= READING;
-			READING, OUT_OF_BOUNDS: state <= REQUESTING;
 			default: state <= REQUESTING;
 		endcase
 
-		if (reset) cindex <= 0;
+		if (reset) begin
+			pixels <= 0;
+			cindex <= 0;
+		end
 		else case (state)
 			// set new pixel and increment counter
 			READING, OUT_OF_BOUNDS: begin
-				pixels[trunc_cindex] <= (out_of_bounds) ? 0 : vga_pixel;
-				for (i=0;i<4;i=i+1)
-					if (i != trunc_cindex) pixels[i] <= pixels[i];
+				pixels <= ipixels;
 				cindex <= cindex+2;
 			end
 			// keep current pixels
-			REQUESTING, STANDING_BY: begin
-				for (i=0;i<4;i=i+1) pixels[i] <= pixels[i];
-				cindex <= cindex;
-			end
 			default: begin
-				for (i=0;i<4;i=i+1) pixels[i] <= pixels[i];
+				pixels <= pixels;
 				cindex <= cindex;
 			end
 		endcase
@@ -104,9 +117,10 @@ module vga_write
 	/****************************************/
 
 	/***** OUTPUT TO VGA CHIP *******/
+	wire [`LOG_MEM-1:0] pixel_tuple;
 	wire [`LOG_TRUNC-1:0] pixel_out;
-	assign pixel_out = (vindex[0] == 0) ? pixels[trunc_vindex][2*`LOG_TRUNC-1:`LOG_TRUNC] : pixels[trunc_vindex][`LOG_TRUNC-1:0];
-	// instantiate pixel module here
+	extract4 #(.S(`LOG_MEM)) tuple(pixels, trunc_vindex, pixel_tuple);
+	assign pixel_out = (vindex[0] == 0) ? pixel_tuple[2*`LOG_TRUNC-1:`LOG_TRUNC] : pixel_tuple[`LOG_TRUNC-1:0];
 	ycbcr2rgb converter(.y({pixel_out[17:12],2'b00}), .cb({pixel_out[11:6],2'b00}), .cr({pixel_out[5:0],2'b00}), .r(vga_out_red), .g(vga_out_green), .b(vga_out_blue));
 	// output
 	always @(*) begin
@@ -134,28 +148,24 @@ module vga_write
 
 	always @(posedge vclock) begin
 		if (reset) begin
-			for(j=0;j<8;j=j+1) begin
-				hcounts[j] <= 0;
-				vcounts[j] <= 0;
-				hsyncs[j] <= 0;
-				vsyncs[j] <= 0;
-				blanks[j] <= 0;
-			end
+			hcounts <= 0;
+			vcounts <= 0;
+			hsyncs <= 0;
+			vsyncs <= 0;
+			blanks <= 0;
 			vindex <= 0;
 			vstate <= STARTING_UP;
 		end
 		else begin
 			// fill up the buffer
-			hcounts[vindex] <= hcount;
-			vcounts[vindex] <= vcount;
-			hsyncs[vindex] <= hsync;
-			vsyncs[vindex] <= vsync;
-			blanks[vindex] <= blank;
+			hcounts <= ihcounts;
+			vcounts <= ivcounts;
+			hsyncs <= ihsyncs;
+			vsyncs <= ivsyncs;
+			blanks <= iblanks;
 			vindex <= vindex+1;
-			if (vindex == 7 && vstate == STARTING_UP)
-				vstate <= STEADY_STATE;
-			else 
-				vstate <= vstate;
+			if (vindex == 7 && vstate == STARTING_UP) vstate <= STEADY_STATE;
+			else vstate <= vstate;
 		end
 	end
 endmodule
@@ -223,4 +233,95 @@ module xvga
 			blank <= next_vblank | (next_hblank & ~hreset);
 		end
    	end
+endmodule
+
+// verilog, I hate you
+module insert8
+	#(
+		parameter S=1
+	) (
+		input [8*S-1:0] x,       // input list
+		input [S-1:0] e,         // element to be inserted
+		input [2:0] i,     // index of insertion (0..N-1)
+		output reg [8*S-1:0] y   // output list
+	);
+	parameter N=8;
+	parameter LOG_N=3;
+
+	always @(*) begin
+		case (i)
+			0: y = {x[N*S-1:1*S], e};
+			1: y = {x[N*S-1:2*S], e, x[1*S-1:0]};
+			2: y = {x[N*S-1:3*S], e, x[2*S-1:0]};
+			3: y = {x[N*S-1:4*S], e, x[3*S-1:0]};
+			4: y = {x[N*S-1:5*S], e, x[4*S-1:0]};
+			5: y = {x[N*S-1:6*S], e, x[5*S-1:0]};
+			6: y = {x[N*S-1:7*S], e, x[6*S-1:0]};
+			7: y = {e, x[7*S-1:0]};
+		endcase
+	end
+endmodule
+
+module insert4
+	#(
+		parameter S=1
+	) (
+		input [4*S-1:0] x,       // input list
+		input [S-1:0] e,         // element to be inserted
+		input [1:0] i,     // index of insertion (0..N-1)
+		output reg [4*S-1:0] y   // output list
+	);
+	parameter N=4;
+	parameter LOG_N=2;
+
+	always @(*) begin
+		case (i)
+			0: y = {x[N*S-1:S], e};
+			1: y = {x[N*S-1:2*S], e, x[S-1:0]};
+			2: y = {x[N*S-1:3*S], e, x[2*S-1:0]};
+			3: y = {e, x[3*S-1:0]};
+		endcase
+	end
+endmodule
+
+module extract8
+	#(
+		parameter S=1
+	) (
+		input [8*S-1:0] x,
+		input [2:0] i,
+		output reg [S-1:0] y
+	);
+
+	always @(*) begin
+		case (i)
+			0: y = x[1*S-1:0*S];
+			1: y = x[2*S-1:1*S];
+			2: y = x[3*S-1:2*S];
+			3: y = x[4*S-1:3*S];
+			4: y = x[5*S-1:4*S];
+			5: y = x[6*S-1:5*S];
+			6: y = x[7*S-1:6*S];
+			7: y = x[8*S-1:5*S];
+		endcase
+	end
+endmodule
+
+module extract4
+	#(
+		parameter S=1
+	) (
+		input [4*S-1:0] x,
+		input [1:0] i,
+		output reg [S-1:0] y
+	);
+
+	always @(*) begin
+		case (i)
+			0: y = x[1*S-1:0*S];
+			1: y = x[2*S-1:1*S];
+			2: y = x[3*S-1:2*S];
+			3: y = x[4*S-1:3*S];
+		endcase
+	end
 endmodule
