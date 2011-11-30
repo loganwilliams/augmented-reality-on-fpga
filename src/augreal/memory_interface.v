@@ -58,8 +58,8 @@ module memory_interface
 	parameter NTSC = 4'b1000;
 	parameter VGA  = 4'b0100;
 	parameter LPF  = 4'b0010;
-	parameter PTF  = 4'd0001;
-	parameter NONE = 4'd0000;
+	parameter PTF  = 4'b0001;
+	parameter NONE = 4'b0000;
 	parameter LOG_ORD = 4;
 	/****************************/
 
@@ -80,9 +80,6 @@ module memory_interface
 	reg disp_mem_block;
 
 	// LOCATIONS OF IMAGES IN EACH BLOCK
-	// making it a 2bit number to allow for the possibility
-	// of loading an image from flash and storing a third image
-	// for processing
 	reg [1:0] capt_mem_loc;
 	reg [1:0] proc_mem_loc;
 	reg [1:0] nexd_mem_loc;	
@@ -93,21 +90,6 @@ module memory_interface
 	reg [`LOG_ADDR-1:0] vga_addr;
 	reg [`LOG_ADDR-1:0] lpf_addr;
 	reg [`LOG_ADDR-1:0] ptf_addr;
-	reg [`LOG_ADDR-1:0] next_ntsc_addr;
-	reg [`LOG_ADDR-1:0] next_vga_addr;
-
-	// NEXT LOCS AND BLOCKS
-	reg [3:0] blocks;
-	reg [3:0] next_blocks;
-	reg [7:0] next_locs;
-	reg next_capt_mem_block;
-	reg next_proc_mem_block;
-	reg next_nexd_mem_block;
-	reg next_disp_mem_block;
-	reg [1:0] next_capt_mem_loc;
-	reg [1:0] next_proc_mem_loc;
-	reg [1:0] next_nexd_mem_loc;
-	reg [1:0] next_disp_mem_loc;
 
 	// PARTIAL DONE FLAGS
 	reg [3:0] mem0_done;
@@ -129,30 +111,10 @@ module memory_interface
 	reg [`LOG_MEM-1:0] prev_ptf_pixel_read;
 
 	// DEBUG
-	assign debug_blocks = {capt_mem_block,disp_mem_block,2'b00};
-	assign debug_locs = {capt_mem_loc, disp_mem_loc, 4'b00};
+	assign debug_blocks = {capt_mem_block,proc_mem_block,nexd_mem_block,disp_mem_block};
+	assign debug_locs = {capt_mem_loc, proc_mem_loc, nexd_mem_loc, disp_mem_loc};
 
 	always @(*) begin
-		assign blocks = {capt_mem_block, proc_mem_block, nexd_mem_block, disp_mem_block};
-		// shifting
-		if (reset) begin
-			// choose starting condition such that capt and disp never overlap
-			next_blocks = 4'b0011;
-			next_locs = {2'b00, 2'b01, 2'b00, 2'b01};
-		end
-		else if (frame_flag) begin
-			case 
-			next_blocks = {proc_mem_block, disp_mem_block, capt_mem_block, nexd_mem_block};
-			next_locs = {proc_mem_loc, disp_mem_loc, capt_mem_loc, nexd_mem_loc};
-		end
-		// retain until shift
-		else begin
-			next_blocks = {capt_mem_block, proc_mem_block, nexd_mem_block, disp_mem_block};
-			next_locs = {capt_mem_loc, proc_mem_loc, nexd_mem_loc, disp_mem_loc};
-		end
-		{next_capt_mem_block,next_proc_mem_block,next_nexd_mem_block,next_disp_mem_block} = next_blocks;
-		{next_capt_mem_loc,next_proc_mem_loc,next_nexd_mem_loc,next_disp_mem_loc} = next_locs;
-
 		// set address & write & done flags
 		// assign write value to mem0 & mem1 based on who's writing
 		if (!capt_mem_block && ntsc_flag) begin
@@ -216,10 +178,10 @@ module memory_interface
 		end
 
 		// set done flags
-		done_ntsc = mem0_done[3] || mem1_done[3];
-		done_vga  = mem0_done[2] || mem1_done[2];
-		done_lpf  = mem0_done[1] || mem1_done[1];
-		done_ptf  = mem0_done[0] || mem1_done[0];
+		done_ntsc = (mem0_done == NTSC) || (mem1_done == NTSC);
+		done_vga  = (mem0_done == VGA)  || (mem1_done == VGA);
+		done_lpf  = (mem0_done == LPF)  || (mem1_done == LPF);
+		done_ptf  = (mem0_done == PTF)  || (mem1_done == PTF);
 
 		// assign read value to corresponding member of queue
 		mem0_next_read = mem0_read_queue[QUEUE_LENGTH*LOG_ORD-1:(QUEUE_LENGTH-1)*LOG_ORD];
@@ -259,29 +221,51 @@ module memory_interface
 		// addr = y*(image_width/2) + lpf_x/2 + loc*(image_width*image_height/2)
 		lpf_addr = (`IMAGE_WIDTH_D2 * lpf_y) + lpf_x[`LOG_WIDTH-1:1] + (proc_mem_loc * `IMAGE_LENGTH);
 		ptf_addr = (`IMAGE_WIDTH_D2 * ptf_y) + ptf_x[`LOG_WIDTH-1:1] + (nexd_mem_loc * `IMAGE_LENGTH);
-
-		// set next addresses of NTSC and VGA
-		// set to starting address at the start of each frame or when the FPGA is reset
-		if (reset || frame_flag) begin
-			next_ntsc_addr = (next_capt_mem_loc*`IMAGE_LENGTH);
-			next_vga_addr = (next_disp_mem_loc*`IMAGE_LENGTH);
-		end
-		// set addresses of NTSC and VGA / update if pixels have been read or written
-		else begin
-			next_ntsc_addr = ntsc_addr + done_ntsc;
-			next_vga_addr = vga_addr + done_vga;
-		end
 		// this should be it
 	end
 
 	always @(posedge clock) begin
 		// update blocks and locations of images in RAM
-		{capt_mem_block, proc_mem_block, nexd_mem_block, disp_mem_block} <= next_blocks;
-		{capt_mem_loc, proc_mem_loc, nexd_mem_loc, disp_mem_loc} <= next_locs;
-
+		if (reset) begin
+			capt_mem_block 	<= 1'b0;
+			capt_mem_loc 	<= 2'b00;
+			proc_mem_block 	<= 1'b0;
+			proc_mem_loc 	<= 2'b01;
+			nexd_mem_block 	<= 1'b1;
+			nexd_mem_loc 	<= 2'b00;
+			disp_mem_block 	<= 1'b1;
+			disp_mem_loc <= 2'b01;
+		end
+		else if (frame_flag) begin
+			capt_mem_block 	<= proc_mem_block;
+			capt_mem_loc 		<= proc_mem_loc;
+			proc_mem_block 	<= disp_mem_block;
+			proc_mem_loc 		<= disp_mem_loc;
+			nexd_mem_block 	<= capt_mem_block;
+			nexd_mem_loc 		<= capt_mem_loc;
+			disp_mem_block 	<= nexd_mem_block;
+			disp_mem_loc 		<= nexd_mem_loc;
+		end
+		else begin
+			capt_mem_block 	<= capt_mem_block;
+			capt_mem_loc		<= capt_mem_loc;
+			proc_mem_block		<= proc_mem_block;
+			proc_mem_loc		<= proc_mem_loc;
+			nexd_mem_block		<= nexd_mem_block;
+			nexd_mem_loc		<= nexd_mem_loc;
+			disp_mem_block		<= disp_mem_block;
+			disp_mem_loc		<= disp_mem_loc;
+		end
+		
 		// update ntsc and vga addresses
-		ntsc_addr <= next_ntsc_addr;
-		vga_addr <= next_vga_addr;
+		if (reset || frame_flag) begin
+			ntsc_addr 	<= (proc_mem_loc*`IMAGE_LENGTH);
+			vga_addr 	<= (nexd_mem_loc*`IMAGE_LENGTH);
+		end
+		else begin
+			ntsc_addr <= (done_ntsc) ? (ntsc_addr+1) : ntsc_addr;
+			vga_addr  <= (done_vga) ? (vga_addr+1) : vga_addr;
+		end	
 
 		// update read queues
 		mem0_read_queue <= next_mem0_read_queue;
