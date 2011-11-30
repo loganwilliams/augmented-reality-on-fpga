@@ -8,47 +8,50 @@
 module memory_interface
 	(
 		// STANDARD SIGNALS
-		input clock,
-		input reset,
+		input 			   clock,
+		input 			   reset,
 		// NTSC_CAPTURE
-		input frame_flag,
-		input ntsc_flag,
-		input [`LOG_MEM-1:0] ntsc_pixel,
-		output reg done_ntsc,
+		input 			   frame_flag,
+		input 			   ntsc_flag,
+		input [`LOG_MEM-1:0] 	   ntsc_pixel,
+		output reg 		   done_ntsc,
 		// LPF
-		input lpf_flag,
-		input lpf_wr,
-		input [`LOG_WIDTH-1:0] lpf_x,
-		input [`LOG_HEIGHT-1:0] lpf_y,
-		input [`LOG_MEM-1:0] lpf_pixel_write,
-		output reg done_lpf,
-		output reg [`LOG_MEM-1:0] lpf_pixel_read,
+		input 			   lpf_flag,
+		input 			   lpf_wr,
+		input [`LOG_WIDTH-1:0] 	   lpf_x,
+		input [`LOG_HEIGHT-1:0]    lpf_y,
+		input [`LOG_MEM-1:0] 	   lpf_pixel_write,
+		output reg 		   done_lpf,
+		output reg [`LOG_MEM-1:0]  lpf_pixel_read,
 		// PROJECTIVE_TRANSFORM
-		input pt_flag,
-		input [`LOG_WIDTH-1:0] pt_x,
-		input [`LOG_HEIGHT-1:0] pt_y,
-		input [`LOG_TRUNC-1:0] pt_pixel,
-		output done_pt,
+		input 			   pt_flag,
+		input [`LOG_WIDTH-1:0] 	   pt_x,
+		input [`LOG_HEIGHT-1:0]    pt_y,
+		input [`LOG_TRUNC-1:0] 	   pt_pixel,
+		output 			   done_pt,
 		// VGA_WRITE
-		input vga_flag,
-		output reg done_vga,
-		output reg [`LOG_MEM-1:0] vga_pixel,
+		input 			   vga_flag,
+		output reg 		   done_vga,
+		output reg [`LOG_MEM-1:0]  vga_pixel,
+		input 			   vcount,
+		input 			   hcount,
+	 	input 			   vsync,
 		// MEMORY
 		// MEM ADDRESSES
 		output reg [`LOG_ADDR-1:0] mem0_addr,
-		output reg [`LOG_ADDR-1:0] mem1_addr,	
+		output reg [`LOG_ADDR-1:0] mem1_addr, 
 		// MEM READ	
-		input [`LOG_MEM-1:0] mem0_read,
-		input [`LOG_MEM-1:0] mem1_read,
+		input [`LOG_MEM-1:0] 	   mem0_read,
+		input [`LOG_MEM-1:0] 	   mem1_read,
 		// MEM WRITE
-		output reg [`LOG_MEM-1:0] mem0_write,
-		output reg [`LOG_MEM-1:0] mem1_write,
+		output reg [`LOG_MEM-1:0]  mem0_write,
+		output reg [`LOG_MEM-1:0]  mem1_write,
 		// WR FLAGS
-		output reg mem0_wr,
-		output reg mem1_wr,
+		output reg 		   mem0_wr,
+		output reg 		   mem1_wr,
 		// TESTING
-		output [3:0] debug_blocks,
-		output [7:0] debug_locs
+		output [3:0] 		   debug_blocks,
+		output [7:0] 		   debug_locs
 	);
 
 	/******** PARAMETERS ********/
@@ -219,8 +222,9 @@ module memory_interface
 
 		// set addresses of LPF and PTF from (x,y) coordinates
 		// addr = y*(image_width/2) + lpf_x/2 + loc*(image_width*image_height/2)
-		lpf_addr = (`IMAGE_WIDTH_D2 * lpf_y) + lpf_x[`LOG_WIDTH-1:1] + (proc_mem_loc * `IMAGE_LENGTH);
-		ptf_addr = (`IMAGE_WIDTH_D2 * ptf_y) + ptf_x[`LOG_WIDTH-1:1] + (nexd_mem_loc * `IMAGE_LENGTH);
+		lpf_addr = (`IMAGE_WIDTH_D2 * lpf_y)  + lpf_x[`LOG_WIDTH-1:1]  + (proc_mem_loc * `IMAGE_LENGTH);
+		ptf_addr = (`IMAGE_WIDTH_D2 * ptf_y)  + ptf_x[`LOG_WIDTH-1:1]  + (nexd_mem_loc * `IMAGE_LENGTH);
+		vga_addr = (`IMAGE_WIDTH_D2 * vcount) + hcount[`LOG_WIDTH-1:1] + (disp_mem_loc * `IMAGE_LENGTH);
 		// this should be it
 	end
 
@@ -237,17 +241,17 @@ module memory_interface
 			disp_mem_loc <= 2'b01;
 		end
 		else if (frame_flag) begin
-			capt_mem_block 	<= proc_mem_block;
+			capt_mem_block 		<= proc_mem_block;
 			capt_mem_loc 		<= proc_mem_loc;
-			proc_mem_block 	<= disp_mem_block;
+			proc_mem_block 		<= disp_mem_block;
 			proc_mem_loc 		<= disp_mem_loc;
-			nexd_mem_block 	<= capt_mem_block;
+			nexd_mem_block 		<= capt_mem_block;
 			nexd_mem_loc 		<= capt_mem_loc;
-			disp_mem_block 	<= nexd_mem_block;
+			disp_mem_block 		<= nexd_mem_block;
 			disp_mem_loc 		<= nexd_mem_loc;
 		end
 		else begin
-			capt_mem_block 	<= capt_mem_block;
+			capt_mem_block 		<= capt_mem_block;
 			capt_mem_loc		<= capt_mem_loc;
 			proc_mem_block		<= proc_mem_block;
 			proc_mem_loc		<= proc_mem_loc;
@@ -258,15 +262,9 @@ module memory_interface
 		end
 		
 		// update ntsc and vga addresses
-		if (reset || frame_flag) begin
-			ntsc_addr 	<= (proc_mem_loc*`IMAGE_LENGTH);
-			vga_addr 	<= (nexd_mem_loc*`IMAGE_LENGTH);
-		end
-		else begin
-			ntsc_addr <= (done_ntsc) ? (ntsc_addr+1) : ntsc_addr;
-			vga_addr  <= (done_vga) ? (vga_addr+1) : vga_addr;
-		end	
-
+		if (reset || frame_flag) ntsc_addr <= (proc_mem_loc*`IMAGE_LENGTH);
+		else ntsc_addr <= (done_ntsc) ? (ntsc_addr+1) : ntsc_addr;	
+		
 		// update read queues
 		mem0_read_queue <= next_mem0_read_queue;
 		mem1_read_queue <= next_mem1_read_queue;

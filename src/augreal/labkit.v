@@ -330,7 +330,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire lpf_flag;
 	wire vga_flag;
 	wire [35:0] ntsc_pixels;
-	wire [17:0] vga_pixel;
+	wire [35:0] vga_pixel;
 
 
   
@@ -365,25 +365,29 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire ntsc_flag_cleaned;
 	wire frame_flag_cleaned;
 	wire debug_state;
-	
+
+        // This dummy module should generate a train of pixels with linearly increasing luminosities
+        // in the x direction, and a frame_flag every 640*480 pixels
+   
+	/*
 	dummy_ntsc_capture ntsc(.clk(clock_27mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
 					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
 					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
 					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixels), 
-					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag));
-/*
+					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag));*/
+
 	ntsc_capture ntsc(.clk(clock_27mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
 					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
 					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
 					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixels), 
-					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag), .dv(dv), .fvh(fvh), 
-					  .x(nx), .y(ny));*/
+					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag));
 					  
 	clean nclean(.clock_65mhz(clock_65mhz), .flag(ntsc_flag),
 					.clean_flag(ntsc_flag_cleaned));
 	
 	clean fclean(.clock_65mhz(clock_65mhz), .flag(frame_flag),
 		.clean_flag(frame_flag_cleaned));
+   
 	// use above if using ntsc_capture
 
 	/*************************************
@@ -411,6 +415,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// use above if not using memory_interface
 
 	// use below if using memory_interface
+	
 	assign ram0_ce_b = 1'b0;
 	assign ram0_oe_b = 1'b0;
 	assign ram0_adv_ld = 1'b0;
@@ -438,10 +443,11 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag_cleaned), 
 		.ntsc_flag(ntsc_flag_cleaned),.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
 		.vga_flag(vga_flag),.done_vga(done_vga),.vga_pixel(vga_pixel),
+		.vcount(vcount), .hcount(hcount), .vsync(vsync),
 		.mem0_addr(mem0_addr),.mem1_addr(mem1_addr), 
 		.mem0_read(mem0_read),.mem1_read(mem1_read), 
 		.mem0_write(mem0_write),.mem1_write(mem1_write), 
-		.mem0_wr(mem0_wr),.mem1_wr(mem1_wr), .debug_locs(debug_locs), .debug_blocks(debug_blocks));
+		.mem0_wr(mem0_wr),.mem1_wr(mem1_wr));
 
 	zbt_6111 mem0(
 		.clk(clock_65mhz), .cen(1'b1), 
@@ -458,7 +464,17 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.ram_data(ram1_data), .ram_cen_b(ram1_cen_b));
 	
 	// use above if using memory_interface
+	*/
 
+   wire [13:0] addra;
+   wire [13:0] addrb;
+   wire        wea;
+   
+   
+   
+	bram_interface bi(.clk(clock_65mhz), .ntsc_flag(ntsc_flag_cleaned), .frame_flag(frame_flag_cleaned),
+		.ntsc_pixels(ntsc_pixels), .vga_flag(vga_flag), .vsync(vga_out_vsync), .done_vga(done_vga),
+		.vga_pixels(vga_pixel), .addra(addra), .addrb(addrb), .wea(wea));
 
 	/*************************************
 	*******  VGA BLOCK *******************
@@ -477,6 +493,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	
 	// use below if using vga
 	wire [`LOG_HCOUNT-1:0] hcount;
+   wire [`LOG_VCOUNT-1:0]      vcount;
+   
 	vga_write vga(
 		.clock(clock_65mhz), .vclock(clock_25mhz), 
 		.reset(reset), .frame_flag(frame_flag_cleaned), 
@@ -490,7 +508,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.vga_out_pixel_clock(vga_out_pixel_clock),
 		.vga_out_hsync(vga_out_hsync), 
 		.vga_out_vsync(vga_out_vsync),
-		.hcount(hcount));
+		.hcount(hcount),
+		.vcount(vcount));
 	// use above if using vga
 	
 	// use below if testing vga
@@ -513,15 +532,18 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
 	// user-defined analyzers
 
-		assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, vga_flag, done_vga, done_ntsc, fvh, 7'b0};
-		assign analyzer3_data = {nx[9:0], ntsc_flag, debug_state, 4'b0};
-		assign analyzer2_data = {ntsc_pixels[35:20]};
-		assign analyzer4_data = {ram0_address[7:0], ram1_address[7:0]};
-		
-		assign analyzer3_clock = tv_in_line_clock1;
-		assign analyzer1_clock = clock_27mhz;
-		assign analyzer2_clock = clock_65mhz;
-		assign analyzer4_clock = clock_25mhz;
+	//	assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, vga_flag, done_vga, done_ntsc, fvh, 7'b0};
+	//	assign analyzer3_data = {nx[9:0], ntsc_flag, debug_state, 4'b0};
+
+   assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, vga_flag, addra[13:0]};
+   assign analyzer3_data = {done_vga, ntsc_flag, wea, addrb[13:0]};
+   assign analyzer2_data = {ntsc_pixels[35:20]};
+   assign analyzer4_data = {vga_pixel[35:20]};
+   
+   assign analyzer3_clock = tv_in_line_clock1;
+   assign analyzer1_clock = clock_27mhz;
+   assign analyzer2_clock = clock_65mhz;
+   assign analyzer4_clock = clock_25mhz;
 endmodule
 
 // ramclock module
