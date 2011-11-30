@@ -191,15 +191,6 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// Clock Assignments
 	//
 	//////////////////////////////////////////////////////////////////////////// 
-	
-	// generate 65 mhz clock
-	wire clock_65mhz_unbuf,clock_65mhz_buf;
-	DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf));
-	// synthesis attribute CLKFX_DIVIDE of vclk1 is 10
-	// synthesis attribute CLKFX_MULTIPLY of vclk1 is 24
-	// synthesis attribute CLK_FEEDBACK of vclk1 is NONE
-	// synthesis attribute CLKIN_PERIOD of vclk1 is 37
-	BUFG vclk2(.O(clock_65mhz_buf),.I(clock_65mhz_unbuf));
   
 	wire clock_65mhz; // TODO: decide what to do with this clock	
 
