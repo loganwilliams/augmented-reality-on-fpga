@@ -125,17 +125,18 @@ module vga_write
 	wire [`LOG_MEM-1:0] pixel_tuple;
 	wire [`LOG_TRUNC-1:0] pixel_out;
 	extract4 #(.S(`LOG_MEM)) tuple(pixels, trunc_vindex, pixel_tuple);
-	assign pixel_out = (vindex[0] == 0) ? pixel_tuple[2*`LOG_TRUNC-1:`LOG_TRUNC] : pixel_tuple[`LOG_TRUNC-1:0];
+		assign pixel_out = (vindex[0] == 0) ? pixel_tuple[2*`LOG_TRUNC-1:`LOG_TRUNC] : pixel_tuple[`LOG_TRUNC-1:0];
 	// ycbcr2rgb converter(.y({pixel_out[17:12],2'b00}), .cb({pixel_out[11:6],2'b00}), .cr({pixel_out[5:0],2'b00}), .r(vga_out_red), .g(vga_out_green), .b(vga_out_blue));
-	assign vga_out_red = {pixel_out[17:12], 2'b00};
-	assign vga_out_green = {pixel_out[17:12], 2'b00};
-	assign vga_out_blue = {pixel_out[17:12], 2'b00};
+	//assign pixel_out = (hcount[5:4] + vcount[5:4])<<12;
+	assign vga_out_red = {hcount[5:4], 4'b00};
+	assign vga_out_green = {vcount[5:4], 4'b00};
+	assign vga_out_blue = {6'b111111, 2'b00};
 	// output
 	always @(*) begin
 		if (vstate == STEADY_STATE) begin
 			vga_out_sync_b = 1'b1; // not used
 			vga_out_blank_b = ~blanks[vindex];
-			vga_out_pixel_clock = vclock; // TODO: verify whether inversion is necessary
+			vga_out_pixel_clock = ~vclock; // TODO: verify whether inversion is necessary
 			vga_out_hsync = hsyncs[vindex];
 			vga_out_vsync = vsyncs[vindex];
 		end
@@ -143,7 +144,7 @@ module vga_write
 		else begin
 			vga_out_sync_b = 1'bX;
 			vga_out_blank_b = 1'bX;
-			vga_out_pixel_clock = vclock;
+			vga_out_pixel_clock = ~vclock;
 			vga_out_hsync = 1'bX;
 			vga_out_vsync = 1'bX;
 		end
@@ -214,7 +215,7 @@ module xvga
 	always @(posedge vclock) begin
 		// TODO: revise this section
 		// is it necessary?
-		if (reset || frame_flag) begin
+		if (reset) begin
 			hcount <= 0;
 			hblank <= 0;
 			hsync <= 1;
