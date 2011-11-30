@@ -23,26 +23,26 @@ module dummy_ntsc_capture(
 	 reg [1:0] state = 0;
 	 reg [7:0] counter = 0;
 	 
-	 always @(posedge clk) begin
-		frame_flag <= 0;
-		
+	 always @(posedge clk) begin		
 		if (state == 2'b00) begin
 			ntsc_flag <= 1;
 			ntsc_pixels <= {counter, 10'b0, counter, 10'b0};
-			x <= x + 1;
-			
-			if (x > 638) begin
-				x <= 0;
-				y <= y + 1;
-			end
-			
+			counter <= counter + 1;
+
 			if (y > 478) begin
 				y <= 0;
 				x <= 0;
 				frame_flag <= 1;
+				counter <= 0;
+			end else if (x > 638) begin
+				x <= 0;
+				y <= y + 1;
+				frame_flag <= 0;
+			end else begin
+				x <= x + 1;
+				frame_flag <= 0;
 			end
 			
-			counter <= counter + 1;
 			state <= state + 1;
 		end else begin
 			ntsc_flag <= 0;
