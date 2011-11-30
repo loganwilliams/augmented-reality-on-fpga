@@ -4,28 +4,29 @@
 module vga_write
 	(
 		// STANDARD INPUTS
-		input clock,
-		input vclock,
-		input reset,
-		input frame_flag,
+		input 			 clock,
+		input 			 vclock,
+		input 			 reset,
+		input 			 frame_flag,
 		// MEMORY_INTERFACE
-		input [`LOG_MEM-1:0] vga_pixel,
-		input done_vga,
-		output reg vga_flag,
+		input [`LOG_MEM-1:0] 	 vga_pixel,
+		input 			 done_vga,
+		output reg 		 vga_flag,
 		// VGA
-		output [7:0] vga_out_red,
-		output [7:0] vga_out_green,
-		output [7:0] vga_out_blue,
-		output reg vga_out_sync_b,
-		output reg vga_out_blank_b,
-		output reg vga_out_pixel_clock,
-		output reg vga_out_hsync,
-		output reg vga_out_vsync,
+		output [7:0] 		 vga_out_red,
+		output [7:0] 		 vga_out_green,
+		output [7:0] 		 vga_out_blue,
+		output reg 		 vga_out_sync_b,
+		output reg 		 vga_out_blank_b,
+		output reg 		 vga_out_pixel_clock,
+		output reg 		 vga_out_hsync,
+		output reg 		 vga_out_vsync,
 		// DEBUG
-		output [`LOG_HCOUNT-1:0] hcount
-	);
+		output [`LOG_HCOUNT-1:0] hcount,
+		output [`LOG_VCOUNT-1:0] vcount
+	 );
 
-//	wire [`LOG_HCOUNT-1:0] hcount;
+	wire [`LOG_HCOUNT-1:0] hcount;
 	wire [`LOG_VCOUNT-1:0] vcount;
 	wire hsync, vsync, blank;
 

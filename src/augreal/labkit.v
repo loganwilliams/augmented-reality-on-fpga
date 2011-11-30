@@ -394,7 +394,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	******* SRAM BLOCK *******************
 	**************************************/
 	// use below if not using memory_interface
-	
+	/*
 	assign ram0_data = 36'hZ;
 	assign ram0_address = 19'h0;
 	assign ram0_adv_ld = 1'b0;
@@ -411,11 +411,11 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	assign ram1_oe_b = 1'b1;
 	assign ram1_we_b = 1'b1;
 	assign ram1_bwe_b = 4'hF;   
-	
+	*/
 	// use above if not using memory_interface
 
 	// use below if using memory_interface
-	/*
+	
 	assign ram0_ce_b = 1'b0;
 	assign ram0_oe_b = 1'b0;
 	assign ram0_adv_ld = 1'b0;
@@ -443,10 +443,11 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag_cleaned), 
 		.ntsc_flag(ntsc_flag_cleaned),.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
 		.vga_flag(vga_flag),.done_vga(done_vga),.vga_pixel(vga_pixel),
+		.vcount(vcount), .hcount(hcount), .vsync(vsync),
 		.mem0_addr(mem0_addr),.mem1_addr(mem1_addr), 
 		.mem0_read(mem0_read),.mem1_read(mem1_read), 
 		.mem0_write(mem0_write),.mem1_write(mem1_write), 
-		.mem0_wr(mem0_wr),.mem1_wr(mem1_wr), .debug_locs(debug_locs), .debug_blocks(debug_blocks));
+		.mem0_wr(mem0_wr),.mem1_wr(mem1_wr));
 
 	zbt_6111 mem0(
 		.clk(clock_65mhz), .cen(1'b1), 
@@ -492,6 +493,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	
 	// use below if using vga
 	wire [`LOG_HCOUNT-1:0] hcount;
+   wire [`LOG_VCOUNT-1:0]      vcount;
+   
 	vga_write vga(
 		.clock(clock_65mhz), .vclock(clock_25mhz), 
 		.reset(reset), .frame_flag(frame_flag_cleaned), 
@@ -505,7 +508,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.vga_out_pixel_clock(vga_out_pixel_clock),
 		.vga_out_hsync(vga_out_hsync), 
 		.vga_out_vsync(vga_out_vsync),
-		.hcount(hcount));
+		.hcount(hcount),
+		.vcount(vcount));
 	// use above if using vga
 	
 	// use below if testing vga
