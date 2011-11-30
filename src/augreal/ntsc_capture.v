@@ -13,7 +13,9 @@ module ntsc_capture(
 		    output reg [9:0]  interesting_x, // its x locaiton
 		    output reg [8:0]  interesting_y, // its y location
 		    output reg 	      interesting_flag, // a flag that indicates the data is good
-		    output reg 	      frame_flag); // a flag that indicates when a new frame begins
+		    output reg 	      frame_flag,
+		    output reg [18:0] addrvector
+); // a flag that indicates when a new frame begins
 
    // initialize the adv7185 video ADC
    adv7185init adv7185(.reset(reset), .clock_27mhz(clock_27mhz), .source(1'b0),
@@ -107,6 +109,7 @@ module ntsc_capture(
 	    end // else: !if(state == 0)
 
 	    x <= x + 1; // increment the x coordinate
+	    addrvector <= y * 640 + x + 1;
 
 	    // Look for interesting pixels:
 	    // This identification can be tested once ntsc_capture is connected to
