@@ -290,7 +290,7 @@ module memory_interface
 
 		// update ntsc and vga addresses
 		ntsc_addr <= next_ntsc_addr;
-	   vga_addr <= 640 * vcount + hcount;
+	   vga_addr <= 640 * vcount + hcount + (next_disp_mem_loc*`IMAGE_LENGTH);
 	   
 
 		// update read queues
