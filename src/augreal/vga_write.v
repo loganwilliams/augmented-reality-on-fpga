@@ -1,4 +1,4 @@
-`include "params.v"
+//`include "params.v"
 `default_nettype none
 
 module vga_write
@@ -13,168 +13,197 @@ module vga_write
 		input done_vga,
 		output reg vga_flag,
 		// VGA
-		output [7:0] vga_out_red,
-		output [7:0] vga_out_green,
-		output [7:0] vga_out_blue,
+		output reg [7:0] vga_out_red,
+		output reg [7:0] vga_out_green,
+		output reg [7:0] vga_out_blue,
 		output reg vga_out_sync_b,
 		output reg vga_out_blank_b,
 		output reg vga_out_pixel_clock,
 		output reg vga_out_hsync,
 		output reg vga_out_vsync,
 		// DEBUG
-		output [`LOG_HCOUNT-1:0] hcount
-	);
+		output [`LOG_HCOUNT-1:0] clocked_hcount,
+		output [`LOG_VCOUNT-1:0] clocked_vcount
+	 );
 
-//	wire [`LOG_HCOUNT-1:0] hcount;
+	wire [`LOG_HCOUNT-1:0] hcount;
 	wire [`LOG_VCOUNT-1:0] vcount;
 	wire hsync, vsync, blank;
 
 	xvga xvga1(.vclock(vclock), .reset(reset), .hcount(hcount), .vcount(vcount), .vsync(vsync), .hsync(hsync), .blank(blank));
 
-	// buffer indices
-	reg [2:0] vindex;
-	reg [2:0] cindex;
-	wire [1:0] trunc_vindex;
-	wire [1:0] trunc_cindex;
-	assign trunc_vindex = vindex[2:1];
-	assign trunc_cindex = cindex[2:1];
+	// indices
+	reg [2:0] v_index;
+	reg [2:0] c_index;
 
-	// vclock buffers
-	reg [7:0] hsyncs;
-	reg [7:0] vsyncs;
-	reg [7:0] blanks;
-	reg [8*`LOG_HCOUNT-1:0] hcounts;
-	reg [8*`LOG_VCOUNT-1:0] vcounts;
-	// clock buffers
-	reg [4*`LOG_MEM-1:0] pixels;
+	// write enables
+	reg v_we;
+	reg c_we;
+
+	// read by cindex
+	wire c_hsync;
+	wire c_vsync;
+	wire c_blank;
+	wire [`LOG_HCOUNT-1:0] c_hcount;
+	wire [`LOG_VCOUNT-1:0] c_vcount;
+	wire [`LOG_FULL-1:0] c_pixel;
+
+	// read by vindex
+	wire v_hsync;
+	wire v_vsync;
+	wire v_blank;
+	wire [`LOG_HCOUNT-1:0] v_hcount;
+	wire [`LOG_VCOUNT-1:0] v_vcount;
+	wire [`LOG_FULL-1:0] v_pixel;
+
+	// written by vindex
+	reg w_hsync;
+	reg w_vsync;
+	reg w_blank;
+	reg [`LOG_HCOUNT-1:0] w_hcount;
+	reg [`LOG_VCOUNT-1:0] w_vcount;
+
+	// written by cindex
+	reg [`LOG_FULL-1:0] w_pixel;
+
+	// vclock mems
+	arsw_mem8 #(.S(1)) hsync_buf(
+		.reset(reset), .clock(vclock), .we(v_we), .write_index(v_index), 
+		.read1_index(c_index), .read2_index(v_index), 
+		.read1_data(c_hsync), .read2_data(v_hsync), .write_data(w_hsync));
+	arsw_mem8 #(.S(1)) vsync_buf(
+		.reset(reset), .clock(vclock), .we(v_we), .write_index(v_index), 
+		.read1_index(c_index), .read2_index(v_index), 
+		.read1_data(c_vsync), .read2_data(v_vsync), .write_data(w_vsync));
+	arsw_mem8 #(.S(1)) blank_buf(
+		.reset(reset), .clock(vclock), .we(v_we), .write_index(v_index), 
+		.read1_index(c_index), .read2_index(v_index), 
+		.read1_data(c_blank), .read2_data(v_blank), .write_data(w_blank));
+	arsw_mem8 #(.S(`LOG_HCOUNT)) hcount_buf(
+		.reset(reset), .clock(vclock), .we(v_we), .write_index(v_index), 
+		.read1_index(c_index), .read2_index(v_index), 
+		.read1_data(c_hcount), .read2_data(v_hcount), .write_data(w_hcount));
+	arsw_mem8 #(.S(`LOG_VCOUNT)) vcount_buf(
+		.reset(reset), .clock(vclock), .we(v_we), .write_index(v_index), 
+		.read1_index(c_index), .read2_index(v_index), 
+		.read1_data(c_vcount), .read2_data(v_vcount),. write_data(w_vcount));
+	// clock mem
+	arsw_mem8 #(.S(`LOG_FULL)) pixel_buf(
+		.reset(reset), .clock(clock), .we(c_we), .write_index(c_index), 
+		.read1_index(c_index), .read2_index(v_index), 
+		.read1_data(c_pixel), .read2_data(v_pixel), .write_data(w_pixel));
+
+	// clock state variables
+	reg [1:0] c_state;
+	reg write_next;
+	parameter REQUESTING 	= 2'd0;
+	parameter WAITING	 	= 2'd1;
+	parameter READING 		= 2'd2;
+	parameter OUT_OF_BOUNDS	= 2'd3;
+
+	// vclock state variables
+	reg v_state;
+	parameter STARTING_UP 	= 1'b0;
+	parameter STEADY_STATE 	= 1'b1;
 
 	reg out_of_bounds;
-	reg [`LOG_MEM-1:0] next_pixel;
 
-	wire [7:0] ihsyncs;
-	wire [7:0] ivsyncs;
-	wire [7:0] iblanks;
-	wire [8*`LOG_HCOUNT-1:0] ihcounts;
-	wire [8*`LOG_VCOUNT-1:0] ivcounts;
-	wire [4*`LOG_MEM-1:0] ipixels;
-
-	insert8 #(.S(1)) insert_hsyncs(hsyncs, hsync, vindex, ihsyncs);
-	insert8 #(.S(1)) insert_vsyncs(vsyncs, vsync, vindex, ivsyncs);
-	insert8 #(.S(1)) insert_blanks(blanks, blank, vindex, iblanks);
-	insert8 #(.S(`LOG_HCOUNT)) insert_hcounts(hcounts, hcount, vindex, ihcounts);
-	insert8 #(.S(`LOG_VCOUNT)) insert_vcounts(vcounts, vcount, vindex, ivcounts);
-	insert4 #(.S(`LOG_MEM)) insert_pixels(pixels, next_pixel, trunc_cindex, ipixels);
-
-	// clock states - used for fetching
-	reg [1:0] state;
-	// TODO reg waiting_for_frame_flag;
-	parameter REQUESTING = 2'd0;
-	parameter STANDING_BY = 2'd1;
-	parameter READING = 2'd2;
-	parameter OUT_OF_BOUNDS = 2'd3;
-
-	wire [`LOG_HCOUNT-1:0] chcount;
-	wire [`LOG_VCOUNT-1:0] cvcount;
-	extract8 #(.S(`LOG_HCOUNT)) exth(.x(hcounts), .i(cindex), .y(chcount));
-	extract8 #(.S(`LOG_VCOUNT)) extv(.x(vcounts), .i(cindex), .y(cvcount));
 	always @(*) begin
-		// is the current requested pixel outside of screen bounds?
-		out_of_bounds = chcount >= 640 || cvcount >= 480;
-		// whether to request a pixel from memory; !out_of_bounds prevents
-		// excessive requesting
-		vga_flag = (!reset && !frame_flag && (trunc_vindex - trunc_cindex) > 1 && !out_of_bounds && state == REQUESTING);
-		next_pixel = (out_of_bounds) ? `LOG_MEM'd0 : vga_pixel;
+		out_of_bounds = c_hcount >= 640 || c_vcount >= 480;
+		vga_flag = (!reset && !frame_flag && !out_of_bounds 
+					&& c_state == REQUESTING && (v_index-c_index) > 2);
+		if (out_of_bounds) w_pixel = `LOG_FULL'b0;
+		else if (!write_next) w_pixel = {vga_pixel[`LOG_MEM-1:`LOG_TRUNC], 2'b00};
+		else w_pixel = {vga_pixel[`LOG_TRUNC-1:0], 2'b00};
+		c_we = (c_state == READING) || (c_state == OUT_OF_BOUNDS) || (write_next);
 	end
 
-	/***** READING FROM MEMORY_INTERFACE ******/
 	always @(posedge clock) begin
-		// fetcher block
-		if (reset) state <= REQUESTING;
-		else case (state)
-			REQUESTING: begin
-				if (vga_flag) state <= STANDING_BY;
-				else if (out_of_bounds) state <= OUT_OF_BOUNDS;
-				else state <= state;
-			end
-			STANDING_BY: state <= READING;
-			default: state <= REQUESTING;
-		endcase
-
 		if (reset) begin
-			pixels <= 0;
-			cindex <= 0;
+			c_state <= REQUESTING;
+			c_index <= 3'd0;
+			write_next <= 0;
 		end
-		else case (state)
-			// set new pixel and increment counter
-			READING, OUT_OF_BOUNDS: begin
-				pixels <= ipixels;
-				cindex <= cindex+2;
+		else case (c_state)
+			REQUESTING: begin
+				if (vga_flag) c_state <= WAITING;
+				else if (out_of_bounds) c_state <= OUT_OF_BOUNDS;
+				else c_state <= c_state;
+				
+				if (write_next) c_index <= c_index+1;
+				else c_index <= c_index;
+				
+				write_next <= 0;
 			end
-			// keep current pixels
+			WAITING: begin
+				c_state <= READING;
+				c_index <= c_index;
+				write_next <= 0;
+			end
+			READING, OUT_OF_BOUNDS: begin
+				c_state <= REQUESTING;
+				c_index <= c_index+1;
+				write_next <= 1;
+			end
 			default: begin
-				pixels <= pixels;
-				cindex <= cindex;
+				c_state <= REQUESTING;
+				c_index <= 3'd0;
+				write_next <= 0;
 			end
 		endcase
 	end
-	/****************************************/
 
-	reg vstate;
-	parameter STARTING_UP=1'b0;
-	parameter STEADY_STATE=1'b1;
-
-	/***** OUTPUT TO VGA CHIP *******/
-	wire [`LOG_MEM-1:0] pixel_tuple;
-	wire [`LOG_TRUNC-1:0] pixel_out;
-	extract4 #(.S(`LOG_MEM)) tuple(pixels, trunc_vindex, pixel_tuple);
-		assign pixel_out = (vindex[0] == 0) ? pixel_tuple[2*`LOG_TRUNC-1:`LOG_TRUNC] : pixel_tuple[`LOG_TRUNC-1:0];
-	// ycbcr2rgb converter(.y({pixel_out[17:12],2'b00}), .cb({pixel_out[11:6],2'b00}), .cr({pixel_out[5:0],2'b00}), .r(vga_out_red), .g(vga_out_green), .b(vga_out_blue));
-	//assign pixel_out = (hcount[5:4] + vcount[5:4])<<12;
-	assign vga_out_red = {hcount[5:4], 4'b00};
-	assign vga_out_green = {pixel_out[17:12], 2'b00};
-	assign vga_out_blue = {pixel_out[17:12], 2'b00};
-	// output
 	always @(*) begin
-		if (vstate == STEADY_STATE) begin
-			vga_out_sync_b = 1'b1; // not used
-			vga_out_blank_b = ~blanks[vindex];
-			vga_out_pixel_clock = ~vclock; // TODO: verify whether inversion is necessary
-			vga_out_hsync = hsyncs[vindex];
-			vga_out_vsync = vsyncs[vindex];
-		end
-		// wait for steady state before streaming
-		else begin
-			vga_out_sync_b = 1'bX;
-			vga_out_blank_b = 1'bX;
-			vga_out_pixel_clock = ~vclock;
-			vga_out_hsync = 1'bX;
-			vga_out_vsync = 1'bX;
-		end
+		w_hsync = hsync;
+		w_vsync = vsync;
+		w_blank = blank;
+		w_hcount = hcount;
+		w_vcount = vcount;
+		case (v_state)
+			STEADY_STATE: begin
+				vga_out_red = v_pixel[23:16];
+				vga_out_green = v_pixel[15:8];
+				vga_out_blue = v_pixel[7:0];
+				vga_out_sync_b = 1'b1; // not used
+				vga_out_blank_b = ~v_blank;
+				vga_out_pixel_clock = ~vclock; // revise this
+				vga_out_hsync = v_hsync;
+				vga_out_vsync = v_vsync;
+			end
+			STARTING_UP: begin
+				vga_out_red = 8'hX;
+				vga_out_green = 8'hX;
+				vga_out_blue = 8'hX;
+				vga_out_sync_b = 1'bX;
+				vga_out_blank_b = 1'bX;
+				vga_out_pixel_clock = 1'b0;
+				vga_out_hsync = 1'bX;
+				vga_out_vsync = 1'bX;
+			end
+		endcase
 	end
-	/********************************/
 
 	always @(posedge vclock) begin
 		if (reset) begin
-			hcounts <= 0;
-			vcounts <= 0;
-			hsyncs <= 0;
-			vsyncs <= 0;
-			blanks <= 0;
-			vindex <= 0;
-			vstate <= STARTING_UP;
+			v_we <= 1'b1;
+			v_index <= 3'd0;
+			v_state <= STARTING_UP;
 		end
 		else begin
-			// fill up the buffer
-			hcounts <= ihcounts;
-			vcounts <= ivcounts;
-			hsyncs <= ihsyncs;
-			vsyncs <= ivsyncs;
-			blanks <= iblanks;
-			vindex <= vindex+1;
-			if (vindex == 7 && vstate == STARTING_UP) vstate <= STEADY_STATE;
-			else vstate <= vstate;
+			v_we <= 1'b1;
+			v_index <= v_index+1;
+			case (v_state)
+				STARTING_UP:
+					v_state <= (v_index == 7) ? STEADY_STATE : STARTING_UP;
+				default:
+					v_state <= v_state;
+			endcase
 		end
 	end
+
+	// DEBUGGING
+	assign clocked_hcount = c_hcount;
+	assign clocked_vcount = c_vcount;
 endmodule
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -242,93 +271,59 @@ module xvga
    	end
 endmodule
 
-// verilog, I hate you
-module insert8
-	#(
-		parameter S=1
-	) (
-		input [8*S-1:0] x,       // input list
-		input [S-1:0] e,         // element to be inserted
-		input [2:0] i,     // index of insertion (0..N-1)
-		output reg [8*S-1:0] y   // output list
+// dual async read, sync write memory
+module arsw_mem8 #(parameter S=1) 
+	(
+		input reset,
+		input clock,
+		input we,
+		input [2:0] write_index,
+		input [2:0] read1_index,
+		input [2:0] read2_index,
+		output reg [S-1:0] read1_data,
+		output reg [S-1:0] read2_data,
+		input [S-1:0] write_data
 	);
-	parameter N=8;
-	parameter LOG_N=3;
+
+	reg [8*S-1:0] data;
 
 	always @(*) begin
-		case (i)
-			0: y = {x[N*S-1:1*S], e};
-			1: y = {x[N*S-1:2*S], e, x[1*S-1:0]};
-			2: y = {x[N*S-1:3*S], e, x[2*S-1:0]};
-			3: y = {x[N*S-1:4*S], e, x[3*S-1:0]};
-			4: y = {x[N*S-1:5*S], e, x[4*S-1:0]};
-			5: y = {x[N*S-1:6*S], e, x[5*S-1:0]};
-			6: y = {x[N*S-1:7*S], e, x[6*S-1:0]};
-			7: y = {e, x[7*S-1:0]};
+		case (read1_index)
+			0: read1_data = data[1*S-1:0*S];
+			1: read1_data = data[2*S-1:1*S];
+			2: read1_data = data[3*S-1:2*S];
+			3: read1_data = data[4*S-1:3*S];
+			4: read1_data = data[5*S-1:4*S];
+			5: read1_data = data[6*S-1:5*S];
+			6: read1_data = data[7*S-1:6*S];
+			7: read1_data = data[8*S-1:7*S];
+		endcase
+
+		case (read2_index)
+			0: read2_data = data[1*S-1:0*S];
+			1: read2_data = data[2*S-1:1*S];
+			2: read2_data = data[3*S-1:2*S];
+			3: read2_data = data[4*S-1:3*S];
+			4: read2_data = data[5*S-1:4*S];
+			5: read2_data = data[6*S-1:5*S];
+			6: read2_data = data[7*S-1:6*S];
+			7: read2_data = data[8*S-1:7*S];
 		endcase
 	end
-endmodule
 
-module insert4
-	#(
-		parameter S=1
-	) (
-		input [4*S-1:0] x,       // input list
-		input [S-1:0] e,         // element to be inserted
-		input [1:0] i,     // index of insertion (0..N-1)
-		output reg [4*S-1:0] y   // output list
-	);
-	parameter N=4;
-	parameter LOG_N=2;
-
-	always @(*) begin
-		case (i)
-			0: y = {x[N*S-1:S], e};
-			1: y = {x[N*S-1:2*S], e, x[S-1:0]};
-			2: y = {x[N*S-1:3*S], e, x[2*S-1:0]};
-			3: y = {e, x[3*S-1:0]};
-		endcase
-	end
-endmodule
-
-module extract8
-	#(
-		parameter S=1
-	) (
-		input [8*S-1:0] x,
-		input [2:0] i,
-		output reg [S-1:0] y
-	);
-
-	always @(*) begin
-		case (i)
-			0: y = x[1*S-1:0*S];
-			1: y = x[2*S-1:1*S];
-			2: y = x[3*S-1:2*S];
-			3: y = x[4*S-1:3*S];
-			4: y = x[5*S-1:4*S];
-			5: y = x[6*S-1:5*S];
-			6: y = x[7*S-1:6*S];
-			7: y = x[8*S-1:5*S];
-		endcase
-	end
-endmodule
-
-module extract4
-	#(
-		parameter S=1
-	) (
-		input [4*S-1:0] x,
-		input [1:0] i,
-		output reg [S-1:0] y
-	);
-
-	always @(*) begin
-		case (i)
-			0: y = x[1*S-1:0*S];
-			1: y = x[2*S-1:1*S];
-			2: y = x[3*S-1:2*S];
-			3: y = x[4*S-1:3*S];
+	always @(posedge clock) begin
+		if (reset) begin
+			data <= {(8*S){1'b0}};
+		end
+		else case (write_index)
+			0: data <= {data[8*S-1:1*S], write_data};
+			1: data <= {data[8*S-1:2*S], write_data, data[1*S-1:0]};
+			2: data <= {data[8*S-1:3*S], write_data, data[2*S-1:0]};
+			3: data <= {data[8*S-1:4*S], write_data, data[3*S-1:0]};
+			4: data <= {data[8*S-1:5*S], write_data, data[4*S-1:0]};
+			5: data <= {data[8*S-1:6*S], write_data, data[5*S-1:0]};
+			6: data <= {data[8*S-1:7*S], write_data, data[6*S-1:0]};
+			7: data <= 					{write_data, data[7*S-1:0]};
 		endcase
 	end
 endmodule
