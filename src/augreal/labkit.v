@@ -364,19 +364,28 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire ntsc_flag_cleaned;
 	wire frame_flag_cleaned;
 	wire debug_state;
-
+/*
 	ntsc_capture ntsc(.clk(clock_27mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
 					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
 					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
 					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixels), 
 					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag), .dv(dv), .fvh(fvh), 
-					  .x(nx), .y(ny));
+					  .x(nx), .y(ny));*/
 					  
+					  
+	dummy_ntsc_capture ntsc(.clk(clock_65mhz), .clock_27mhz(clock_65mhz), .reset(reset), 
+					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
+					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
+					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixels), 
+					  .ntsc_flag(ntsc_flag_cleaned),.frame_flag(frame_flag_cleaned));
+					  /*
 	clean nclean(.clock_65mhz(clock_65mhz), .flag(ntsc_flag),
 					.clean_flag(ntsc_flag_cleaned));
 	
 	clean fclean(.clock_65mhz(clock_65mhz), .flag(frame_flag),
 		.clean_flag(frame_flag_cleaned));
+		*/
+		
 	// use above if using ntsc_capture
 
 	/*************************************
