@@ -97,6 +97,7 @@ module memory_interface
 	reg [`LOG_ADDR-1:0] next_vga_addr;
 
 	// NEXT LOCS AND BLOCKS
+	reg [3:0] blocks;
 	reg [3:0] next_blocks;
 	reg [7:0] next_locs;
 	reg next_capt_mem_block;
@@ -132,6 +133,7 @@ module memory_interface
 	assign debug_locs = {capt_mem_loc, disp_mem_loc, 4'b00};
 
 	always @(*) begin
+		assign blocks = {capt_mem_block, proc_mem_block, nexd_mem_block, disp_mem_block};
 		// shifting
 		if (reset) begin
 			// choose starting condition such that capt and disp never overlap
@@ -139,6 +141,7 @@ module memory_interface
 			next_locs = {2'b00, 2'b01, 2'b00, 2'b01};
 		end
 		else if (frame_flag) begin
+			case 
 			next_blocks = {proc_mem_block, disp_mem_block, capt_mem_block, nexd_mem_block};
 			next_locs = {proc_mem_loc, disp_mem_loc, capt_mem_loc, nexd_mem_loc};
 		end

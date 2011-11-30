@@ -20,10 +20,12 @@ module vga_write
 		output reg vga_out_blank_b,
 		output reg vga_out_pixel_clock,
 		output reg vga_out_hsync,
-		output reg vga_out_vsync
+		output reg vga_out_vsync,
+		// DEBUG
+		output [`LOG_HCOUNT-1:0] hcount
 	);
 
-	wire [`LOG_HCOUNT-1:0] hcount;
+//	wire [`LOG_HCOUNT-1:0] hcount;
 	wire [`LOG_VCOUNT-1:0] vcount;
 	wire hsync, vsync, blank;
 
