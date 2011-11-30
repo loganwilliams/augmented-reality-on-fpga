@@ -21,7 +21,7 @@ module ntsc_capture(
 		       .tv_in_i2c_data(tv_in_i2c_data));
 
    wire [29:0] 			      ycrcb;
-   //wire [2:0] 		      fvh;
+   wire [2:0] 			      fvh;
 
    // this module decodes the data and outputs the ycrcb pair
    ntsc_decode decode(.clk(tv_in_line_clock1), .reset(reset),
@@ -29,8 +29,8 @@ module ntsc_capture(
 		      .v(fvh[1]), .h(fvh[0]), .data_valid(dv), .f(fvh[2]));
 
    reg 				      state = 0;
-   //reg [9:0] 			      x = 0;
-   //reg [8:0] 			      y = 0;
+   reg [9:0] 			      x = 0;
+   reg [8:0] 			      y = 0;
    
    wire 			      f;
    wire 			      v;
@@ -41,6 +41,7 @@ module ntsc_capture(
    reg 				      rh;
    reg 				      rv;
 
+   // unsynchronized outputs
    reg [35:0] 			      us_ntsc_pixels;
    reg 				      us_ntsc_flag;
    reg [1:0] 			      us_color;
@@ -58,7 +59,7 @@ module ntsc_capture(
    assign v = fvh[1];
    assign h = fvh[0];
 
-
+   // synchronize to the external video line clock
    always @ (posedge tv_in_line_clock1) begin
       rh <= 0;
       rv <= 0;
