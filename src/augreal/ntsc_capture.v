@@ -1,41 +1,27 @@
-module synchronize(
-	input sig,
-	input reset,
-	output reg syncsig);
-	
-	always @(*) begin
-		if (sig) syncsig <= 1;
-		if (reset) syncsig <= 0;
-	end
-endmodule
-
 module ntsc_capture(
-		    input 	      clk, // the main system clock
-			 input clock_27mhz,
+		    input 	      clock_65mhz, // the main system clock
+		    input 	      clock_27mhz,
 		    input 	      reset, // reset line
 		    output 	      tv_in_reset_b, // these are all labkit wires
 		    output 	      tv_in_i2c_clock, //   |
 		    inout 	      tv_in_i2c_data, //    |
 		    input 	      tv_in_line_clock1, // |
-		    input 	[19:0]      tv_in_ycrcb, //       |
+		    input [19:0]      tv_in_ycrcb, //       |
 		    output reg [35:0] ntsc_pixels, // outputs two sets of pixels in Y/Cr/Cb/Y/Cr/Cb format
 		    output reg 	      ntsc_flag, // a flag that goes high when a pixel is being output
 		    output reg [1:0]  color, // these outputs are for object_recognition. this indicates the color of the recognized pixel
 		    output reg [9:0]  interesting_x, // its x locaiton
 		    output reg [8:0]  interesting_y, // its y location
 		    output reg 	      interesting_flag, // a flag that indicates the data is good
-		    output 	  reg    frame_flag,
-			 output dv,
-			 output [2:0] fvh,
-			 output reg [9:0] x,
-			 output reg [8:0] y); // a flag that indicates when a new frame begins
+		    output reg 	      frame_flag); // a flag that indicates when a new frame begins
 
+   // initialize the adv7185 video ADC
    adv7185init adv7185(.reset(reset), .clock_27mhz(clock_27mhz), .source(1'b0),
 		       .tv_in_reset_b(tv_in_reset_b), .tv_in_i2c_clock(tv_in_i2c_clock),
 		       .tv_in_i2c_data(tv_in_i2c_data));
 
    wire [29:0] 			      ycrcb;
-   //wire [2:0] 			      fvh;
+   //wire [2:0] 		      fvh;
 
    // this module decodes the data and outputs the ycrcb pair
    ntsc_decode decode(.clk(tv_in_line_clock1), .reset(reset),
@@ -45,72 +31,78 @@ module ntsc_capture(
    reg 				      state = 0;
    //reg [9:0] 			      x = 0;
    //reg [8:0] 			      y = 0;
-	
-	wire f;
-	wire v;
-	wire h;
-	
-	wire sv;
-	wire sh;
-	reg rh;
-	reg rv;
-	
-	synchronize syncv(.sig(v), .syncsig(sv), .reset(rv));
-	synchronize synch(.sig(h), .syncsig(sh), .reset(rh));
-	
-	reg pulseonce;
-	
-	assign f = fvh[2];
-	assign v = fvh[1];
-	assign h = fvh[0];
+   
+   wire 			      f;
+   wire 			      v;
+   wire 			      h;
+   
+   wire 			      sv;
+   wire 			      sh;
+   reg 				      rh;
+   reg 				      rv;
+
+   reg [35:0] 			      us_ntsc_pixels;
+   reg 				      us_ntsc_flag;
+   reg [1:0] 			      us_color;
+   reg [9:0] 			      us_interesting_x;
+   reg [8:0] 			      us_interesting_y;
+   reg 				      us_interesting_f;
+   reg 				      us_frame_flag;
+   
+   synchronize syncv(.sig(v), .syncsig(sv), .reset(rv));
+   synchronize synch(.sig(h), .syncsig(sh), .reset(rh));
+   
+   reg 				      pulseonce;
+   
+   assign f = fvh[2];
+   assign v = fvh[1];
+   assign h = fvh[0];
 
 
    always @ (posedge tv_in_line_clock1) begin
-			rh <= 0;
-			rv <= 0;
-			
-		if (sv) begin
-			y <= ~f;
-			x <= 0;
-			rv <= 1;
-		end
-		
-		if (sh) begin
-			y <= y + 2;
-			x <= 0;
-			rh <= 1;
-		end
-	
-      interesting_flag <= 0; // reset interesting flag
+      rh <= 0;
+      rv <= 0;
       
-			frame_flag <= 0;
-		
-			if (((y > 479) | v) & f & ~pulseonce) begin
-				frame_flag <= 1;
-				pulseonce <= 1;
-			end
-				
-			if (~f) begin
-				pulseonce <= 0;
-			end
+      if (sv) begin
+	 y <= ~f;
+	 x <= 0;
+	 rv <= 1;
+      end
+      
+      if (sh) begin
+	 y <= y + 2;
+	 x <= 0;
+	 rh <= 1;
+      end
+                  
+      if (((y > 479) | v) & f & ~pulseonce) begin
+	 us_frame_flag <= 1;
+	 pulseonce <= 1;
+      end else begin
+	 us_frame_flag <= 0;
+      end
+      
+      if (~f) begin
+	 pulseonce <= 0;
+      end
       
       if (dv) begin
 
 	 if (y < 480 && x < 640) begin // above 480 lines are blanked
 	    if (state == 0) begin
-	       ntsc_pixels[17:10] <= ycrcb[29:22];
-	       ntsc_pixels[9:5] <= ycrcb[19:15];
-	       ntsc_pixels[4:0] <= ycrcb[9:5];
+	       us_ntsc_pixels[17:10] <= ycrcb[29:22];
+	       us_ntsc_pixels[9:5] <= ycrcb[19:15];
+	       us_ntsc_pixels[4:0] <= ycrcb[9:5];
 
-	       ntsc_flag <= 0;
+	       us_ntsc_flag <= 0;
 	       state <= 1;
-	    
+	       
 	    end else begin
-	       ntsc_pixels[35:28] <= ycrcb[29:22];
-	       ntsc_pixels[27:23] <= ycrcb[19:15];
-	       ntsc_pixels[22:18] <= ycrcb[9:5];
+	       us_ntsc_pixels[35:28] <= ycrcb[29:22];
+	       us_ntsc_pixels[27:23] <= ycrcb[19:15];
+	       us_ntsc_pixels[22:18] <= ycrcb[9:5];
 
-	       ntsc_flag <= 1;
+	       us_ntsc_flag <= 1;
 	       state <= 0;
 	       
 	    end // else: !if(state == 0)
@@ -126,60 +118,80 @@ module ntsc_capture(
 	    //                cr                          cb
 	    if ((ntsc_pixels[19:10] > 800) & (ntsc_pixels[9:0] > 800)) begin
 	       // upper right corner (of YIQ space)
-	       color <= 2'b00;
+	       us_color <= 2'b00;
 
-	       interesting_x <= x;
-	       interesting_y <= y;
-	       interesting_flag <= 1;
+	       us_interesting_x <= x;
+	       us_interesting_y <= y;
+	       us_interesting_flag <= 1;
 	       
 	       //                       cr                         cb
 	    end else if ((ntsc_pixels[19:10] < 200) & (ntsc_pixels[9:0] > 800)) begin
 	       // upper left corner (of YIQ space)
-	       color <= 2'b01;
+	       us_color <= 2'b01;
 
-	       interesting_x <= x;
-	       interesting_y <= y;
-	       interesting_flag <= 1;
+	       us_interesting_x <= x;
+	       us_interesting_y <= y;
+	       us_interesting_flag <= 1;
 	       
 	       //                       cr                         cb
 	    end else if ((ntsc_pixels[19:10] > 800) & (ntsc_pixels[9:0] < 200)) begin
 	       // lower right corner (of YIQ space)
-	       color <= 2'b10;
+	       us_color <= 2'b10;
 
-	       interesting_x <= x;
-	       interesting_y <= y;
-	       interesting_flag <= 1;
+	       us_interesting_x <= x;
+	       us_interesting_y <= y;
+	       us_interesting_flag <= 1;
 	       
 	       //                       cr                         cb
 	    end else if ((ntsc_pixels[19:10] < 200) & (ntsc_pixels[9:0] < 200)) begin
 	       // lower left corner (of YIQ space)
-	       color <= 2'b11;
+	       us_color <= 2'b11;
 
-	       interesting_x <= x;
-	       interesting_y <= y;
-	       interesting_flag <= 1;
+	       us_interesting_x <= x;
+	       us_interesting_y <= y;
+	       us_interesting_flag <= 1;
 	       
-	    end
+	    end else us_interesting_flag <= 0;
 	    
 	    
-	 
 	 end else begin
-		ntsc_flag <= 0;
-		end
+	    us_ntsc_flag <= 0;
+	 end
       end // if (dv)
 
       if (reset) begin
 	 state <= 0;
 	 x<= 0;
 	 y <= 0;
-      end
-      
-	 
-   end // always @ (posedge clk)
-   
-	 
+      end   
+   end // always @ (posedge tv_in_line_clock1)
+
+   // Synchronize outputs to main system clock
+   always @ (posedge clock_65mhz) begin
+      ntsc_flag <= us_ntsc_flag;
+      ntsc_pixels <= us_ntsc_pixels;
+      frame_flag <= us_frame_flag;
+      interesting_x <= us_interesting_x;
+      interesting_y <= us_interesting_y;
+      interesting_flag <= us_interesting_flag;
+      color <= us_color;
+   end   
 
 endmodule // ntsc_capture
+
+
+// This module takes an input (sig), and produces an output (syncsig),
+// that goes high as soon as sig does, and stays high until reset goes high.
+module synchronize(
+		   input      sig,
+		   input      reset,
+		   output reg syncsig);
+   
+   always @(*) begin
+      if (sig) syncsig <= 1;
+      if (reset) syncsig <= 0;
+   end
+endmodule
 
 
 // These modules are used to grab input NTSC video data from the RCA
@@ -211,10 +223,10 @@ module ntsc_decode(clk, reset, tv_in_ycrcb, ycrcb, f, v, h, data_valid);
    input reset;
    input [9:0] tv_in_ycrcb; // modified for 10 bit input - should be P[19:10]
    output [29:0] ycrcb;
-   output 	f;
-   output 	v;
-   output 	h;
-   output 	data_valid;
+   output 	 f;
+   output 	 v;
+   output 	 h;
+   output 	 data_valid;
    // output [4:0] state;
 
    parameter 	SYNC_1 = 0;
@@ -250,10 +262,10 @@ module ntsc_decode(clk, reset, tv_in_ycrcb, ycrcb, f, v, h, data_valid);
    //   1. Find the two SAV blocks (stands for Start Active Video perhaps?)
    //   2. Decode the subsequent data
 
-   reg [4:0] 	current_state = 5'h00;
-   reg [9:0] 	y = 10'h000;  // luminance
-   reg [9:0] 	cr = 10'h000; // chrominance
-   reg [9:0] 	cb = 10'h000; // more chrominance
+   reg [4:0] 	 current_state = 5'h00;
+   reg [9:0] 	 y = 10'h000;  // luminance
+   reg [9:0] 	 cr = 10'h000; // chrominance
+   reg [9:0] 	 cb = 10'h000; // more chrominance
    
    //assign 	state = current_state;
    
@@ -327,7 +339,7 @@ module ntsc_decode(clk, reset, tv_in_ycrcb, ycrcb, f, v, h, data_valid);
    assign data_valid = y_enable;
    assign ycrcb = {y,cr,cb};
 
-   reg 	  f = 0;
+   reg 	f = 0;
    
    always @ (posedge clk)
      begin
@@ -355,25 +367,25 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define INPUT_SELECT                            4'h0
-  // 0: CVBS on AIN1 (composite video in)
-  // 7: Y on AIN2, C on AIN5 (s-video in)
-  // (These are the only configurations supported by the 6.111 labkit hardware)
+// 0: CVBS on AIN1 (composite video in)
+// 7: Y on AIN2, C on AIN5 (s-video in)
+// (These are the only configurations supported by the 6.111 labkit hardware)
 `define INPUT_MODE                              4'h0
-  // 0: Autodetect: NTSC or PAL (BGHID), w/o pedestal
-  // 1: Autodetect: NTSC or PAL (BGHID), w/pedestal
-  // 2: Autodetect: NTSC or PAL (N), w/o pedestal
-  // 3: Autodetect: NTSC or PAL (N), w/pedestal
-  // 4: NTSC w/o pedestal
-  // 5: NTSC w/pedestal
-  // 6: NTSC 4.43 w/o pedestal
-  // 7: NTSC 4.43 w/pedestal
-  // 8: PAL BGHID w/o pedestal
-  // 9: PAL N w/pedestal
-  // A: PAL M w/o pedestal
-  // B: PAL M w/pedestal
-  // C: PAL combination N
-  // D: PAL combination N w/pedestal
-  // E-F: [Not valid]
+// 0: Autodetect: NTSC or PAL (BGHID), w/o pedestal
+// 1: Autodetect: NTSC or PAL (BGHID), w/pedestal
+// 2: Autodetect: NTSC or PAL (N), w/o pedestal
+// 3: Autodetect: NTSC or PAL (N), w/pedestal
+// 4: NTSC w/o pedestal
+// 5: NTSC w/pedestal
+// 6: NTSC 4.43 w/o pedestal
+// 7: NTSC 4.43 w/pedestal
+// 8: PAL BGHID w/o pedestal
+// 9: PAL N w/pedestal
+// A: PAL M w/o pedestal
+// B: PAL M w/pedestal
+// C: PAL combination N
+// D: PAL combination N w/pedestal
+// E-F: [Not valid]
 
 `define ADV7185_REGISTER_0 {`INPUT_MODE, `INPUT_SELECT}
 
@@ -382,25 +394,25 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define VIDEO_QUALITY                           2'h0
-  // 0: Broadcast quality
-  // 1: TV quality
-  // 2: VCR quality
-  // 3: Surveillance quality
+// 0: Broadcast quality
+// 1: TV quality
+// 2: VCR quality
+// 3: Surveillance quality
 `define SQUARE_PIXEL_IN_MODE                    1'b0
-  // 0: Normal mode
-  // 1: Square pixel mode
+// 0: Normal mode
+// 1: Square pixel mode
 `define DIFFERENTIAL_INPUT                      1'b0
-  // 0: Single-ended inputs
-  // 1: Differential inputs
+// 0: Single-ended inputs
+// 1: Differential inputs
 `define FOUR_TIMES_SAMPLING                     1'b0
-  // 0: Standard sampling rate
-  // 1: 4x sampling rate (NTSC only)
+// 0: Standard sampling rate
+// 1: 4x sampling rate (NTSC only)
 `define BETACAM                                 1'b0
-  // 0: Standard video input
-  // 1: Betacam video input
+// 0: Standard video input
+// 1: Betacam video input
 `define AUTOMATIC_STARTUP_ENABLE                1'b1
-  // 0: Change of input triggers reacquire
-  // 1: Change of input does not trigger reacquire
+// 0: Change of input triggers reacquire
+// 1: Change of input does not trigger reacquire
 
 `define ADV7185_REGISTER_1 {`AUTOMATIC_STARTUP_ENABLE, 1'b0, `BETACAM, `FOUR_TIMES_SAMPLING, `DIFFERENTIAL_INPUT, `SQUARE_PIXEL_IN_MODE, `VIDEO_QUALITY}
 
@@ -409,19 +421,19 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define Y_PEAKING_FILTER                        3'h4
-  // 0: Composite =  4.5dB,  s-video =  9.25dB
-  // 1: Composite =  4.5dB,  s-video =  9.25dB
-  // 2: Composite =  4.5dB,  s-video =  5.75dB
-  // 3: Composite =  1.25dB, s-video =  3.3dB
-  // 4: Composite =  0.0dB,  s-video =  0.0dB
-  // 5: Composite = -1.25dB, s-video = -3.0dB
-  // 6: Composite = -1.75dB, s-video = -8.0dB
-  // 7: Composite = -3.0dB,  s-video = -8.0dB
+// 0: Composite =  4.5dB,  s-video =  9.25dB
+// 1: Composite =  4.5dB,  s-video =  9.25dB
+// 2: Composite =  4.5dB,  s-video =  5.75dB
+// 3: Composite =  1.25dB, s-video =  3.3dB
+// 4: Composite =  0.0dB,  s-video =  0.0dB
+// 5: Composite = -1.25dB, s-video = -3.0dB
+// 6: Composite = -1.75dB, s-video = -8.0dB
+// 7: Composite = -3.0dB,  s-video = -8.0dB
 `define CORING                                  2'h0
-  // 0: No coring
-  // 1: Truncate if Y < black+8
-  // 2: Truncate if Y < black+16
-  // 3: Truncate if Y < black+32
+// 0: No coring
+// 1: Truncate if Y < black+8
+// 2: Truncate if Y < black+16
+// 3: Truncate if Y < black+32
 
 `define ADV7185_REGISTER_2 {3'b000, `CORING, `Y_PEAKING_FILTER}
 
@@ -430,25 +442,25 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define INTERFACE_SELECT                        2'h0
-  // 0: Philips-compatible
-  // 1: Broktree API A-compatible
-  // 2: Broktree API B-compatible
-  // 3: [Not valid]
+// 0: Philips-compatible
+// 1: Broktree API A-compatible
+// 2: Broktree API B-compatible
+// 3: [Not valid]
 `define OUTPUT_FORMAT                           4'h0
-  // 0: 10-bit @ LLC, 4:2:2 CCIR656
-  // 1: 20-bit @ LLC, 4:2:2 CCIR656
-  // 2: 16-bit @ LLC, 4:2:2 CCIR656
-  // 3: 8-bit @ LLC, 4:2:2 CCIR656
-  // 4: 12-bit @ LLC, 4:1:1
-  // 5-F: [Not valid]
-  // (Note that the 6.111 labkit hardware provides only a 10-bit interface to
-  // the ADV7185.)
+// 0: 10-bit @ LLC, 4:2:2 CCIR656
+// 1: 20-bit @ LLC, 4:2:2 CCIR656
+// 2: 16-bit @ LLC, 4:2:2 CCIR656
+// 3: 8-bit @ LLC, 4:2:2 CCIR656
+// 4: 12-bit @ LLC, 4:1:1
+// 5-F: [Not valid]
+// (Note that the 6.111 labkit hardware provides only a 10-bit interface to
+// the ADV7185.)
 `define TRISTATE_OUTPUT_DRIVERS                 1'b0
-  // 0: Drivers tristated when ~OE is high
-  // 1: Drivers always tristated
+// 0: Drivers tristated when ~OE is high
+// 1: Drivers always tristated
 `define VBI_ENABLE                              1'b0
-  // 0: Decode lines during vertical blanking interval
-  // 1: Decode only active video regions
+// 0: Decode lines during vertical blanking interval
+// 1: Decode only active video regions
 
 `define ADV7185_REGISTER_3 {`VBI_ENABLE, `TRISTATE_OUTPUT_DRIVERS, `OUTPUT_FORMAT, `INTERFACE_SELECT}
 
@@ -457,11 +469,11 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define OUTPUT_DATA_RANGE                       1'b0
-  // 0: Output values restricted to CCIR-compliant range
-  // 1: Use full output range
+// 0: Output values restricted to CCIR-compliant range
+// 1: Use full output range
 `define BT656_TYPE                              1'b0
-  // 0: BT656-3-compatible
-  // 1: BT656-4-compatible
+// 0: BT656-3-compatible
+// 1: BT656-4-compatible
 
 `define ADV7185_REGISTER_4 {`BT656_TYPE, 3'b000, 3'b110, `OUTPUT_DATA_RANGE}
 
@@ -472,17 +484,17 @@ endmodule
 
 `define GENERAL_PURPOSE_OUTPUTS                 4'b0000
 `define GPO_0_1_ENABLE                          1'b0
-  // 0: General purpose outputs 0 and 1 tristated
-  // 1: General purpose outputs 0 and 1 enabled
+// 0: General purpose outputs 0 and 1 tristated
+// 1: General purpose outputs 0 and 1 enabled
 `define GPO_2_3_ENABLE                          1'b0
-  // 0: General purpose outputs 2 and 3 tristated
-  // 1: General purpose outputs 2 and 3 enabled
+// 0: General purpose outputs 2 and 3 tristated
+// 1: General purpose outputs 2 and 3 enabled
 `define BLANK_CHROMA_IN_VBI                     1'b1
-  // 0: Chroma decoded and output during vertical blanking
-  // 1: Chroma blanked during vertical blanking
+// 0: Chroma decoded and output during vertical blanking
+// 1: Chroma blanked during vertical blanking
 `define HLOCK_ENABLE                            1'b0
-  // 0: GPO 0 is a general purpose output
-  // 1: GPO 0 shows HLOCK status
+// 0: GPO 0 is a general purpose output
+// 1: GPO 0 shows HLOCK status
 
 `define ADV7185_REGISTER_5 {`HLOCK_ENABLE, `BLANK_CHROMA_IN_VBI, `GPO_2_3_ENABLE, `GPO_0_1_ENABLE, `GENERAL_PURPOSE_OUTPUTS}
 
@@ -491,16 +503,16 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define FIFO_FLAG_MARGIN                        5'h10
-  // Sets the locations where FIFO almost-full and almost-empty flags are set
+// Sets the locations where FIFO almost-full and almost-empty flags are set
 `define FIFO_RESET                              1'b0
-  // 0: Normal operation
-  // 1: Reset FIFO. This bit is automatically cleared
+// 0: Normal operation
+// 1: Reset FIFO. This bit is automatically cleared
 `define AUTOMATIC_FIFO_RESET                    1'b0
-  // 0: No automatic reset
-  // 1: FIFO is autmatically reset at the end of each video field
+// 0: No automatic reset
+// 1: FIFO is autmatically reset at the end of each video field
 `define FIFO_FLAG_SELF_TIME                     1'b1
-  // 0: FIFO flags are synchronized to CLKIN
-  // 1: FIFO flags are synchronized to internal 27MHz clock
+// 0: FIFO flags are synchronized to CLKIN
+// 1: FIFO flags are synchronized to internal 27MHz clock
 
 `define ADV7185_REGISTER_7 {`FIFO_FLAG_SELF_TIME, `AUTOMATIC_FIFO_RESET, `FIFO_RESET, `FIFO_FLAG_MARGIN}
 
@@ -541,13 +553,13 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define DEFAULT_VALUE_ENABLE                    1'b0
-  // 0: Use programmed Y, Cr, and Cb values
-  // 1: Use default values
+// 0: Use programmed Y, Cr, and Cb values
+// 1: Use default values
 `define DEFAULT_VALUE_AUTOMATIC_ENABLE          1'b0
-  // 0: Use programmed Y, Cr, and Cb values
-  // 1: Use default values if lock is lost
+// 0: Use programmed Y, Cr, and Cb values
+// 1: Use default values if lock is lost
 `define DEFAULT_Y_VALUE                         6'h0C
-  // Default Y value
+// Default Y value
 
 `define ADV7185_REGISTER_C {`DEFAULT_Y_VALUE, `DEFAULT_VALUE_AUTOMATIC_ENABLE, `DEFAULT_VALUE_ENABLE}
 
@@ -556,9 +568,9 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define DEFAULT_CR_VALUE                        4'h8
-  // Most-significant four bits of default Cr value
+// Most-significant four bits of default Cr value
 `define DEFAULT_CB_VALUE                        4'h8
-  // Most-significant four bits of default Cb value
+// Most-significant four bits of default Cb value
 
 `define ADV7185_REGISTER_D {`DEFAULT_CB_VALUE, `DEFAULT_CR_VALUE}
 
@@ -567,10 +579,10 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define TEMPORAL_DECIMATION_ENABLE              1'b0
-  // 0: Disable
-  // 1: Enable
+// 0: Disable
+// 1: Enable
 `define TEMPORAL_DECIMATION_CONTROL             2'h0
-  // 0: Supress frames, start with even field
+// 0: Supress frames, start with even field
   // 1: Supress frames, start with odd field
   // 2: Supress even fields only
   // 3: Supress odd fields only
