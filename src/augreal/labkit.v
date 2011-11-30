@@ -192,8 +192,6 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//
 	//////////////////////////////////////////////////////////////////////////// 
 	
-	wire clock_65mhz; // TODO: decide what to do with this clock	
-	
 	// generate 65 mhz clock
 	wire clock_65mhz_unbuf,clock_65mhz_buf;
 	DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf));
@@ -203,6 +201,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// synthesis attribute CLKIN_PERIOD of vclk1 is 37
 	BUFG vclk2(.O(clock_65mhz_buf),.I(clock_65mhz_unbuf));
   
+	wire clock_65mhz; // TODO: decide what to do with this clock	
+
 	// generate 25 mhz clock
 	wire clock_25mhz_unbuf,clock_25mhz;
 	DCM vclk3(.CLKIN(clock_27mhz),.CLKFX(clock_25mhz_unbuf));
@@ -211,6 +211,17 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// synthesis attribute CLK_FEEDBACK of vclk3 is NONE
 	// synthesis attribute CLKIN_PERIOD of vclk3 is 37
 	BUFG vclk4(.O(clock_25mhz),.I(clock_25mhz_unbuf));
+
+	// generate 65 mhz clock
+	wire clock_65mhz_unbuf,clock_65mhz_buf;
+	DCM vclk1(.CLKIN(clock_25mhz),.CLKFX(clock_65mhz_unbuf));
+	// synthesis attribute CLKFX_DIVIDE of vclk1 is 1
+	// synthesis attribute CLKFX_MULTIPLY of vclk1 is 3
+	// synthesis attribute CLK_FEEDBACK of vclk1 is NONE
+	// synthesis attribute CLKIN_PERIOD of vclk1 is 40
+	BUFG vclk2(.O(clock_65mhz_buf),.I(clock_65mhz_unbuf));
+  
+
 
 	wire locked;
 	ramclock rc(.ref_clock(clock_65mhz_buf), .fpga_clock(clock_65mhz),
@@ -364,18 +375,18 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire frame_flag_cleaned;
 	wire debug_state;
 
-	ntsc_capture ntsc(.clk(clock_65mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
+	ntsc_capture ntsc(.clk(clock_27mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
 					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
 					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
 					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixels), 
 					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag), .dv(dv), .fvh(fvh), 
 					  .x(nx), .y(ny));
 					  
-	ntsc_clean nclean(.clock_65mhz(clock_65mhz), .ntsc_flag(ntsc_flag),
-					.clean_ntsc_flag(ntsc_flag_cleaned), .state(debug_state));
+	clean nclean(.clock_65mhz(clock_65mhz), .flag(ntsc_flag),
+					.clean_flag(ntsc_flag_cleaned));
 	
-	ntsc_clean fclean(.clock_65mhz(clock_65mhz), .ntsc_flag(frame_flag),
-		.clean_ntsc_flag(frame_flag_cleaned));
+	clean fclean(.clock_65mhz(clock_65mhz), .flag(frame_flag),
+		.clean_flag(frame_flag_cleaned));
 	// use above if using ntsc_capture
 
 	/*************************************
@@ -423,25 +434,27 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire [`LOG_MEM-1:0] mem1_read;
 	wire [`LOG_MEM-1:0] mem0_write;
 	wire [`LOG_MEM-1:0] mem1_write;
+	wire [7:0] debug_locs;
+	wire [3:0] debug_blocks;
 
 	memory_interface mi(
-		.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag), 
-		.ntsc_flag(ntsc_flag),.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
+		.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag_cleaned), 
+		.ntsc_flag(ntsc_flag_cleaned),.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
 		.vga_flag(vga_flag),.done_vga(done_vga),.vga_pixel(vga_pixel),
 		.mem0_addr(mem0_addr),.mem1_addr(mem1_addr), 
 		.mem0_read(mem0_read),.mem1_read(mem1_read), 
 		.mem0_write(mem0_write),.mem1_write(mem1_write), 
-		.mem0_wr(mem0_wr),.mem1_wr(mem1_wr));
+		.mem0_wr(mem0_wr),.mem1_wr(mem1_wr), .debug_locs(debug_locs), .debug_blocks(debug_blocks));
 
 	zbt_6111 mem0(
-		.clock(clock_65mhz), .cen(1'b1), 
+		.clk(clock_65mhz), .cen(1'b1), 
 		.we(mem0_wr), .addr(mem0_addr),
 		.write_data(mem0_write), .read_data(mem0_read), 
 		.ram_we_b(ram0_we_b), .ram_address(ram0_address), 
 		.ram_data(ram0_data), .ram_cen_b(ram0_cen_b));
 	
 	zbt_6111 mem1(
-		.clock(clock_65mhz), .cen(1'b1), 
+		.clk(clock_65mhz), .cen(1'b1), 
 		.we(mem1_wr), .addr(mem1_addr),
 		.write_data(mem1_write), .read_data(mem1_read), 
 		.ram_we_b(ram1_we_b), .ram_address(ram1_address), 
@@ -503,10 +516,11 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
 	// user-defined analyzers
 
-		assign analyzer1_data = {frame_flag, ntsc_flag_cleaned, dv, vga_flag, done_vga, done_ntsc, fvh, 7'b0};
+		assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, vga_flag, done_vga, done_ntsc, fvh, 7'b0};
 		assign analyzer3_data = {nx[9:0], ntsc_flag, debug_state, 4'b0};
-		assign analyzer2_data = {vga_pixel[15:0]};
+		assign analyzer2_data = {debug_locs, debug_blocks, 4'b0};
 		assign analyzer4_data = {ram0_address[7:0], ram1_address[7:0]};
+		
 		assign analyzer3_clock = tv_in_line_clock1;
 		assign analyzer1_clock = clock_27mhz;
 		assign analyzer2_clock = clock_65mhz;
