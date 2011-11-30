@@ -6,7 +6,10 @@ module bram_interface(
 		      input 		vga_flag,
 		      input 		vsync,
 		      output 		done_vga,
-		      output reg [35:0] vga_pixels
+		      output reg [35:0] vga_pixels,
+		      output reg [13:0] addra, 
+		      output reg [13:0] addrb,
+		      output reg 	wea
 		      );
    
    reg [9:0] 				nx;
@@ -15,10 +18,10 @@ module bram_interface(
    reg [9:0] 				vx;
    reg [8:0] 				vy;
    
-   reg [13:0] 				addra, addrb;
+   //reg [13:0] 			addra, addrb;
    reg [35:0] 				dina, dinb;
    wire [35:0] 				douta, doutb;
-   reg 					wea;
+   //reg 					wea;
    
    reg [1:0] 				state = 0;
    reg [35:0] 				vbuf;
