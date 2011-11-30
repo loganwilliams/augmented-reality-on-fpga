@@ -191,6 +191,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// Clock Assignments
 	//
 	//////////////////////////////////////////////////////////////////////////// 
+  
 	wire clock_65mhz; // TODO: decide what to do with this clock	
 
 	// generate 25 mhz clock
@@ -392,7 +393,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	******* SRAM BLOCK *******************
 	**************************************/
 	// use below if not using memory_interface
-/*	
+	
 	assign ram0_data = 36'hZ;
 	assign ram0_address = 19'h0;
 	assign ram0_adv_ld = 1'b0;
@@ -409,11 +410,11 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	assign ram1_oe_b = 1'b1;
 	assign ram1_we_b = 1'b1;
 	assign ram1_bwe_b = 4'hF;   
-	*/
+	
 	// use above if not using memory_interface
 
 	// use below if using memory_interface
-	assign ram0_ce_b = 1'b0;
+	/*assign ram0_ce_b = 1'b0;
 	assign ram0_oe_b = 1'b0;
 	assign ram0_adv_ld = 1'b0;
 	assign ram0_bwe_b = 4'h0;
@@ -424,6 +425,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	assign ram1_bwe_b = 4'h0;
 	
 		// from memory_interface to zbt_6111 module
+	
 	wire mem0_wr;
 	wire mem1_wr;
 	wire [`LOG_ADDR-1:0] mem0_addr;
@@ -457,6 +459,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.write_data(mem1_write), .read_data(mem1_read), 
 		.ram_we_b(ram1_we_b), .ram_address(ram1_address), 
 		.ram_data(ram1_data), .ram_cen_b(ram1_cen_b));
+	*/
 	// use above if using memory_interface
 
 
@@ -475,13 +478,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	assign vga_out_vsync = 1'b0;*/
 	// use above if not using vga
 	
-	// use below if testing vga
-	/*
-	dummy_mi_for_vga dummy(.clock(clock_65mhz), .reset(reset), .vga_pixel(vga_pixel), .done_vga(done_vga), .vga_flag(vga_flag));
-	*/
-	// use above if testing vga
-	
 	// use below if using vga
+	wire [`LOG_HCOUNT-1:0] hcount;
 	vga_write vga(
 		.clock(clock_65mhz), .vclock(clock_25mhz), 
 		.reset(reset), .frame_flag(frame_flag_cleaned), 
@@ -494,9 +492,13 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.vga_out_blank_b(vga_out_blank_b), 
 		.vga_out_pixel_clock(vga_out_pixel_clock),
 		.vga_out_hsync(vga_out_hsync), 
-		.vga_out_vsync(vga_out_vsync));
-		
+		.vga_out_vsync(vga_out_vsync),
+		.hcount(hcount));
 	// use above if using vga
+	
+	// use below if testing vga
+	dummy_mem_int dummy(.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag), .vga_pixel(vga_pixel), .done_vga(done_vga), .vga_flag(vga_flag), .hcount(hcount));
+	// use above if testing vga
 
 
 	/*************************************

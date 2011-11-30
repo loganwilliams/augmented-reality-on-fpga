@@ -20,10 +20,12 @@ module vga_write
 		output reg vga_out_blank_b,
 		output reg vga_out_pixel_clock,
 		output reg vga_out_hsync,
-		output reg vga_out_vsync
+		output reg vga_out_vsync,
+		// DEBUG
+		output [`LOG_HCOUNT-1:0] hcount
 	);
 
-	wire [`LOG_HCOUNT-1:0] hcount;
+//	wire [`LOG_HCOUNT-1:0] hcount;
 	wire [`LOG_VCOUNT-1:0] vcount;
 	wire hsync, vsync, blank;
 
@@ -129,8 +131,8 @@ module vga_write
 	// ycbcr2rgb converter(.y({pixel_out[17:12],2'b00}), .cb({pixel_out[11:6],2'b00}), .cr({pixel_out[5:0],2'b00}), .r(vga_out_red), .g(vga_out_green), .b(vga_out_blue));
 	//assign pixel_out = (hcount[5:4] + vcount[5:4])<<12;
 	assign vga_out_red = {hcount[5:4], 4'b00};
-	assign vga_out_green = {vcount[5:4], 4'b00};
-	assign vga_out_blue = {6'b111111, 2'b00};
+	assign vga_out_green = {pixel_out[17:12], 2'b00};
+	assign vga_out_blue = {pixel_out[17:12], 2'b00};
 	// output
 	always @(*) begin
 		if (vstate == STEADY_STATE) begin
