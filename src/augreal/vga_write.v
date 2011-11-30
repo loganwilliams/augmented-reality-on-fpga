@@ -1,4 +1,4 @@
-//`include "params.v"
+`include "params.v"
 `default_nettype none
 
 module vga_write
@@ -113,8 +113,8 @@ module vga_write
 		vga_flag = (!reset && !frame_flag && !out_of_bounds 
 					&& c_state == REQUESTING && (v_index-c_index) > 2);
 		if (out_of_bounds) w_pixel = `LOG_FULL'b0;
-		else if (!write_next) w_pixel = {vga_pixel[`LOG_MEM-1:`LOG_TRUNC], 2'b00};
-		else w_pixel = {vga_pixel[`LOG_TRUNC-1:0], 2'b00};
+		else if (!write_next) w_pixel = {vga_pixel[`LOG_MEM-1:`LOG_TRUNC], 6'b00};
+		else w_pixel = {vga_pixel[`LOG_TRUNC-1:0], 6'b00};
 		c_we = (c_state == READING) || (c_state == OUT_OF_BOUNDS) || (write_next);
 	end
 
@@ -161,9 +161,12 @@ module vga_write
 		w_vcount = vcount;
 		case (v_state)
 			STEADY_STATE: begin
+				//vga_out_red = v_pixel[23:16];
+				//vga_out_green = v_pixel[15:8];
+				//vga_out_blue = v_pixel[7:0];
 				vga_out_red = v_pixel[23:16];
-				vga_out_green = v_pixel[15:8];
-				vga_out_blue = v_pixel[7:0];
+				vga_out_blue = v_pixel[23:16];
+				vga_out_green = v_pixel[23:16];
 				vga_out_sync_b = 1'b1; // not used
 				vga_out_blank_b = ~v_blank;
 				vga_out_pixel_clock = ~vclock; // revise this

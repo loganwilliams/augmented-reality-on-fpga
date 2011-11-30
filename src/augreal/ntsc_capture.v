@@ -14,7 +14,8 @@ module ntsc_capture(
 		    output reg [8:0]  interesting_y, // its y location
 		    output reg 	      interesting_flag, // a flag that indicates the data is good
 		    output reg 	      frame_flag,
-		    output reg [18:0] addrvector
+		    output reg [9:0] output_x,
+			 output reg [8:0] y
 ); // a flag that indicates when a new frame begins
 
    // initialize the adv7185 video ADC
@@ -24,6 +25,8 @@ module ntsc_capture(
 
    wire [29:0] 			      ycrcb;
    wire [2:0] 			      fvh;
+	
+	wire dv;
 
    // this module decodes the data and outputs the ycrcb pair
    ntsc_decode decode(.clk(tv_in_line_clock1), .reset(reset),
@@ -32,7 +35,7 @@ module ntsc_capture(
 
    reg 				      state = 0;
    reg [9:0] 			      x = 0;
-   reg [8:0] 			      y = 0;
+   //reg [8:0] 			      y = 0;
    
    wire 			      f;
    wire 			      v;
@@ -48,7 +51,7 @@ module ntsc_capture(
    reg [1:0] 			      us_color;
    reg [9:0] 			      us_interesting_x;
    reg [8:0] 			      us_interesting_y;
-   reg 				      us_interesting_f;
+   reg 				      us_interesting_flag;
    
    synchronize syncv(.sig(v), .syncsig(sv), .reset(rv));
    synchronize synch(.sig(h), .syncsig(sh), .reset(rh));
@@ -61,7 +64,6 @@ module ntsc_capture(
 
    // synchronize to the external video line clock
    always @ (posedge tv_in_line_clock1) begin
-      rh <= 0;
       rv <= 0;
       
       if (sv) begin
@@ -69,12 +71,15 @@ module ntsc_capture(
 	 x <= 0;
 	 rv <= 1;
       end
-      
+		
+		// something weird is happening here
       if (sh) begin
-	 y <= y + 2;
-	 x <= 0;
-	 rh <= 1;
-      end
+		y <= y + 2;
+		x <= 0;
+		rh <= 1;
+		end else begin
+		rh <= 0;
+		end
                   
       if (((y > 479) | v) & f & ~pulseonce) begin
 	 frame_flag <= 1;
@@ -97,6 +102,7 @@ module ntsc_capture(
 
 	       ntsc_flag <= 0;
 	       state <= 1;
+			 output_x <= x;
 	       
 	    end else begin
 	       us_ntsc_pixels[35:28] <= ycrcb[29:22];
@@ -109,7 +115,6 @@ module ntsc_capture(
 	    end // else: !if(state == 0)
 
 	    x <= x + 1; // increment the x coordinate
-	    addrvector <= y * 640 + x + 1;
 
 	    // Look for interesting pixels:
 	    // This identification can be tested once ntsc_capture is connected to

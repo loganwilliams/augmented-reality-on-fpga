@@ -15,6 +15,8 @@ module memory_interface
 		input 			   ntsc_flag,
 		input [`LOG_MEM-1:0] 	   ntsc_pixel,
 		output reg 		   done_ntsc,
+		input [`LOG_WIDTH-1:0] ntsc_x,
+		input [`LOG_HEIGHT-1:0] ntsc_y,
 		// LPF
 		input 			   lpf_flag,
 		input 			   lpf_wr,
@@ -33,8 +35,8 @@ module memory_interface
 		input 			   vga_flag,
 		output reg 		   done_vga,
 		output reg [`LOG_MEM-1:0]  vga_pixel,
-		input 			   vcount,
-		input 			   hcount,
+		input 	[`LOG_VCOUNT-1:0]		   vcount,
+		input 	[`LOG_HCOUNT-1:0]		   hcount,
 	 	input 			   vsync,
 		// MEMORY
 		// MEM ADDRESSES
@@ -224,7 +226,8 @@ module memory_interface
 		// addr = y*(image_width/2) + lpf_x/2 + loc*(image_width*image_height/2)
 		lpf_addr = (`IMAGE_WIDTH_D2 * lpf_y)  + lpf_x[`LOG_WIDTH-1:1]  + (proc_mem_loc * `IMAGE_LENGTH);
 		ptf_addr = (`IMAGE_WIDTH_D2 * ptf_y)  + ptf_x[`LOG_WIDTH-1:1]  + (nexd_mem_loc * `IMAGE_LENGTH);
-		vga_addr = (`IMAGE_WIDTH_D2 * vcount) + hcount[`LOG_WIDTH-1:1] + (disp_mem_loc * `IMAGE_LENGTH);
+		vga_addr = (`IMAGE_WIDTH_D2 * vcount) + hcount[`LOG_HCOUNT-1:1] + (disp_mem_loc * `IMAGE_LENGTH);
+		ntsc_addr = (`IMAGE_WIDTH_D2 * ntsc_y) + ntsc_x[`LOG_WIDTH-1:1] + (capt_mem_loc * `IMAGE_LENGTH);
 		// this should be it
 	end
 
@@ -251,7 +254,7 @@ module memory_interface
 			disp_mem_loc 		<= nexd_mem_loc;
 		end
 		else begin
-			capt_mem_block 		<= capt_mem_block;
+			capt_mem_block 	<= capt_mem_block;
 			capt_mem_loc		<= capt_mem_loc;
 			proc_mem_block		<= proc_mem_block;
 			proc_mem_loc		<= proc_mem_loc;
@@ -262,8 +265,8 @@ module memory_interface
 		end
 		
 		// update ntsc and vga addresses
-		if (reset || frame_flag) ntsc_addr <= (proc_mem_loc*`IMAGE_LENGTH);
-		else ntsc_addr <= (done_ntsc) ? (ntsc_addr+1) : ntsc_addr;	
+		//if (reset || frame_flag) ntsc_addr <= (proc_mem_loc*`IMAGE_LENGTH);
+		//else ntsc_addr <= (done_ntsc) ? (ntsc_addr+1) : ntsc_addr;	
 		
 		// update read queues
 		mem0_read_queue <= next_mem0_read_queue;

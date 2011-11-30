@@ -14,11 +14,13 @@ module dummy_ntsc_capture(
 			  output reg [9:0]  interesting_x, // its x locaiton
 			  output reg [8:0]  interesting_y, // its y location
 			  output reg 	    interesting_flag, // a flag that indicates the data is good
-			  output reg 	    frame_flag
+			  output reg 	    frame_flag,
+			  output reg [9:0] x,
+			  output reg [8:0] y
 			  );
    
-   reg [9:0] 				    x = 0;
-   reg [8:0] 				    y = 0;
+  // reg [9:0] 				    x = 0;
+  // reg [8:0] 				    y = 0;
    
    reg [1:0] 				    state = 0;
    reg [7:0] 				    counter = 0;
