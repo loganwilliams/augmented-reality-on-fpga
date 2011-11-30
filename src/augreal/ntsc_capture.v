@@ -43,12 +43,10 @@ module ntsc_capture(
 
    // unsynchronized outputs
    reg [35:0] 			      us_ntsc_pixels;
-   reg 				      us_ntsc_flag;
    reg [1:0] 			      us_color;
    reg [9:0] 			      us_interesting_x;
    reg [8:0] 			      us_interesting_y;
    reg 				      us_interesting_f;
-   reg 				      us_frame_flag;
    
    synchronize syncv(.sig(v), .syncsig(sv), .reset(rv));
    synchronize synch(.sig(h), .syncsig(sh), .reset(rh));
@@ -77,10 +75,10 @@ module ntsc_capture(
       end
                   
       if (((y > 479) | v) & f & ~pulseonce) begin
-	 us_frame_flag <= 1;
+	 frame_flag <= 1;
 	 pulseonce <= 1;
       end else begin
-	 us_frame_flag <= 0;
+	 frame_flag <= 0;
       end
       
       if (~f) begin
@@ -95,7 +93,7 @@ module ntsc_capture(
 	       us_ntsc_pixels[9:5] <= ycrcb[19:15];
 	       us_ntsc_pixels[4:0] <= ycrcb[9:5];
 
-	       us_ntsc_flag <= 0;
+	       ntsc_flag <= 0;
 	       state <= 1;
 	       
 	    end else begin
@@ -103,7 +101,7 @@ module ntsc_capture(
 	       us_ntsc_pixels[27:23] <= ycrcb[19:15];
 	       us_ntsc_pixels[22:18] <= ycrcb[9:5];
 
-	       us_ntsc_flag <= 1;
+	       ntsc_flag <= 1;
 	       state <= 0;
 	       
 	    end // else: !if(state == 0)
@@ -156,7 +154,7 @@ module ntsc_capture(
 	    
 	    
 	 end else begin
-	    us_ntsc_flag <= 0;
+	    ntsc_flag <= 0;
 	 end
       end // if (dv)
 
@@ -169,9 +167,7 @@ module ntsc_capture(
 
    // Synchronize outputs to main system clock
    always @ (posedge clock_65mhz) begin
-      ntsc_flag <= us_ntsc_flag;
       ntsc_pixels <= us_ntsc_pixels;
-      frame_flag <= us_frame_flag;
       interesting_x <= us_interesting_x;
       interesting_y <= us_interesting_y;
       interesting_flag <= us_interesting_flag;
