@@ -543,9 +543,9 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//	assign analyzer3_data = {nx[9:0], ntsc_flag, debug_state, 4'b0};
 
    assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, done_vga, done_ntsc, vga_flag,  fvh, 7'b0};
-   assign analyzer3_data = {done_vga, ntsc_flag, ntsc_x[9:0], 4'b0};
-   assign analyzer2_data = {ntsc_y[8:0], ntsc_pixels[35:28]};
-   assign analyzer4_data = {ram0_address[7:0], ram1_address[7:0]};
+   assign analyzer3_data = {ram0_address[18:3]};
+   assign analyzer2_data = {ram0_address[2:0], ram1_address[18:6]};
+   assign analyzer4_data = {ram1_address[5:0], ntsc_x[4:0], hcount[4:0]};
    
    assign analyzer3_clock = tv_in_line_clock1;
    assign analyzer1_clock = clock_27mhz;
