@@ -35,13 +35,13 @@
 
 // VGA (640x480@60Hz)
 `define VGA_HBLANKON 	10'd639
-`define VGA_HSYNCON  	10'd645
+`define VGA_HSYNCON  	10'd655
 `define VGA_HSYNCOFF	10'd751
-`define VGA_HRESET		10'd799
+`define VGA_HRESET	10'd799
 `define VGA_VBLANKON    10'd479
-`define VGA_VSYNCON		10'd490
+`define VGA_VSYNCON	10'd490
 `define VGA_VSYNCOFF	10'd492
-`define VGA_VRESET		10'd523
+`define VGA_VRESET	10'd523
 
 // VGA  bitwidths
 `define LOG_HCOUNT	10
