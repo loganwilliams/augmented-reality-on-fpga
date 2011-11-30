@@ -193,7 +193,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//////////////////////////////////////////////////////////////////////////// 
 	
 	// generate 65 mhz clock
-	wire clock_65mhz_unbuf,clock_65mhz;
+	wire clock_65mhz_unbuf,clock_65mhz_buf;
 	DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf));
 	// synthesis attribute CLKFX_DIVIDE of vclk1 is 10
 	// synthesis attribute CLKFX_MULTIPLY of vclk1 is 24
@@ -211,8 +211,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	BUFG vclk4(.O(clock_25mhz),.I(clock_25mhz_unbuf));
 
 	wire locked;
-	wire weirdclock; // TODO: decide what to do with this clock	
-	ramclock rc(.ref_clock(clock_65mhz), .fpga_clock(weirdclock),
+	wire clock_65mhz; // TODO: decide what to do with this clock	
+	ramclock rc(.ref_clock(clock_65mhz_buf), .fpga_clock(clock_65mhz),
 				.ram0_clock(ram0_clk), .ram1_clock(ram1_clk),
 				.clock_feedback_in(clock_feedback_in),
 				.clock_feedback_out(clock_feedback_out), .locked(locked));
@@ -310,7 +310,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	
    	//////////////////////////////////////////////////////////////////////////
 	//
-	// OUR MODULES: ntsc_capture
+	// OUR MODULES: 		ntsc_capture
 	// 				memory_interface
 	// 				lpf
 	// 				projective_transform,
@@ -402,32 +402,48 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// use above if not using memory_interface
 
 	// use below if using memory_interface
-	assign ram0_adv_ld = 1'b0;
-	assign ram0_cen_b = 1'b0;
 	assign ram0_ce_b = 1'b0;
 	assign ram0_oe_b = 1'b0;
-	assign ram0_bwe_b = 4'hF;
+	assign ram0_adv_ld = 1'b0;
+	assign ram0_bwe_b = 4'h0;
 
-	assign ram1_adv_ld = 1'b0;
-	assign ram1_cen_b = 1'b0;
 	assign ram1_ce_b = 1'b0;
 	assign ram1_oe_b = 1'b0;
-	assign ram1_bwe_b = 4'hF;
+	assign ram1_adv_ld = 1'b0;
+	assign ram1_bwe_b = 4'h0;
 	
-	wire ram0_we;
-	wire ram1_we;
-	assign ram0_we_b = ~ram0_we;
-	assign ram1_we_b = ~ram1_we;
-	wire [3:0] debug_blocks;
-	wire [7:0] debug_locs;
+		// from memory_interface to zbt_6111 module
+	wire mem0_wr;
+	wire mem1_wr;
+	wire [`LOG_ADDR-1:0] mem0_addr;
+	wire [`LOG_ADDR-1:0] mem1_addr;
+	wire [`LOG_MEM-1:0] mem0_read;
+	wire [`LOG_MEM-1:0] mem1_read;
+	wire [`LOG_MEM-1:0] mem0_write;
+	wire [`LOG_MEM-1:0] mem1_write;
 
-	memory_interface mi(.clock(clock_65mhz), 		.reset(reset), 				.frame_flag(frame_flag_cleaned), 
-						.ntsc_flag(ntsc_flag_cleaned),		.ntsc_pixel(ntsc_pixels), 	.done_ntsc(done_ntsc), 
-						.vga_flag(vga_flag), 		.done_vga(done_vga), 		.vga_pixel(vga_pixel),
-						.mem0_addr(ram0_address), 	.mem1_addr(ram1_address), 
-						.mem0_read(ram0_data), 		.mem1_read(ram1_data), 
-						.mem0_write(ram0_data), 	.mem1_write(ram1_data), 
-						.mem0_wr(ram0_we), 			.mem1_wr(ram1_we), .debug_blocks(debug_blocks), .debug_locs(debug_locs));
+	memory_interface mi(
+		.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag), 
+		.ntsc_flag(ntsc_flag),.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
+		.vga_flag(vga_flag),.done_vga(done_vga),.vga_pixel(vga_pixel),
+		.mem0_addr(mem0_addr),.mem1_addr(mem1_addr), 
+		.mem0_read(mem0_read),.mem1_read(mem1_read), 
+		.mem0_write(mem0_write),.mem1_write(mem1_write), 
+		.mem0_wr(mem0_wr),.mem1_wr(mem1_wr));
+
+	zbt_6111 mem0(
+		.clock(clock_65mhz), .cen(1'b1), 
+		.we(mem0_wr), .addr(mem0_addr),
+		.write_data(mem0_write), .read_data(mem0_read), 
+		.ram_we_b(ram0_we_b), .ram_address(ram0_address), 
+		.ram_data(ram0_data), .ram_cen_b(ram0_cen_b));
+	
+	zbt_6111 mem1(
+		.clock(clock_65mhz), .cen(1'b1), 
+		.we(mem1_wr), .addr(mem1_addr),
+		.write_data(mem1_write), .read_data(mem1_read), 
+		.ram_we_b(ram1_we_b), .ram_address(ram1_address), 
+		.ram_data(ram1_data), .ram_cen_b(ram1_cen_b));
 	// use above if using memory_interface
 
 
@@ -446,13 +462,26 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	assign vga_out_vsync = 1'b0;*/
 	// use above if not using vga
 	
+	// use below if testing vga
+	/*
+	dummy_mi_for_vga dummy(.clock(clock_65mhz), .reset(reset), .vga_pixel(vga_pixel), .done_vga(done_vga), .vga_flag(vga_flag));
+	*/
+	// use above if testing vga
+	
 	// use below if using vga
-	
-		vga_write vga(.clock(clock_65mhz), .vclock(clock_25mhz), .reset(reset), .frame_flag(frame_flag_cleaned), .vga_pixel(vga_pixel),
-					.done_vga(done_vga), .vga_flag(vga_flag), .vga_out_red(vga_out_red), .vga_out_green(vga_out_green), .vga_out_blue(vga_out_blue),
-					.vga_out_sync_b(vga_out_sync_b), .vga_out_blank_b(vga_out_blank_b), .vga_out_pixel_clock(vga_out_pixel_clock),
-					.vga_out_hsync(vga_out_hsync), .vga_out_vsync(vga_out_vsync));
-	
+	vga_write vga(
+		.clock(clock_65mhz), .vclock(clock_25mhz), 
+		.reset(reset), .frame_flag(frame_flag_cleaned), 
+		.vga_pixel(vga_pixel), 
+		.done_vga(done_vga), .vga_flag(vga_flag), 
+		.vga_out_red(vga_out_red), 
+		.vga_out_green(vga_out_green), 
+		.vga_out_blue(vga_out_blue),
+		.vga_out_sync_b(vga_out_sync_b), 
+		.vga_out_blank_b(vga_out_blank_b), 
+		.vga_out_pixel_clock(vga_out_pixel_clock),
+		.vga_out_hsync(vga_out_hsync), 
+		.vga_out_vsync(vga_out_vsync));
 	// use above if using vga
 
 
