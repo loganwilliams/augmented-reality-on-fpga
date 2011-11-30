@@ -8,47 +8,50 @@
 module memory_interface
 	(
 		// STANDARD SIGNALS
-		input clock,
-		input reset,
+		input 			   clock,
+		input 			   reset,
 		// NTSC_CAPTURE
-		input frame_flag,
-		input ntsc_flag,
-		input [`LOG_MEM-1:0] ntsc_pixel,
-		output reg done_ntsc,
+		input 			   frame_flag,
+		input 			   ntsc_flag,
+		input [`LOG_MEM-1:0] 	   ntsc_pixel,
+		output reg 		   done_ntsc,
 		// LPF
-		input lpf_flag,
-		input lpf_wr,
-		input [`LOG_WIDTH-1:0] lpf_x,
-		input [`LOG_HEIGHT-1:0] lpf_y,
-		input [`LOG_MEM-1:0] lpf_pixel_write,
-		output reg done_lpf,
-		output reg [`LOG_MEM-1:0] lpf_pixel_read,
+		input 			   lpf_flag,
+		input 			   lpf_wr,
+		input [`LOG_WIDTH-1:0] 	   lpf_x,
+		input [`LOG_HEIGHT-1:0]    lpf_y,
+		input [`LOG_MEM-1:0] 	   lpf_pixel_write,
+		output reg 		   done_lpf,
+		output reg [`LOG_MEM-1:0]  lpf_pixel_read,
 		// PROJECTIVE_TRANSFORM
-		input pt_flag,
-		input [`LOG_WIDTH-1:0] pt_x,
-		input [`LOG_HEIGHT-1:0] pt_y,
-		input [`LOG_TRUNC-1:0] pt_pixel,
-		output done_pt,
+		input 			   pt_flag,
+		input [`LOG_WIDTH-1:0] 	   pt_x,
+		input [`LOG_HEIGHT-1:0]    pt_y,
+		input [`LOG_TRUNC-1:0] 	   pt_pixel,
+		output 			   done_pt,
 		// VGA_WRITE
-		input vga_flag,
-		output reg done_vga,
-		output reg [`LOG_MEM-1:0] vga_pixel,
+		input 			   vga_flag,
+		output reg 		   done_vga,
+		output reg [`LOG_MEM-1:0]  vga_pixel,
+		input 			   vcount,
+		input 			   hcount,
+	 input vsync,
 		// MEMORY
 		// MEM ADDRESSES
 		output reg [`LOG_ADDR-1:0] mem0_addr,
-		output reg [`LOG_ADDR-1:0] mem1_addr,	
+		output reg [`LOG_ADDR-1:0] mem1_addr, 
 		// MEM READ	
-		input [`LOG_MEM-1:0] mem0_read,
-		input [`LOG_MEM-1:0] mem1_read,
+		input [`LOG_MEM-1:0] 	   mem0_read,
+		input [`LOG_MEM-1:0] 	   mem1_read,
 		// MEM WRITE
-		output reg [`LOG_MEM-1:0] mem0_write,
-		output reg [`LOG_MEM-1:0] mem1_write,
+		output reg [`LOG_MEM-1:0]  mem0_write,
+		output reg [`LOG_MEM-1:0]  mem1_write,
 		// WR FLAGS
-		output reg mem0_wr,
-		output reg mem1_wr,
+		output reg 		   mem0_wr,
+		output reg 		   mem1_wr,
 		// TESTING
-		output [3:0] debug_blocks,
-		output [7:0] debug_locs
+		output [3:0] 		   debug_blocks,
+		output [7:0] 		   debug_locs
 	);
 
 	/******** PARAMETERS ********/
@@ -264,13 +267,19 @@ module memory_interface
 		// set to starting address at the start of each frame or when the FPGA is reset
 		if (reset || frame_flag) begin
 			next_ntsc_addr = (next_capt_mem_loc*`IMAGE_LENGTH);
-			next_vga_addr = (next_disp_mem_loc*`IMAGE_LENGTH);
 		end
 		// set addresses of NTSC and VGA / update if pixels have been read or written
 		else begin
 			next_ntsc_addr = ntsc_addr + done_ntsc;
-			next_vga_addr = vga_addr + done_vga;
 		end
+
+	   if (reset || vsync) begin
+	      next_vga_addr = (next_disp_mem_loc*`IMAGE_LENGTH);
+	   end
+	   else begin
+	      			next_vga_addr = vga_addr + done_vga;
+	   end
+	   
 		// this should be it
 	end
 
@@ -281,7 +290,8 @@ module memory_interface
 
 		// update ntsc and vga addresses
 		ntsc_addr <= next_ntsc_addr;
-		vga_addr <= next_vga_addr;
+	   vga_addr <= 640 * vcount + hcount;
+	   
 
 		// update read queues
 		mem0_read_queue <= next_mem0_read_queue;
