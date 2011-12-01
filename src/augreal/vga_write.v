@@ -111,7 +111,7 @@ module vga_write
 	always @(*) begin
 		out_of_bounds = c_hcount >= 640 || c_vcount >= 480;
 		vga_flag = (!reset && !frame_flag && !out_of_bounds 
-					&& c_state == REQUESTING && (v_index-c_index) > 4);
+					&& c_state == REQUESTING && (v_index-c_index) > 2);
 		if (out_of_bounds) w_pixel = `LOG_FULL'b0;
 		else if (!write_next) w_pixel = {vga_pixel[`LOG_MEM-1:`LOG_TRUNC], 6'b00};
 		else w_pixel = {vga_pixel[`LOG_TRUNC-1:0], 6'b00};
@@ -161,27 +161,34 @@ module vga_write
 		w_vcount = vcount;
 		case (v_state)
 			STEADY_STATE: begin
+				vga_out_sync_b = 1'b1;
+				vga_out_pixel_clock = ~vclock;
+			end
+			STARTING_UP: begin
+				vga_out_sync_b = 1'bX;
+				vga_out_pixel_clock = 1'b0;
+			end
+	end
+	always @(posedge vclock) begin
+		case (v_state)
+			STEADY_STATE: begin
 				//vga_out_red = v_pixel[23:16];
 				//vga_out_green = v_pixel[15:8];
 				//vga_out_blue = v_pixel[7:0];
-				vga_out_red = v_pixel[23:16];
-				vga_out_blue = v_pixel[23:16];
-				vga_out_green = v_pixel[23:16];
-				vga_out_sync_b = 1'b1; // not used
-				vga_out_blank_b = ~v_blank;
-				vga_out_pixel_clock = vclock; // revise this
-				vga_out_hsync = v_hsync;
-				vga_out_vsync = v_vsync;
+				vga_out_red <= v_pixel[23:16];
+				vga_out_blue <= v_pixel[23:16];
+				vga_out_green <= v_pixel[23:16];
+				vga_out_blank_b <= ~v_blank;
+				vga_out_hsync <= v_hsync;
+				vga_out_vsync <= v_vsync;
 			end
 			STARTING_UP: begin
-				vga_out_red = 8'hX;
-				vga_out_green = 8'hX;
-				vga_out_blue = 8'hX;
-				vga_out_sync_b = 1'bX;
-				vga_out_blank_b = 1'bX;
-				vga_out_pixel_clock = 1'b0;
-				vga_out_hsync = 1'bX;
-				vga_out_vsync = 1'bX;
+				vga_out_red <= 8'hX;
+				vga_out_green <= 8'hX;
+				vga_out_blue <= 8'hX;
+				vga_out_blank_b <= 1'bX;
+				vga_out_hsync <= 1'bX;
+				vga_out_vsync <= 1'bX;
 			end
 		endcase
 	end
