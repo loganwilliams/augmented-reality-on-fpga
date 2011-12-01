@@ -372,20 +372,20 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
         // This dummy module should generate a train of pixels with linearly increasing luminosities
         // in the x direction, and a frame_flag every 640*480 pixels
    
-	/*
+	
 	dummy_ntsc_capture ntsc(.clk(clock_27mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
 					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
 					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
 					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixels), 
 					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag), .x(ntsc_x), .y(ntsc_y));
-*/
 
+/*
 	ntsc_capture ntsc(.clock_65mhz(clock_65mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
 					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
 					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
 					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixels), 
 					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag), .output_x(ntsc_x), .y(ntsc_y));
-					  
+					  */
 	clean nclean(.clock_65mhz(clock_65mhz), .flag(ntsc_flag),
 					.clean_flag(ntsc_flag_cleaned));
 	
@@ -502,7 +502,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// use below if using vga
 
    
-	vga_write vga(
+	stupid_vga_write vga(
 		.clock(clock_65mhz), .vclock(clock_25mhz), 
 		.reset(reset), .frame_flag(frame_flag_cleaned), 
 		.vga_pixel(vga_pixel), 
@@ -515,8 +515,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.vga_out_pixel_clock(vga_out_pixel_clock),
 		.vga_out_hsync(vga_out_hsync), 
 		.vga_out_vsync(vga_out_vsync),
-		.clocked_hcount(hcount),
-		.clocked_vcount(vcount));
+		.hcount(hcount),
+		.vcount(vcount));
 	// use above if using vga
 	
 	// use below if testing vga

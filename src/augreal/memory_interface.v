@@ -254,7 +254,7 @@ module memory_interface
 			disp_mem_loc 		<= nexd_mem_loc;
 		end
 		else begin
-			capt_mem_block 	<= capt_mem_block;
+			capt_mem_block 		<= capt_mem_block;
 			capt_mem_loc		<= capt_mem_loc;
 			proc_mem_block		<= proc_mem_block;
 			proc_mem_loc		<= proc_mem_loc;
