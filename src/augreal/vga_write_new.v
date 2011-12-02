@@ -33,35 +33,60 @@ module stupid_vga_write
 	stupid_xvga xvga1(.vclock(vclock), .reset(reset), .hcount(hcount),
 					.vcount(vcount), .vsync(vsync), .hsync(hsync), .blank(blank));
 
-	reg [35:0] pixel_buffer;
-	reg delayed_vclock;
-	reg d1f;
-	reg d2f;
-	reg everyother;
+	reg buffer_index;
+	reg [35:0] pixel_buffer_0;
+	reg [35:0] pixel_buffer_1;
+	wire [35:0] pixel_buffer;
 	
-	assign vga_flag = vclock & ~delayed_vclock & everyother;
+	reg prev_hcount;
+	reg curr_hcount;
+	
+	wire rising_hcount;
+	wire falling_hcount;
+	assign rising_hcount = curr_hcount & ~prev_hcount;
+	assign falling_hcount = ~curr_hcount & prev_hcount;
+	assign vga_flag = rising_hcount;
 	
 	always @(posedge clock) begin
-		delayed_vclock <= vclock;
-		d1f <= vga_flag;
-		d2f <= vga_flag;
+		curr_hcount <= hcount[0];
+		prev_hcount <= reset ? 0 : curr_hcount;
 		
-		if (d2f) begin
-			pixel_buffer <= vga_pixel;
+		if (reset) begin
+			pixel_buffer_0 <= 0;
+			pixel_buffer_1 <= 0;
+		end
+		// set next pixel to vga_pixel
+		// keep current pixel
+		else if (buffer_index) begin
+			pixel_buffer_0 <= vga_pixel;
+			pixel_buffer_1 <= pixel_buffer_1;
+		end
+		else begin
+			pixel_buffer_0 <= pixel_buffer_0;
+			pixel_buffer_1 <= vga_pixel;
 		end
 	end
+
+	wire [7:0] r;
+	wire [7:0] g;
+	wire [7:0] b;
+	assign pixel_buffer = ~buffer_index ? pixel_buffer_0 : pixel_buffer_1;
+	/*
+	ycbcr2rgb transformer( // more than meets the eye
+		.y(hcount[0] ? {pixel_buffer[17:10]} : {pixel_buffer[35:28]}),
+		.cr(hcount[0]? {pixel_buffer[9:5],  3'd0} : {pixel_buffer[27:23], 3'd0}),
+		.cb(hcount[0]? {pixel_buffer[4:0],  3'd0} : {pixel_buffer[22:18], 3'd0}),
+		.r(r), .g(g), .b(b));
+	*/
+	assign r = (hcount[0]) ? pixel_buffer[17:10] : pixel_buffer[35:28];
+	assign g = r;
+	assign b = g;
 	
 	always @(posedge vclock) begin
-		everyother <= ~everyother;
-		if (hcount[0]) begin
-			vga_out_red <= pixel_buffer[17:10];
-			vga_out_blue <= pixel_buffer[17:10];
-			vga_out_green <= pixel_buffer[17:10];
-		end else begin
-			vga_out_red <= pixel_buffer[35:28];
-			vga_out_blue <= pixel_buffer[35:28];
-			vga_out_green <= pixel_buffer[35:28];
-		end
+		buffer_index <= reset ? 0 : ~buffer_index;
+		vga_out_red <= r;
+		vga_out_green <= g;
+		vga_out_blue <= b;
 		vga_out_blank_b <= ~blank;
 		vga_out_sync_b <= 1'b1;
 	end

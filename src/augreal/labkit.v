@@ -194,32 +194,31 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
   
 	wire clock_65mhz; // TODO: decide what to do with this clock	
 
-	// generate 25 mhz clock
-	wire clock_25mhz_unbuf,clock_25mhz;
-	DCM vclk3(.CLKIN(clock_27mhz),.CLKFX(clock_25mhz_unbuf));
-	// synthesis attribute CLKFX_DIVIDE of vclk3 is 15
-	// synthesis attribute CLKFX_MULTIPLY of vclk3 is 14
-	// synthesis attribute CLK_FEEDBACK of vclk3 is NONE
-	// synthesis attribute CLKIN_PERIOD of vclk3 is 37
-	BUFG vclk4(.O(clock_25mhz),.I(clock_25mhz_unbuf));
-
 	// generate 65 mhz clock
 	wire clock_65mhz_unbuf,clock_65mhz_buf;
-	DCM vclk1(.CLKIN(clock_25mhz),.CLKFX(clock_65mhz_unbuf));
-	// synthesis attribute CLKFX_DIVIDE of vclk1 is 1
-	// synthesis attribute CLKFX_MULTIPLY of vclk1 is 3
+	DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf));
+	// synthesis attribute CLKFX_DIVIDE of vclk1 is 9
+	// synthesis attribute CLKFX_MULTIPLY of vclk1 is 25
 	// synthesis attribute CLK_FEEDBACK of vclk1 is NONE
-	// synthesis attribute CLKIN_PERIOD of vclk1 is 40
+	// synthesis attribute CLKIN_PERIOD of vclk1 is 37
 	BUFG vclk2(.O(clock_65mhz_buf),.I(clock_65mhz_unbuf));
-  
-
-
+	
 	wire locked;
 	ramclock rc(.ref_clock(clock_65mhz_buf), .fpga_clock(clock_65mhz),
 				.ram0_clock(ram0_clk), .ram1_clock(ram1_clk),
 				.clock_feedback_in(clock_feedback_in),
 				.clock_feedback_out(clock_feedback_out), .locked(locked));
 
+	// generate 25 mhz clock
+	wire clock_25mhz_unbuf,clock_25mhz;
+	DCM vclk3(.CLKIN(clock_65mhz),.CLKFX(clock_25mhz_unbuf));
+	// synthesis attribute CLKFX_DIVIDE of vclk3 is 6
+	// synthesis attribute CLKFX_MULTIPLY of vclk3 is 2
+	// synthesis attribute CLK_FEEDBACK of vclk3 is NONE
+	// synthesis attribute CLKIN_PERIOD of vclk3 is 13
+	BUFG vclk4(.O(clock_25mhz),.I(clock_25mhz_unbuf));
+	
+	
 	////////////////////////////////////////////////////////////////////////////
 	//
 	// I/O Assignments
@@ -311,7 +310,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		 		   .A0(1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1));
 	defparam reset_sr.INIT = 16'hFFFF;
 	
-   	//////////////////////////////////////////////////////////////////////////
+   //////////////////////////////////////////////////////////////////////////
 	//
 	// OUR MODULES: 		ntsc_capture
 	// 				memory_interface
@@ -372,20 +371,20 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
         // This dummy module should generate a train of pixels with linearly increasing luminosities
         // in the x direction, and a frame_flag every 640*480 pixels
    
-	
+	/*
 	dummy_ntsc_capture ntsc(.clk(clock_27mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
 					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
 					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
 					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixels), 
 					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag), .x(ntsc_x), .y(ntsc_y));
+	*/
 
-/*
 	ntsc_capture ntsc(.clock_65mhz(clock_65mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
 					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
 					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
 					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixels), 
 					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag), .output_x(ntsc_x), .y(ntsc_y));
-					  */
+					  
 	clean nclean(.clock_65mhz(clock_65mhz), .flag(ntsc_flag),
 					.clean_flag(ntsc_flag_cleaned));
 	
