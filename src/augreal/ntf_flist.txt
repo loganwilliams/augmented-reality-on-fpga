@@ -1,0 +1,12 @@
+# Output products list for <ntf>
+ntf.asy
+ntf.ngc
+ntf.sym
+ntf.v
+ntf.veo
+ntf.vhd
+ntf.vho
+ntf.xco
+ntf_fifo_generator_v4_4_xst_1.ngc_xst.xrpt
+ntf_flist.txt
+ntf_xmdf.tcl
