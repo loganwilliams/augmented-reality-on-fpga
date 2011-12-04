@@ -201,12 +201,17 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
 	// generate 65 mhz clock
 	wire clock_65mhz_unbuf,clock_65mhz_buf;
-	DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf), .LOCKED(led[0]), .RST(resetdcm));
+	
+	assign clock_65mhz_unbuf = clock_27mhz;
+	
+	//DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf), .LOCKED(led[0]), .RST(resetdcm));
 	// synthesis attribute CLKFX_DIVIDE of vclk1 is 9
 	// synthesis attribute CLKFX_MULTIPLY of vclk1 is 25
 	// synthesis attribute CLK_FEEDBACK of vclk1 is NONE
 	// synthesis attribute CLKIN_PERIOD of vclk1 is 37
 	BUFG vclk2(.O(clock_65mhz_buf),.I(clock_65mhz_unbuf));
+	
+	
 	
 	wire locked;
 	ramclock rc(.ref_clock(clock_65mhz_buf), .fpga_clock(clock_65mhz),
@@ -216,7 +221,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
 	// generate 25 mhz clock
 	wire clock_25mhz_unbuf,clock_25mhz;
-	DCM vclk3(.CLKIN(clock_65mhz),.CLKFX(clock_25mhz_unbuf), .LOCKED(led[1]), .RST(resetdcm));
+	DCM vclk3(.CLKIN(clock_65mhz),.CLKFX(clock_25mhz_unbuf), .LOCKED(led[0]), .RST(resetdcm));
 	// synthesis attribute CLKFX_DIVIDE of vclk3 is 6
 	// synthesis attribute CLKFX_MULTIPLY of vclk3 is 2
 	// synthesis attribute CLK_FEEDBACK of vclk3 is NONE
@@ -280,7 +285,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// disp_data_in is an input
 
 	// Buttons, Switches, and Individual LEDs
-	assign led[7:2] = 6'b0;
+	assign led[7:1] = 7'b0;
 	// button0, button1, button2, button3, button_enter, button_right,
 	// button_left, button_down, button_up, and switches are inputs
 
@@ -404,14 +409,17 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 			  .empty(empty),
 			  .ntsc_raw(nr));
 	
-   // These should be unnecessary now that ntsc_capture has a FIFO queue
-   /*
-    clean nclean(.clock_65mhz(clock_65mhz), .flag(ntsc_flag),
-    .clean_flag(ntsc_flag_cleaned));
 	
-    clean fclean(.clock_65mhz(clock_65mhz), .flag(frame_flag),
-    .clean_flag(frame_flag_cleaned));
-    */
+	//debounce dbff(.clock(clock_65mhz), .noisy(~button1), .clean(frame_flag));
+	
+   // These should be unnecessary now that ntsc_capture has a FIFO queue
+   
+    //clean nclean(.clock_65mhz(clock_65mhz), .flag(ntsc_flag),
+    //.clean_flag(ntsc_flag_cleaned));
+	
+    //clean fclean(.clock_65mhz(clock_65mhz), .flag(frame_flag),
+    //.clean_flag(frame_flag_cleaned));
+    
 	// use above if using ntsc_capture
 
 	/*************************************
@@ -473,7 +481,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
 	memory_interface mi(
 		.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag_cleaned), 
-		.ntsc_flag(1'b0),.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
+		.ntsc_flag(ntsc_flag_cleaned),.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
 		.vga_flag(vga_flag),.done_vga(done_vga),.vga_pixel(vga_pixel),
 		.vcount(vcount), .hcount(hcount), .vsync(vga_out_vsync),
 		.mem0_addr(mem0_addrr),.mem1_addr(mem1_addrr), 
@@ -547,7 +555,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// use below if using vga
 
    
-	vga_write_fifo vga(
+	stupid_vga_write vga(
 		.clock(clock_65mhz), .vclock(clock_25mhz), 
 		.reset(reset), .frame_flag(frame_flag_cleaned), 
 		.vga_pixel(vga_pixel), 
@@ -560,8 +568,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.vga_out_pixel_clock(vga_out_pixel_clock),
 		.vga_out_hsync(vga_out_hsync), 
 		.vga_out_vsync(vga_out_vsync),
-		.clocked_hcount(hcount),
-		.clocked_vcount(vcount));
+		.hcount(hcount),
+		.vcount(vcount));
 	// use above if using vga
 	
 	// use below if testing vga
