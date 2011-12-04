@@ -110,7 +110,7 @@ module vga_write_clock
 	always @(del_hcount[0] or del_vcount[0] or del_hcount[1] or del_vcount[1]
 				or del_hsync[1] or del_vsync[1] or del_blank[1] or del_v2f_rd_en[0]
 				or del_v2f_rd_en[2]) begin
-		out_of_bounds <= del_hcount[0] >= 640 || del_vcount[0] >= 480;
+		out_of_bounds = del_hcount[0] >= 640 || del_vcount[0] >= 480;
 		hsync = v2f_dout[3];
 		vsync = v2f_dout[2];
 		blank = v2f_dout[1];
