@@ -9,58 +9,79 @@ module ntsc_capture(
 		    input [19:0]      tv_in_ycrcb, //       |
 		    output reg [35:0] ntsc_pixels, // outputs two sets of pixels in Y/Cr/Cb/Y/Cr/Cb format
 		    output reg 	      ntsc_flag, // a flag that goes high when a pixel is being output
-		    output reg [1:0]  color, // these outputs are for object_recognition. this indicates the color of the recognized pixel
-		    output reg [9:0]  interesting_x, // its x locaiton
-		    output reg [8:0]  interesting_y, // its y location
-		    output reg 	      interesting_flag, // a flag that indicates the data is good
-		    output reg 	      frame_flag,
-		    output reg [9:0] output_x,
-			 output reg [8:0] y
-); // a flag that indicates when a new frame begins
+		    output reg o_color, // these outputs are for object_recognition. this indicates the color of the recognized pixel
+		    output reg 	      o_i_flag, // a flag that indicates the data is good
+		    output reg 	      o_frame_flag,
+		    output reg [9:0]  o_x,
+		    output reg [8:0] o_y,
+			 output empty,
+			 output reg wr_en,
+			 output wr_ack,
+			 output [3:0] ntsc_raw
+		    ); // a flag that indicates when a new frame begins
 
    // initialize the adv7185 video ADC
    adv7185init adv7185(.reset(reset), .clock_27mhz(clock_27mhz), .source(1'b0),
 		       .tv_in_reset_b(tv_in_reset_b), .tv_in_i2c_clock(tv_in_i2c_clock),
 		       .tv_in_i2c_data(tv_in_i2c_data));
 
-   wire [29:0] 			      ycrcb;
-   wire [2:0] 			      fvh;
-	
-	wire dv;
+   wire [29:0] 			     ycrcb;
+   wire [2:0] 			     fvh;
+   
+   wire 			     dv;
+
+   reg [63:0] 			     din;
+   //reg 				     wr_en = 0;
+   wire 			     rd_en;
+   wire [63:0] 			     dout;
+   wire 			     full, valid;
+
+   reg [17:0] 			     pixel_buffer;
+
+   reg 				     read_state;
+   
+   
+
+   ntf n2f(.din(din), .rd_clk(clock_65mhz), .rd_en(rd_en),
+		    .rst(reset), .wr_clk(tv_in_line_clock1), .wr_en(wr_en),
+		    .dout(dout), .empty(empty), .full(full), .valid(valid),
+		    .wr_ack(wr_ack));
+   
 
    // this module decodes the data and outputs the ycrcb pair
    ntsc_decode decode(.clk(tv_in_line_clock1), .reset(reset),
 		      .tv_in_ycrcb(tv_in_ycrcb[19:10]), .ycrcb(ycrcb),
 		      .v(fvh[1]), .h(fvh[0]), .data_valid(dv), .f(fvh[2]));
 
-   reg 				      state = 0;
-   reg [9:0] 			      x = 0;
-   //reg [8:0] 			      y = 0;
+   reg 				     state = 0;
+   reg [9:0] 			     x = 0;
+   reg [8:0] 			     y = 0;
    
-   wire 			      f;
-   wire 			      v;
-   wire 			      h;
+   wire 			     f;
+   wire 			     v;
+   wire 			     h;
    
-   wire 			      sv;
-   wire 			      sh;
-   reg 				      rh;
-   reg 				      rv;
+   wire 			     sv;
+   wire 			     sh;
+   reg 				     rh;
+   reg 				     rv;
 
-   // unsynchronized outputs
-   reg [35:0] 			      us_ntsc_pixels;
-   reg [1:0] 			      us_color;
-   reg [9:0] 			      us_interesting_x;
-   reg [8:0] 			      us_interesting_y;
-   reg 				      us_interesting_flag;
-   
    synchronize syncv(.sig(v), .syncsig(sv), .reset(rv));
    synchronize synch(.sig(h), .syncsig(sh), .reset(rh));
    
-   reg 				      pulseonce;
+   reg 				     pulseonce;
    
    assign f = fvh[2];
    assign v = fvh[1];
    assign h = fvh[0];
+
+   wire [1:0] 			     color;
+   wire 			     interesting_flag;
+
+   assign color = 2'b00;
+   assign interesting_flag = 1'b0;
+	
+	assign ntsc_raw = din[28:25];
 
    // synchronize to the external video line clock
    always @ (posedge tv_in_line_clock1) begin
@@ -71,21 +92,24 @@ module ntsc_capture(
 	 x <= 0;
 	 rv <= 1;
       end
-		
-		// something weird is happening here
+      
+      // something weird is happening here
       if (sh) begin
-		y <= y + 2;
-		x <= 0;
-		rh <= 1;
-		end else begin
-		rh <= 0;
-		end
-                  
+	 y <= y + 2;
+	 x <= 0;
+	 rh <= 1;
+      end else begin
+	 rh <= 0;
+      end
+      
       if (((y > 479) | v) & f & ~pulseonce) begin
-	 frame_flag <= 1;
+	 din <= {36'b0, 1'b0, 1'b1, x, y, color, interesting_flag, 4'b0};
+	 wr_en <= 1;
+	       
 	 pulseonce <= 1;
       end else begin
-	 frame_flag <= 0;
+	 wr_en <= 0;
+	 
       end
       
       if (~f) begin
@@ -96,75 +120,53 @@ module ntsc_capture(
 
 	 if (y < 480 && x < 640) begin // above 480 lines are blanked
 	    if (state == 0) begin
-	       us_ntsc_pixels[17:10] <= ycrcb[29:22];
-	       us_ntsc_pixels[9:5] <= ycrcb[19:15];
-	       us_ntsc_pixels[4:0] <= ycrcb[9:5];
+	       pixel_buffer[17:10] <= ycrcb[29:22];
+	       pixel_buffer[9:5] <= ycrcb[19:15];
+	       pixel_buffer[4:0] <= ycrcb[9:5];
 
-	       ntsc_flag <= 0;
 	       state <= 1;
-			 output_x <= x;
+
+	       // we only output on state 0 if interesting pixels have been
+	       // detected
+
+			  if (interesting_flag) begin
+			  din[27] <= 0;
+			  din[26] <= 0;
+				din[25:16] <= x;
+				din[15:7] <= y;
+				din[6:5] <= color;
+				din[4] <= interesting_flag;
+				wr_en <= 1;
+				end else wr_en <= 0;
 	       
 	    end else begin
-	       us_ntsc_pixels[35:28] <= ycrcb[29:22];
-	       us_ntsc_pixels[27:23] <= ycrcb[19:15];
-	       us_ntsc_pixels[22:18] <= ycrcb[9:5];
-
-	       ntsc_flag <= 1;
 	       state <= 0;
-	       
+
+	       // {36, 1 (ntsc_flag), 1, 10, 9, 2, 1, 4} = 64
+	       din <= {pixel_buffer, ycrcb[29:22], ycrcb[19:15], ycrcb[9:5],
+		       1'b1 , 1'b0, x-1, y, color,
+		       interesting_flag, 4'b0};
+				
+
+				din[63:46] <= pixel_buffer;
+				din[45:38] <= ycrcb[29:22];
+				din[37:33] <= ycrcb[19:15];
+				din[32:28] <= ycrcb[9:5];
+				din[27] <= 1;
+				din[26] <= 0;
+				din[25:16] <= x-1;
+				din[15:7] <= y;
+				din[6:5] <= color;
+				din[4] <= interesting_flag;
+
+	       wr_en <= 1;
+	      
 	    end // else: !if(state == 0)
 
 	    x <= x + 1; // increment the x coordinate
-
-	    // Look for interesting pixels:
-	    // This identification can be tested once ntsc_capture is connected to
-	    // vga_display by replacing pixels that are above the threshold with
-	    // pixels of another color so that the regions identified can be seen
-	    // visually
-	    
-	    //                cr                          cb
-	    if ((ntsc_pixels[19:10] > 800) & (ntsc_pixels[9:0] > 800)) begin
-	       // upper right corner (of YIQ space)
-	       us_color <= 2'b00;
-
-	       us_interesting_x <= x;
-	       us_interesting_y <= y;
-	       us_interesting_flag <= 1;
-	       
-	       //                       cr                         cb
-	    end else if ((ntsc_pixels[19:10] < 200) & (ntsc_pixels[9:0] > 800)) begin
-	       // upper left corner (of YIQ space)
-	       us_color <= 2'b01;
-
-	       us_interesting_x <= x;
-	       us_interesting_y <= y;
-	       us_interesting_flag <= 1;
-	       
-	       //                       cr                         cb
-	    end else if ((ntsc_pixels[19:10] > 800) & (ntsc_pixels[9:0] < 200)) begin
-	       // lower right corner (of YIQ space)
-	       us_color <= 2'b10;
-
-	       us_interesting_x <= x;
-	       us_interesting_y <= y;
-	       us_interesting_flag <= 1;
-	       
-	       //                       cr                         cb
-	    end else if ((ntsc_pixels[19:10] < 200) & (ntsc_pixels[9:0] < 200)) begin
-	       // lower left corner (of YIQ space)
-	       us_color <= 2'b11;
-
-	       us_interesting_x <= x;
-	       us_interesting_y <= y;
-	       us_interesting_flag <= 1;
-	       
-	    end else us_interesting_flag <= 0;
-	    
-	    
-	 end else begin
-	    ntsc_flag <= 0;
-	 end
+	 end // if (y < 480 && x < 640)
       end // if (dv)
+      
 
       if (reset) begin
 	 state <= 0;
@@ -173,13 +175,39 @@ module ntsc_capture(
       end   
    end // always @ (posedge tv_in_line_clock1)
 
+   assign rd_en = ~empty;
+   
    // Synchronize outputs to main system clock
    always @ (posedge clock_65mhz) begin
-      ntsc_pixels <= us_ntsc_pixels;
-      interesting_x <= us_interesting_x;
-      interesting_y <= us_interesting_y;
-      interesting_flag <= us_interesting_flag;
-      color <= us_color;
+      // if the FIFO is not empty
+      if (rd_en) begin
+	 read_state <= 1;
+      end else begin
+	 read_state <= 0;
+      end
+
+      // we have data
+      if (rd_en) begin
+	 //{ntsc_pixels, ntsc_flag, o_frame_flag, o_x, o_y, o_color, o_i_flag} <= dout[63:4];
+	 ntsc_pixels <= dout[63: 28];
+	 ntsc_flag <= dout[27];
+	 o_frame_flag <= dout[26];
+	 o_x <= dout[25:16];
+	 o_y <= dout[15:7];
+	 o_color <= dout[6:5];
+	 o_i_flag <= dout[4];
+	 
+      end else begin
+	 //{ntsc_pixels, ntsc_flag, o_frame_flag, o_x, o_y, o_color, o_i_flag} <= 60'b0;
+	 ntsc_pixels <= 0;
+	 ntsc_flag <= 0;
+	 o_frame_flag <= 0;
+	 o_x <= 0;
+	 o_y <= 0;
+	 o_color <= 0;
+	 o_i_flag <= 0;
+      end
+      
    end   
 
 endmodule // ntsc_capture
