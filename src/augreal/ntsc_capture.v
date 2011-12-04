@@ -88,7 +88,7 @@ module ntsc_capture(
       rv <= 0;
       
       if (sv) begin
-	 y <= ~f;
+	 y <= f;
 	 x <= 0;
 	 rv <= 1;
       end

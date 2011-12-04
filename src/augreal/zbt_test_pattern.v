@@ -11,9 +11,15 @@ module zbt_test_pattern(
 			output reg mem0_wr,
 			output reg mem1_wr);
 
-   reg [2:0] 			   state = 0;
+   reg [1:0] 			   state = 0;
    reg [8:0] 			   y;
    reg [9:0] 			   x;
+	wire [18:0] addr;
+	reg [1:0] loc;
+	
+	address_calculator test_ac(
+		.x(x), .y(y), 
+		.loc(loc), .addr(addr));
    
    always @(posedge clock) begin
       case (state)
@@ -25,24 +31,26 @@ module zbt_test_pattern(
 	      state <= 1;
 	      x <= 0;
 	      y <= 0;
+			loc <= 0;
 	   end
 	end
 
 	1: begin
-	   mem0_addr <= y*320 + x + 0;
-	   mem1_addr <= y*320 + x + 0;
+	   mem0_addr <= addr;
+	   mem1_addr <= addr;
 	   mem0_wr <= 1;
 	   mem1_wr <= 1;
-	   if ((x[5] & ~y[5]) || (~x[5] & y[5])) begin
-	      mem0_write <= 36'b111111111111111111111111111111111111;
-	      mem1_write <= 36'b111111111111111111111111111111111111;
+	   if ((x[4] & ~y[4]) || (~x[4] & y[4])) begin
+	      mem0_write <= 36'b111111111100011000111111111100011000;
+	      mem1_write <= 36'b111111111000010000111111111000010000;
 	   end else begin
-	      mem0_write <= 36'b0;
-	      mem1_write <= 36'b0;
+	      mem0_write <= 36'b000000001000010000000000001000010000;
+	      mem1_write <= 36'b000000001000010000000000001000010000;
 	   end
 
 	   if (y == 479 && x == 639) begin
 	      state <= 2;
+			loc <= 1;
 	      mem0_wr <= 0;
 	      mem1_wr <= 0;
 	      x <= 0;
@@ -54,16 +62,16 @@ module zbt_test_pattern(
 	end // case: 1
 
 	2: begin
-	   mem0_addr <= y*320 + x + 19'd153600;
-	   mem1_addr <= y*320 + x + 19'd153600;
+	   mem0_addr <= addr;
+	   mem1_addr <= addr;
 	   mem0_wr <= 1;
 	   mem1_wr <= 1;
 	   if ((x[5] & ~y[5]) || (~x[5] & y[5])) begin
-	      mem0_write <= 36'b111111111111111111111111111111111111;
-	      mem1_write <= 36'b111111111111111111111111111111111111;
+	      mem0_write <= 36'b111111111100011000111111111100011000;
+	      mem1_write <= 36'b111111111000010000111111111000010000;
 	   end else begin
-	      mem0_write <= 36'b0;
-	      mem1_write <= 36'b0;
+	      mem0_write <= 36'b000000001000010000000000001000010000;
+	      mem1_write <= 36'b000000001000010000000000001000010000;
 	   end
 
 	   if (y == 479 && x == 639) begin
