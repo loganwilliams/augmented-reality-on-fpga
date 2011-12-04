@@ -476,13 +476,13 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.ntsc_flag(1'b0),.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
 		.vga_flag(vga_flag),.done_vga(done_vga),.vga_pixel(vga_pixel),
 		.vcount(vcount), .hcount(hcount), .vsync(vga_out_vsync),
-		.mem0_addr(mem0_addr),.mem1_addr(mem1_addr), 
+		.mem0_addr(mem0_addrr),.mem1_addr(mem1_addrr), 
 		.mem0_read(mem0_read),.mem1_read(mem1_read), 
-		.mem0_write(mem0_write),.mem1_write(mem1_write), 
-		.mem0_wr(mem0_wr),.mem1_wr(mem1_wr),
+		.mem0_write(mem0_writer),.mem1_write(mem1_writer), 
+		.mem0_wr(mem0_wrr),.mem1_wr(mem1_wrr),
 		.ntsc_x(ntsc_x), .ntsc_y(ntsc_y));
 
-/*
+
    wire 		       enter_clean;
 
    debounce db3(.clock(clock_65mhz), .reset(reset), .noisy(~button_enter),
@@ -490,18 +490,18 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    
 	
    zbt_test_pattern ztp(.clock(clock_65mhz), .reset(reset), .start(enter_clean),
-			.mem0_addr(mem0_addr), .mem1_addr(mem1_addr),
-			.mem0_write(mem0_write), .mem1_write(mem1_write),
-			.mem0_wr(mem0_wr), .mem1_wr(mem1_wr));
-   */
-	/*
+			.mem0_addr(mem0_addrt), .mem1_addr(mem1_addrt),
+			.mem0_write(mem0_writet), .mem1_write(mem1_writet),
+			.mem0_wr(mem0_wrt), .mem1_wr(mem1_wrt));
+   
+	
 	assign mem0_wr = (enter_clean) ? mem0_wrt : mem0_wrr;
 	assign mem0_addr = (enter_clean) ? mem0_addrt : mem0_addrr;
 	assign mem0_write = (enter_clean) ? mem0_writet : mem0_writer;
 	assign mem1_wr = (enter_clean) ? mem1_wrt : mem1_wrr;
 	assign mem1_addr = (enter_clean) ? mem1_addrt : mem1_addrr;
 	assign mem1_write = (enter_clean) ? mem1_writet : mem1_writer;
-	*/
+	
 	zbt_6111 mem0(
 		.clk(clock_65mhz), .cen(1'b1), 
 		.we(mem0_wr), .addr(mem0_addr),
@@ -547,7 +547,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// use below if using vga
 
    
-	stupid_vga_write vga(
+	vga_write_fifo vga(
 		.clock(clock_65mhz), .vclock(clock_25mhz), 
 		.reset(reset), .frame_flag(frame_flag_cleaned), 
 		.vga_pixel(vga_pixel), 
@@ -560,8 +560,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.vga_out_pixel_clock(vga_out_pixel_clock),
 		.vga_out_hsync(vga_out_hsync), 
 		.vga_out_vsync(vga_out_vsync),
-		.hcount(hcount),
-		.vcount(vcount));
+		.clocked_hcount(hcount),
+		.clocked_vcount(vcount));
 	// use above if using vga
 	
 	// use below if testing vga
