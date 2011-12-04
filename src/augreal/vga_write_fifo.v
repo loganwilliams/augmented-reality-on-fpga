@@ -1,5 +1,8 @@
 `include "params.v"
-`default_nettype none
+//`include "fifo/fpga_to_vga.v"
+//`include "fifo/vga_to_fpga.v"
+//`include "ycbcr2rgb.v"
+//`default_nettype none
 
 module vga_write_fifo
 	(
@@ -13,11 +16,11 @@ module vga_write_fifo
 		input done_vga,
 		output vga_flag,
 		// VGA
-		output reg [7:0] vga_out_red,
-		output reg [7:0] vga_out_green,
-		output reg [7:0] vga_out_blue,
-		output reg  vga_out_sync_b,
-		output reg  vga_out_blank_b,
+		output [7:0] vga_out_red,
+		output [7:0] vga_out_green,
+		output [7:0] vga_out_blue,
+		output  vga_out_sync_b,
+		output  vga_out_blank_b,
 		output  vga_out_pixel_clock,
 		output  vga_out_hsync,
 		output  vga_out_vsync,
@@ -40,14 +43,14 @@ module vga_write_fifo
 	wire [63:0] f2v_din;
 	wire [63:0] f2v_dout;
 
-	.vga_write_clock(
+	vga_write_clock vwc(
 		.clock(clock), .reset(reset), .frame_flag(frame_flag),
 		.vga_pixel(vga_pixel), .done_vga(done_vga), .vga_flag(vga_flag),
 		.hcount(clocked_hcount), .vcount(clocked_vcount),
 		.v2f_empty(v2f_empty), .f2v_full(f2v_full), .v2f_rd_en(v2f_rd_en),
 		.f2v_wr_en(f2v_wr_en), .v2f_dout(v2f_dout), .f2v_din(f2v_din));
 
-	.vga_write_vclock(
+	vga_write_vclock vwv(
 		.vclock(vclock), .reset(reset), .f2v_empty(f2v_empty), .v2f_full(v2f_full),
 		.f2v_rd_en(f2v_rd_en), .v2f_wr_en(v2f_wr_en), .f2v_dout(f2v_dout), .v2f_din(v2f_din),
 		.vga_out_red(vga_out_red), .vga_out_green(vga_out_green), .vga_out_blue(vga_out_blue),
@@ -87,6 +90,10 @@ module vga_write_clock
 		input [23:0] v2f_dout,
 		output reg [63:0] f2v_din
 	);
+	
+	reg hsync;
+	reg vsync;
+	reg blank;
 
 	reg [`LOG_HCOUNT-1:0] del_hcount[0:1];
 	reg [`LOG_VCOUNT-1:0] del_vcount[0:1];
@@ -121,8 +128,15 @@ module vga_write_clock
 		// write three cycles after the correspoding rd_en pulse
 		// 3 cycles instead of 2 due to the additional 1 cycle read delay
 		f2v_wr_en = del_v2f_rd_en[2];
-		f2v_din = {del_hcount[1], del_vcount[1], del_hsync[1], del_vsync[1], del_blank[1],
-					pixel, reset, frame_flag};
+		f2v_din[63:54] = del_hcount[1];
+		f2v_din[53:44] = del_vcount[1];
+		f2v_din[43]    = del_hsync[1];
+		f2v_din[42]    = del_vsync[1];
+		f2v_din[41]    = del_blank[1];
+		f2v_din[40:5]  = pixel;
+		f2v_din[4]     = reset;
+		f2v_din[3]     = frame_flag;
+		f2v_din[2:0]   = 3'b0;
 	end
 
 	always @(posedge clock) begin
@@ -130,10 +144,13 @@ module vga_write_clock
 		if (reset) begin
 			del_vga_flag[0] <= 0;
 			del_vga_flag[1] <= 0;
+			
 			del_hcount[0] <= 0;
 			del_hcount[1] <= 0;
+			
 			del_vcount[0] <= 0;
 			del_vcount[1] <= 0;
+			
 			del_v2f_rd_en[0] <= 0;
 			del_v2f_rd_en[1] <= 0;
 			del_v2f_rd_en[2] <= 0;
@@ -183,12 +200,13 @@ module vga_write_vclock
 		output reg vga_out_blank_b,
 		output reg vga_out_pixel_clock,
 		output reg vga_out_hsync,
-		output reg vga_out_vsync,
+		output reg vga_out_vsync
 	);
 
 	// from FIFO
 	reg [`LOG_HCOUNT-1:0] input_hcount;
 	reg [`LOG_VCOUNT-1:0] input_vcount;
+	reg [`LOG_MEM-1:0] input_pixel;
 	reg input_hsync;
 	reg input_vsync;
 	reg input_blank;
@@ -205,7 +223,7 @@ module vga_write_vclock
 	xvga xvga_i(
 		.vclock(vclock), .reset(reset), .frame_flag(frame_flag),
 		.hcount(output_hcount), .vcount(output_vcount),
-		.vsync(vsync), .hsync(hsync), .blank(blank));
+		.vsync(output_vsync), .hsync(output_hsync), .blank(output_blank));
 
 	// ycbcr2rgb
 	// making this part combinational because we're operating at 25MHz
@@ -215,7 +233,7 @@ module vga_write_vclock
 		.r(vga_out_red), .g(vga_out_green), .b(vga_out_blue));
 
 	always @(*) begin
-		vga_out_sync    = 1'b1;
+		vga_out_sync_b  = 1'b1;
 		vga_out_blank_b = ~input_blank;
 		vga_out_hsync   = input_hsync;
 		vga_out_vsync   = input_vsync;
@@ -230,6 +248,7 @@ module vga_write_vclock
 		v2f_din[3]     <= output_hsync;
 		v2f_din[2]     <= output_vsync;
 		v2f_din[1]     <= output_blank;	
+		v2f_din[0]     <= 1'b0;
 
 		f2v_rd_en    <= 1'b1;
 		input_hcount <= f2v_dout[63:54];
