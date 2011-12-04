@@ -2,7 +2,7 @@
 //`include "fifo/fpga_to_vga.v"
 //`include "fifo/vga_to_fpga.v"
 //`include "ycbcr2rgb.v"
-//`default_nettype none
+`default_nettype none
 
 module vga_write_fifo
 	(
@@ -107,8 +107,25 @@ module vga_write_clock
 	reg out_of_bounds;
 	reg [`LOG_MEM-1:0] pixel;
 
+	always @(del_hcount[0] or del_vcount[0] or del_hcount[1] or del_vcount[1]
+				or del_hsync[1] or del_vsync[1] or del_blank[1] or del_v2f_rd_en[0]
+				or del_v2f_rd_en[2]) begin
+		out_of_bounds <= del_hcount[0] >= 640 || del_vcount[0] >= 480;
+		hsync = v2f_dout[3];
+		vsync = v2f_dout[2];
+		blank = v2f_dout[1];
+		// wait for hcount, vcount to be available
+		// only request every even pixel
+		vga_flag = (del_v2f_rd_en[0] && hcount[0] == 0 && hcount < 640 && vcount < 480);
+		f2v_wr_en = del_v2f_rd_en[2];
+		f2v_din[63:54] = del_hcount[1];
+		f2v_din[53:44] = del_vcount[1];
+		f2v_din[43]    = del_hsync[1];
+		f2v_din[42]    = del_vsync[1];
+		f2v_din[41]    = del_blank[1];
+	end
+		
 	always @(*) begin
-		out_of_bounds = del_hcount[1] >= 640 || del_vcount[1] >= 480;
 		pixel = out_of_bounds ? 36'd0 : vga_pixel;
 
 		// always read when the queue is not empty
@@ -117,22 +134,9 @@ module vga_write_clock
 		// extract info from FIFO
 		hcount = v2f_dout[23:14];
 		vcount = v2f_dout[13:4];
-		hsync = v2f_dout[3];
-		vsync = v2f_dout[2];
-		blank = v2f_dout[1];
-
-		// wait for hcount, vcount to be available
-		// only request every even pixel
-		vga_flag = (del_v2f_rd_en[0] && hcount[0] == 0 && hcount < 640 && vcount < 480);
 
 		// write three cycles after the correspoding rd_en pulse
 		// 3 cycles instead of 2 due to the additional 1 cycle read delay
-		f2v_wr_en = del_v2f_rd_en[2];
-		f2v_din[63:54] = del_hcount[1];
-		f2v_din[53:44] = del_vcount[1];
-		f2v_din[43]    = del_hsync[1];
-		f2v_din[42]    = del_vsync[1];
-		f2v_din[41]    = del_blank[1];
 		f2v_din[40:5]  = pixel;
 		f2v_din[4]     = reset;
 		f2v_din[3]     = frame_flag;
@@ -193,9 +197,9 @@ module vga_write_vclock
 		input [63:0] f2v_dout,
 		output reg [23:0] v2f_din,
 		// TO VGA CHIP
-		output [7:0] vga_out_red,
-		output [7:0] vga_out_green,
-		output [7:0] vga_out_blue,
+		output reg [7:0] vga_out_red,
+		output reg [7:0] vga_out_green,
+		output reg [7:0] vga_out_blue,
 		output reg vga_out_sync_b,
 		output reg vga_out_blank_b,
 		output reg vga_out_pixel_clock,
@@ -228,16 +232,29 @@ module vga_write_vclock
 	// ycbcr2rgb
 	// making this part combinational because we're operating at 25MHz
 	// and only with simple LUTs, adders -- no multipliers
+	wire [7:0] r;
+	wire [7:0] g;
+	wire [7:0] b;
 	ycrcb_lut ycc(
 		.ycrcb(input_hcount[0] ? input_pixel[35:18] : input_pixel[17:0]),
-		.r(vga_out_red), .g(vga_out_green), .b(vga_out_blue));
+		.r(r), .g(g), .b(b));
 
 	always @(*) begin
+		if (input_hcount >= 640 || input_vcount >= 480) begin
+			vga_out_red = 8'd0;
+			vga_out_green = 8'd0;
+			vga_out_blue = 8'd0;
+		end
+		else begin
+			vga_out_red = r;
+			vga_out_green = g;
+			vga_out_blue = b;
+		end
 		vga_out_sync_b  = 1'b1;
 		vga_out_blank_b = ~input_blank;
 		vga_out_hsync   = input_hsync;
 		vga_out_vsync   = input_vsync;
-		vga_out_pixel_clock = ~vclock;
+		vga_out_pixel_clock = vclock;
 	end
 
 	always @(posedge vclock) begin
