@@ -103,29 +103,15 @@ module vga_write_clock
 
 	reg del_vga_flag[0:1];
 	reg del_v2f_rd_en[0:2];
+	reg enable_vga_flag;
 
 	reg out_of_bounds;
 	reg [`LOG_MEM-1:0] pixel;
-
-	always @(del_hcount[0] or del_vcount[0] or del_hcount[1] or del_vcount[1]
-				or del_hsync[1] or del_vsync[1] or del_blank[1] or del_v2f_rd_en[0]
-				or del_v2f_rd_en[2]) begin
-		out_of_bounds <= del_hcount[0] >= 640 || del_vcount[0] >= 480;
-		hsync = v2f_dout[3];
-		vsync = v2f_dout[2];
-		blank = v2f_dout[1];
-		// wait for hcount, vcount to be available
-		// only request every even pixel
-		vga_flag = (del_v2f_rd_en[0] && hcount[0] == 0 && hcount < 640 && vcount < 480);
-		f2v_wr_en = del_v2f_rd_en[2];
-		f2v_din[63:54] = del_hcount[1];
-		f2v_din[53:44] = del_vcount[1];
-		f2v_din[43]    = del_hsync[1];
-		f2v_din[42]    = del_vsync[1];
-		f2v_din[41]    = del_blank[1];
-	end
 		
 	always @(*) begin
+		// wait for hcount, vcount to be available
+		// only request every even pixel
+		vga_flag = (enable_vga_flag && hcount[0] == 0 && hcount < 640 && vcount < 480);
 		pixel = out_of_bounds ? 36'd0 : vga_pixel;
 
 		// always read when the queue is not empty
@@ -134,6 +120,9 @@ module vga_write_clock
 		// extract info from FIFO
 		hcount = v2f_dout[23:14];
 		vcount = v2f_dout[13:4];
+		hsync = v2f_dout[3];
+		vsync = v2f_dout[2];
+		blank = v2f_dout[1];
 
 		// write three cycles after the correspoding rd_en pulse
 		// 3 cycles instead of 2 due to the additional 1 cycle read delay
@@ -160,6 +149,15 @@ module vga_write_clock
 			del_v2f_rd_en[2] <= 0;
 		end
 		else begin
+			out_of_bounds <= hcount >= 640 || vcount >= 480;
+		
+			f2v_wr_en <= del_v2f_rd_en[1];
+			f2v_din[63:54] <= del_hcount[0];
+			f2v_din[53:44] <= del_vcount[0];
+			f2v_din[43]    <= del_hsync[0];
+			f2v_din[42]    <= del_vsync[0];
+			f2v_din[41]    <= del_blank[0];
+		
 			del_vga_flag[0] <= vga_flag;
 			del_vga_flag[1] <= del_vga_flag[0];
 
@@ -179,6 +177,7 @@ module vga_write_clock
 			del_blank[1] <= del_blank[0];
 
 			del_v2f_rd_en[0] <= v2f_rd_en;
+			enable_vga_flag  <= v2f_rd_en;
 			del_v2f_rd_en[1] <= del_v2f_rd_en[0];
 			del_v2f_rd_en[2] <= del_v2f_rd_en[1];
 		end
