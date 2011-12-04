@@ -1,0 +1,12 @@
+# Output products list for <fpga_to_vga>
+fpga_to_vga.asy
+fpga_to_vga.ngc
+fpga_to_vga.sym
+fpga_to_vga.v
+fpga_to_vga.veo
+fpga_to_vga.vhd
+fpga_to_vga.vho
+fpga_to_vga.xco
+fpga_to_vga_fifo_generator_v4_4_xst_1.ngc_xst.xrpt
+fpga_to_vga_flist.txt
+fpga_to_vga_xmdf.tcl
