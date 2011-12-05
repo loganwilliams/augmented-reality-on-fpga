@@ -17,7 +17,10 @@ module ntsc_capture(
 			 output empty,
 			 output reg wr_en,
 			 output wr_ack,
-			 output [3:0] ntsc_raw
+			 output [3:0] ntsc_raw,
+			 output reg [9:0] midcr,
+			 output reg [9:0] midcb,
+			 output reg [9:0] midy
 		    ); // a flag that indicates when a new frame begins
 
    // initialize the adv7185 video ADC
@@ -77,6 +80,13 @@ module ntsc_capture(
 
    wire [1:0] 			     color;
    wire 			     interesting_flag;
+	
+	wire [9:0] cr;
+wire [9:0] 	cb;
+wire [9:0] lum;
+	assign cr = ycrcb[19:10];
+	assign cb = ycrcb[9:0];
+	assign lum = ycrcb[29:20];
 
    assign color = 2'b00;
    assign interesting_flag = 1'b0;
@@ -119,10 +129,45 @@ module ntsc_capture(
       if (dv) begin
 
 	 if (y >= 25 && y < 505 && x < 640) begin // above 480 lines are blanked
+	 
+	 if (x == 320 && y == 265) begin
+		midcr <= cr;
+		midcb <= cb;
+		midy <= ycrcb[29:20];
+		end
+	 
+	 
 	    if (state == 0) begin
-	       pixel_buffer[17:10] <= ycrcb[29:22];
-	       pixel_buffer[9:5] <= ycrcb[19:15];
-	       pixel_buffer[4:0] <= ycrcb[9:5];
+		 // ORANGE
+		 	 if ((cb < 10'h190) & (cr > 10'h280) & (lum > 10'h200)) begin
+				pixel_buffer[17:10] <= 8'b11111111;
+				pixel_buffer[9:5]<= 5'b11111;
+				pixel_buffer[4:0] <= 5'b00000;
+				
+				// GREEN
+			end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h180) &
+							 (lum < 10'h300) & (cr > 10'h1D0) & (cb > 10'h120)) begin
+				pixel_buffer[17:10] <= 8'b11111111;
+				pixel_buffer[9:5] <= 5'b00000;
+				pixel_buffer[4:0] <= 5'b00000;
+				
+				// PINK
+			end else if ((cb > 10'h1F0) & (cr > 10'h280) & (lum > 10'h190)) begin
+				pixel_buffer[17:10] <= 8'b11111111;
+				pixel_buffer[9:5] <= 5'b11111;
+				pixel_buffer[4:0] <= 5'b11111;
+				
+				// BLUE
+			end else if ((cb > 10'h200) & (cr < 10'h1F0) & (lum > 10'h1A0)) begin
+				pixel_buffer[17:10] <= 8'b11111111;
+				pixel_buffer[9:5] <= 5'b00000;
+				pixel_buffer[4:0] <= 5'b11111;
+				
+			end else begin 
+				pixel_buffer[17:10] <= ycrcb[29:22];
+				pixel_buffer[9:5] <= ycrcb[19:15];
+				pixel_buffer[4:0] <= ycrcb[9:5];
+			 end
 
 	       state <= 1;
 
@@ -142,16 +187,32 @@ module ntsc_capture(
 	    end else begin
 	       state <= 0;
 
-	       // {36, 1 (ntsc_flag), 1, 10, 9, 2, 1, 4} = 64
-	       din <= {pixel_buffer, ycrcb[29:22], ycrcb[19:15], ycrcb[9:5],
-		       1'b1 , 1'b0, x-1, y, color,
-		       interesting_flag, 4'b0};
-				
+			din[63:46] <= pixel_buffer;
 
-				din[63:46] <= pixel_buffer;
+
+		 	if ((cb < 10'h190) & (cr > 10'h280) & (lum > 10'h200)) begin
+				din[45:38] <= 8'b11111111;
+				din[37:33] <= 5'b11111;
+				din[32:28] <= 5'b00000;
+			end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h180) &
+							 (lum < 10'h300) & (cr > 10'h1D0) & (cb > 10'h120)) begin
+							 din[45:38] <= 8'b11111111;
+				din[37:33] <= 5'b00000;
+				din[32:28] <= 5'b00000;
+			end else if ((cb > 10'h1F0) & (cr > 10'h280) & (lum > 10'h190)) begin
+				din[45:38] <= 8'b11111111;
+				din[37:33] <= 5'b11111;
+				din[32:28] <= 5'b11111;
+			end else if ((cb > 10'h200) & (cr < 10'h1F0) & (lum > 10'h1A0)) begin
+				din[45:38] <= 8'b11111111;
+				din[37:33] <= 5'b00000;
+				din[32:28] <= 5'b11111;
+			end else begin
 				din[45:38] <= ycrcb[29:22];
 				din[37:33] <= ycrcb[19:15];
 				din[32:28] <= ycrcb[9:5];
+			end
+			
 				din[27] <= 1;
 				din[26] <= 0;
 				din[25:16] <= x-1;
