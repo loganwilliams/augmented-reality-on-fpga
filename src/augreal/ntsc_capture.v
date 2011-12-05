@@ -102,7 +102,7 @@ module ntsc_capture(
 	 rh <= 0;
       end
       
-      if (((y > 479) | v) & f & ~pulseonce) begin
+      if (((y > 504) | v) & f & ~pulseonce) begin
 	 din <= {36'b0, 1'b0, 1'b1, x, y, color, interesting_flag, 4'b0};
 	 wr_en <= 1;
 	       
@@ -118,7 +118,7 @@ module ntsc_capture(
       
       if (dv) begin
 
-	 if (y < 480 && x < 640) begin // above 480 lines are blanked
+	 if (y >= 25 && y < 505 && x < 640) begin // above 480 lines are blanked
 	    if (state == 0) begin
 	       pixel_buffer[17:10] <= ycrcb[29:22];
 	       pixel_buffer[9:5] <= ycrcb[19:15];
@@ -133,7 +133,7 @@ module ntsc_capture(
 			  din[27] <= 0;
 			  din[26] <= 0;
 				din[25:16] <= x;
-				din[15:7] <= y;
+				din[15:7] <= y - 25;
 				din[6:5] <= color;
 				din[4] <= interesting_flag;
 				wr_en <= 1;
@@ -155,7 +155,7 @@ module ntsc_capture(
 				din[27] <= 1;
 				din[26] <= 0;
 				din[25:16] <= x-1;
-				din[15:7] <= y;
+				din[15:7] <= y - 25;
 				din[6:5] <= color;
 				din[4] <= interesting_flag;
 
