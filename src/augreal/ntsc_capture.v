@@ -115,7 +115,7 @@ wire [9:0] lum;
       if (((y > 504) | v) & f & ~pulseonce) begin
 	 din <= {36'b0, 1'b0, 1'b1, x, y, color, interesting_flag, 4'b0};
 	 wr_en <= 1;
-	       
+	 
 	 pulseonce <= 1;
       end else begin
 	 wr_en <= 0;
@@ -129,99 +129,116 @@ wire [9:0] lum;
       if (dv) begin
 
 	 if (y >= 25 && y < 505 && x < 640) begin // above 480 lines are blanked
-	 
-	 if (x == 320 && y == 265) begin
-		midcr <= cr;
-		midcb <= cb;
-		midy <= ycrcb[29:20];
-		end
-	 
-	 
+	    
+	    if (x == 320 && y == 265) begin
+	       midcr <= cr;
+	       midcb <= cb;
+	       midy <= ycrcb[29:20];
+	    end
+	    
+	    
 	    if (state == 0) begin
-		 // ORANGE
-		 	 if ((cb < 10'h190) & (cr > 10'h280) & (lum > 10'h200)) begin
-				pixel_buffer[17:10] <= 8'b11111111;
-				pixel_buffer[9:5]<= 5'b11111;
-				pixel_buffer[4:0] <= 5'b00000;
-				
-				// GREEN
-			end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h180) &
-							 (lum < 10'h300) & (cr > 10'h1D0) & (cb > 10'h120)) begin
-				pixel_buffer[17:10] <= 8'b11111111;
-				pixel_buffer[9:5] <= 5'b00000;
-				pixel_buffer[4:0] <= 5'b00000;
-				
-				// PINK
-			end else if ((cb > 10'h1F0) & (cr > 10'h280) & (lum > 10'h190)) begin
-				pixel_buffer[17:10] <= 8'b11111111;
-				pixel_buffer[9:5] <= 5'b11111;
-				pixel_buffer[4:0] <= 5'b11111;
-				
-				// BLUE
-			end else if ((cb > 10'h200) & (cr < 10'h1F0) & (lum > 10'h1A0)) begin
-				pixel_buffer[17:10] <= 8'b11111111;
-				pixel_buffer[9:5] <= 5'b00000;
-				pixel_buffer[4:0] <= 5'b11111;
-				
-			end else begin 
-				pixel_buffer[17:10] <= ycrcb[29:22];
-				pixel_buffer[9:5] <= ycrcb[19:15];
-				pixel_buffer[4:0] <= ycrcb[9:5];
-			 end
+	       // ORANGE
+	       if ((cb < 10'h190) & (cr > 10'h280) & (lum > 10'h200)) begin
+		  pixel_buffer[17:10] <= 8'b11111111;
+		  pixel_buffer[9:5]<= 5'b11111;
+		  pixel_buffer[4:0] <= 5'b00000;
+		  din[4] <= 1;
+		din[6:5] <= 0;
+		din[25:16] <= x;
+		din[15:7] <= y - 25;
+		  wr_en <= 1;
+		  // GREEN
+	       end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h190) &
+			    (lum < 10'h300) & (cr > 10'h1D0) & (cb > 10'h120)) begin
+		  pixel_buffer[17:10] <= 8'b11111111;
+		  pixel_buffer[9:5] <= 5'b00000;
+		  pixel_buffer[4:0] <= 5'b00000;
+		  din[4] <= 1;
+		  din[6:5] <= 2'b11;
+		  din[25:16] <= x;
+		  din[15:7] <= y - 25;
+		  wr_en <= 1;
+		  // PINK
+	       end else if ((cb > 10'h1F0) & (cr > 10'h280) & (lum > 10'h190)) begin
+		  pixel_buffer[17:10] <= 8'b11111111;
+		  pixel_buffer[9:5] <= 5'b11111;
+		  pixel_buffer[4:0] <= 5'b11111;
+		  din[4] <= 1;
+		  din[6:5] <= 2'b01;
+		  din[25:16] <= x;
+		  din[15:7] <= y - 25;
+		  wr_en <= 1;
+		  // BLUE
+	       end else if ((cb > 10'h200) & (cr < 10'h1F0) & (lum > 10'h1A0)) begin
+		  pixel_buffer[17:10] <= 8'b11111111;
+		  pixel_buffer[9:5] <= 5'b00000;
+		  pixel_buffer[4:0] <= 5'b11111;
+		  din[4] <= 1;
+		  din[6:5] <=2'b10;
+		  din[25:16] <= x;
+		  din[15:7] <= y - 25;
+		  wr_en <= 1;
+	       end else begin 
+		  pixel_buffer[17:10] <= ycrcb[29:22];
+		  pixel_buffer[9:5] <= ycrcb[19:15];
+		  pixel_buffer[4:0] <= ycrcb[9:5];
+		  wr_en <= 0;
+	       end
 
 	       state <= 1;
 
 	       // we only output on state 0 if interesting pixels have been
 	       // detected
-
-			  if (interesting_flag) begin
-			  din[27] <= 0;
-			  din[26] <= 0;
-				din[25:16] <= x;
-				din[15:7] <= y - 25;
-				din[6:5] <= color;
-				din[4] <= interesting_flag;
-				wr_en <= 1;
-				end else wr_en <= 0;
 	       
 	    end else begin
 	       state <= 0;
 
-			din[63:46] <= pixel_buffer;
+	       din[63:46] <= pixel_buffer;
 
 
-		 	if ((cb < 10'h190) & (cr > 10'h280) & (lum > 10'h200)) begin
-				din[45:38] <= 8'b11111111;
-				din[37:33] <= 5'b11111;
-				din[32:28] <= 5'b00000;
-			end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h180) &
-							 (lum < 10'h300) & (cr > 10'h1D0) & (cb > 10'h120)) begin
-							 din[45:38] <= 8'b11111111;
-				din[37:33] <= 5'b00000;
-				din[32:28] <= 5'b00000;
-			end else if ((cb > 10'h1F0) & (cr > 10'h280) & (lum > 10'h190)) begin
-				din[45:38] <= 8'b11111111;
-				din[37:33] <= 5'b11111;
-				din[32:28] <= 5'b11111;
-			end else if ((cb > 10'h200) & (cr < 10'h1F0) & (lum > 10'h1A0)) begin
-				din[45:38] <= 8'b11111111;
-				din[37:33] <= 5'b00000;
-				din[32:28] <= 5'b11111;
-			end else begin
-				din[45:38] <= ycrcb[29:22];
-				din[37:33] <= ycrcb[19:15];
-				din[32:28] <= ycrcb[9:5];
-			end
-			
-				din[27] <= 1;
-				din[26] <= 0;
-				din[25:16] <= x-1;
-				din[15:7] <= y - 25;
-				din[6:5] <= color;
-				din[4] <= interesting_flag;
+	       if ((cb < 10'h190) & (cr > 10'h280) & (lum > 10'h200)) begin
+		  din[45:38] <= 8'b11111111;
+		  din[37:33] <= 5'b11111;
+		  din[32:28] <= 5'b00000;
+		  		  din[4] <= 1;
+		  din[6:5] <= 2'b00;
+		  wr_en <= 1;
+	       end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h190) &
+			    (lum < 10'h300) & (cr > 10'h1D0) & (cb > 10'h120)) begin
+		  din[45:38] <= 8'b11111111;
+		  din[37:33] <= 5'b00000;
+		  din[32:28] <= 5'b00000;
+		  		  din[4] <= 1;
+		  din[6:5] <= 2'b11;
+		  wr_en <= 1;
+	       end else if ((cb > 10'h1F0) & (cr > 10'h280) & (lum > 10'h190)) begin
+		  din[45:38] <= 8'b11111111;
+		  din[37:33] <= 5'b11111;
+		  din[32:28] <= 5'b11111;
+		  		  din[4] <= 1;
+		  din[6:5] <= 2'b01;
+	       end else if ((cb > 10'h200) & (cr < 10'h1F0) & (lum > 10'h1A0)) begin
+		  din[45:38] <= 8'b11111111;
+		  din[37:33] <= 5'b00000;
+		  din[32:28] <= 5'b11111;	
+		  din[4] <= 1;
+		  din[6:5] <= 2'b10;
+	       end else begin
+		  din[45:38] <= ycrcb[29:22];
+		  din[37:33] <= ycrcb[19:15];
+		  din[32:28] <= ycrcb[9:5];
+		  	       din[6:5] <= 2'b00;
+	       din[4] <= 1'b0;
+	       end
+	       
+	       din[27] <= 1;
+	       din[26] <= 0;
+	       din[25:16] <= x-1;
+	       din[15:7] <= y - 25;
 
 	       wr_en <= 1;
-	      
+	       
 	    end // else: !if(state == 0)
 
 	    x <= x + 1; // increment the x coordinate
@@ -248,7 +265,7 @@ wire [9:0] lum;
       end
 
       // we have data
-      if (rd_en) begin
+      if (read_state) begin
 	 //{ntsc_pixels, ntsc_flag, o_frame_flag, o_x, o_y, o_color, o_i_flag} <= dout[63:4];
 	 ntsc_pixels <= dout[63: 28];
 	 ntsc_flag <= dout[27];
