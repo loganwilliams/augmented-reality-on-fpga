@@ -144,9 +144,9 @@ wire [9:0] lum;
 		  pixel_buffer[9:5]<= 5'b11111;
 		  pixel_buffer[4:0] <= 5'b00000;
 		  din[4] <= 1;
-		din[6:5] <= 0;
-		din[25:16] <= x;
-		din[15:7] <= y - 25;
+			din[6:5] <= 0;
+			din[25:16] <= x;
+			din[15:7] <= y - 25;
 		  wr_en <= 1;
 		  // GREEN
 	       end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h190) &
