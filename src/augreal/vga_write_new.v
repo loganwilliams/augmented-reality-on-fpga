@@ -37,7 +37,7 @@ module stupid_vga_write
 	// account for delay in memory
 	wire del_hcount;
 	wire del_vsync, del_hsync, del_blank;
-	parameter DELAY=6;
+	parameter DELAY=7;
 	delay #(.N(DELAY), .LOG(1)) dhc(.clock(vclock), .reset(reset), .x(hcount[0]), .y(del_hcount));
 	delay #(.N(DELAY), .LOG(1)) dhs(.clock(vclock), .reset(reset), .x(hsync), .y(del_hsync));
 	delay #(.N(DELAY), .LOG(1)) dvs(.clock(vclock), .reset(reset), .x(vsync), .y(del_vsync));
@@ -49,7 +49,7 @@ module stupid_vga_write
 	wire [7:0] b;
 	reg [35:0] pixel;
 	ycrcb_lut ycc(
-		.ycrcb(~del_hcount ? pixel[35:18] : pixel[17:0]),
+		.ycrcb(del_hcount ? pixel[35:18] : pixel[17:0]),
 		.r(r), .g(g), .b(b));
 	
 	// generate vga_flag 1 out of every 4 clock cycles
