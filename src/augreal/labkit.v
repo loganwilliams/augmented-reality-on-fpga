@@ -217,11 +217,14 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
 	// generate 25 mhz clock
 	wire clock_25mhz_unbuf, clock_25mhz;
+	wire clock0_25mhz_unbuf, clock0_25mhz_buf;
 	DCM vclk3(
-		.CLKIN(clock_65mhz), .CLKFB(clock_25mhz),
+		.CLKIN(clock_65mhz), .CLKFB(clock0_25mhz_buf), .CLK0(clock0_25mhz_unbuf),
 		.CLKDV(clock_25mhz_unbuf), .LOCKED(led[1]), .RST(resetdcm));
 	// synthesis attribute CLKDV_DIVIDE of vclk3 is 2
 	// synthesis attribute CLK_FEEDBACK of vclk3 is "1X"
+	// synthesis attribute STARTUP_WAIT of vclk3 is TRUE
+	BUFG vclkfb(.O(clock0_25mhz_buf), .I(clock0_25mhz_unbuf));
 	BUFG vclk4(.O(clock_25mhz),.I(clock_25mhz_unbuf));
 	
 	
