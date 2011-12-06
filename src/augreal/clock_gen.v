@@ -25,24 +25,12 @@ module clock_gen(
 	// synthesis attribute CLKIN_PERIOD of vclk1 is 37
 	BUFG vclk2(.O(clock_50mhz_buf),.I(clock_50mhz_unbuf));
 	
-	wire locked;
-	ramclock rc(.ref_clock(clock_50mhz_buf), .fpga_clock(clock_50mhz),
+	ramclock rc(.ref_clock(clock_50mhz_buf), .fpga_clock(clock_50mhz), .fpga_clock_d2(clock_25mhz),
 		    .ram0_clock(ram0_clk), .ram1_clock(ram1_clk),
 		    .clock_feedback_in(clock_feedback_in), .clock_feedback_out(clock_feedback_out), 
 		    .locked(locked_ram));
-
-	// generate 25 mhz clock
-	wire clock_25mhz_unbuf;
-	wire clock_fb_unbuf, clock_fb_buf;
-	DCM vclk3(.CLKIN(clock_50mhz), .CLKFB(clock_fb_buf), .CLK0(clock_fb_unbuf),
-		  .CLKDV(clock_25mhz_unbuf), .LOCKED(locked_25mhz), .RST(reset_dcm));
-	// synthesis attribute CLKDV_DIVIDE of vclk3 is 2
-	// synthesis attribute CLK_FEEDBACK of vclk3 is 1X
-	// synthesis attribute CLKOUT_PHASE_SHIFT of vclk3 is "FIXED"
-	// synthesis attribute PHASE_SHIFT of vclk3 is 0
-	// synthesis attribute DLL_FREQUENCY_MODE of vclk3 is "HIGH"
-	BUFG vclkfb(.O(clock_fb_buf), .I(clock_fb_unbuf));
-	BUFG vclk4(.O(clock_25mhz),.I(clock_25mhz_unbuf));
+	
+	assign locked_25mhz = locked_ram;	
 endmodule
 
 
@@ -77,17 +65,18 @@ endmodule
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-module ramclock(ref_clock, fpga_clock, ram0_clock, ram1_clock, 
+module ramclock(ref_clock, fpga_clock, fpga_clock_d2, ram0_clock, ram1_clock, 
 	        clock_feedback_in, clock_feedback_out, locked);
    
    input ref_clock;                 // Reference clock input
    output fpga_clock;               // Output clock to drive FPGA logic
+   output fpga_clock_d2;
    output ram0_clock, ram1_clock;   // Output clocks for each RAM chip
    input  clock_feedback_in;        // Output to feedback trace
    output clock_feedback_out;       // Input from feedback trace
    output locked;                   // Indicates that clock outputs are stable
    
-   wire  ref_clk, fpga_clk, ram_clk, fb_clk, lock1, lock2, dcm_reset, ram_clock;
+   wire  ref_clk, fpga_clk, fpga_clk_d2, ram_clk, fb_clk, lock1, lock2, dcm_reset, ram_clock;
 
    ////////////////////////////////////////////////////////////////////////////
    
@@ -95,19 +84,22 @@ module ramclock(ref_clock, fpga_clock, ram0_clock, ram1_clock,
 	assign ref_clk = ref_clock;
    
    BUFG int_buf (.O(fpga_clock), .I(fpga_clk));
+   BUFG int_buf_d2 (.O(fpga_clock_d2), .I(fpga_clk_d2));
 
    DCM int_dcm (.CLKFB(fpga_clock),
 		.CLKIN(ref_clk),
 		.RST(dcm_reset),
 		.CLK0(fpga_clk),
+		.CLKDV(fpga_clk_d2),
 		.LOCKED(lock1));
    // synthesis attribute DLL_FREQUENCY_MODE of int_dcm is "LOW"
    // synthesis attribute DUTY_CYCLE_CORRECTION of int_dcm is "TRUE"
    // synthesis attribute STARTUP_WAIT of int_dcm is "FALSE"
    // synthesis attribute DFS_FREQUENCY_MODE of int_dcm is "LOW"
    // synthesis attribute CLK_FEEDBACK of int_dcm  is "1X"
-   // synthesis attribute CLKOUT_PHASE_SHIFT of int_dcm is "NONE"
+   // synthesis attribute CLKOUT_PHASE_SHIFT of int_dcm is "FIXED"
    // synthesis attribute PHASE_SHIFT of int_dcm is 0
+   // synthesis attribute CLKDV_DIVIDE of int_dcm is 2
    
    BUFG ext_buf (.O(ram_clock), .I(ram_clk));
    
