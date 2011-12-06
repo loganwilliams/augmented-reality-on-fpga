@@ -196,22 +196,18 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
 	wire resetdcm;
 	debounce db4(.clock(clock_27mhz), .noisy(~button0), .clean(resetdcm));
-
 	
-
 	// generate 65 mhz clock
 	wire clock_65mhz_unbuf,clock_65mhz_buf;
 	
-	assign clock_65mhz_unbuf = clock_27mhz;
+	//assign clock_65mhz_unbuf = clock_27mhz;
 	
-	//DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf), .LOCKED(led[0]), .RST(resetdcm));
-	// synthesis attribute CLKFX_DIVIDE of vclk1 is 9
-	// synthesis attribute CLKFX_MULTIPLY of vclk1 is 25
-	// synthesis attribute CLK_FEEDBACK of vclk1 is NONE
+	DCM vclk1(.CLKIN(clock_27mhz),.CLKFX(clock_65mhz_unbuf), .LOCKED(led[0]), .RST(resetdcm));
+	// synthesis attribute CLKFX_DIVIDE of vclk1 is 15
+	// synthesis attribute CLKFX_MULTIPLY of vclk1 is 28
+	// synthesis attribute CLK_FEEDBACK of vclk1 is "NONE"
 	// synthesis attribute CLKIN_PERIOD of vclk1 is 37
 	BUFG vclk2(.O(clock_65mhz_buf),.I(clock_65mhz_unbuf));
-	
-	
 	
 	wire locked;
 	ramclock rc(.ref_clock(clock_65mhz_buf), .fpga_clock(clock_65mhz),
@@ -220,12 +216,12 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 				.clock_feedback_out(clock_feedback_out), .locked(locked));
 
 	// generate 25 mhz clock
-	wire clock_25mhz_unbuf,clock_25mhz;
-	DCM vclk3(.CLKIN(clock_65mhz),.CLKFX(clock_25mhz_unbuf), .LOCKED(led[0]), .RST(resetdcm));
-	// synthesis attribute CLKFX_DIVIDE of vclk3 is 6
-	// synthesis attribute CLKFX_MULTIPLY of vclk3 is 2
-	// synthesis attribute CLK_FEEDBACK of vclk3 is NONE
-	// synthesis attribute CLKIN_PERIOD of vclk3 is 13
+	wire clock_25mhz_unbuf, clock_25mhz;
+	DCM vclk3(
+		.CLKIN(clock_65mhz), .CLKFB(clock_25mhz),
+		.CLKDV(clock_25mhz_unbuf), .LOCKED(led[1]), .RST(resetdcm));
+	// synthesis attribute CLKDV_DIVIDE of vclk3 is 2
+	// synthesis attribute CLK_FEEDBACK of vclk3 is "1X"
 	BUFG vclk4(.O(clock_25mhz),.I(clock_25mhz_unbuf));
 	
 	
@@ -285,7 +281,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// disp_data_in is an input
 
 	// Buttons, Switches, and Individual LEDs
-	assign led[7:1] = 7'b0;
+	assign led[7:2] = 6'b0;
 	// button0, button1, button2, button3, button_enter, button_right,
 	// button_left, button_down, button_up, and switches are inputs
 
@@ -568,8 +564,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.vga_out_pixel_clock(vga_out_pixel_clock),
 		.vga_out_hsync(vga_out_hsync), 
 		.vga_out_vsync(vga_out_vsync),
-		.hcount(hcount),
-		.vcount(vcount));
+		.clocked_hcount(hcount),
+		.clocked_vcount(vcount));
 	// use above if using vga
 	
 	// use below if testing vga
@@ -588,7 +584,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//assign analyzer1_data = 16'h0;
 	//assign analyzer2_data = 16'h0;
 	//assign analyzer3_data = 16'h0;
-	//assign analyzer4_data = 16'h0;
+	assign analyzer4_data = 16'h0;
 
 	// user-defined analyzers
 
@@ -598,7 +594,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
    assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, done_vga, done_ntsc, vga_flag,  fvh, empty, wr_en, wr_ack, nr};
    assign analyzer3_data = {ram0_address[18:3]};
    assign analyzer2_data = {ram0_address[2:0], ram1_address[18:6]};
-   assign analyzer4_data = {ram1_address[5:0], ntsc_x[4:0], hcount[4:0]};
+   // assign analyzer4_data = {ram1_address[5:0], ntsc_x[4:0], hcount[4:0]};
    
    assign analyzer3_clock = tv_in_line_clock1;
    assign analyzer1_clock = clock_27mhz;
@@ -607,6 +603,36 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 endmodule
 
 // ramclock module
+///////////////////////////////////////////////////////////////////////////////
+//
+// 6.111 FPGA Labkit -- ZBT RAM clock generation
+//
+//
+// Created: April 27, 2004
+// Author: Nathan Ickes
+//
+///////////////////////////////////////////////////////////////////////////////
+//
+// This module generates deskewed clocks for driving the ZBT SRAMs and FPGA 
+// registers. A special feedback trace on the labkit PCB (which is length 
+// matched to the RAM traces) is used to adjust the RAM clock phase so that 
+// rising clock edges reach the RAMs at exactly the same time as rising clock 
+// edges reach the registers in the FPGA.
+//
+// The RAM clock signals are driven by DDR output buffers, which further 
+// ensures that the clock-to-pad delay is the same for the RAM clocks as it is 
+// for any other registered RAM signal.
+//
+// When the FPGA is configured, the DCMs are enabled before the chip-level I/O
+// drivers are released from tristate. It is therefore necessary to
+// artificially hold the DCMs in reset for a few cycles after configuration. 
+// This is done using a 16-bit shift register. When the DCMs have locked, the 
+// <lock> output of this mnodule will go high. Until the DCMs are locked, the 
+// ouput clock timings are not guaranteed, so any logic driven by the 
+// <fpga_clock> should probably be held inreset until <locked> is high.
+//
+///////////////////////////////////////////////////////////////////////////////
+
 module ramclock(ref_clock, fpga_clock, ram0_clock, ram1_clock, 
 	        clock_feedback_in, clock_feedback_out, locked);
    
@@ -621,9 +647,7 @@ module ramclock(ref_clock, fpga_clock, ram0_clock, ram1_clock,
 
    ////////////////////////////////////////////////////////////////////////////
    
-   //To force ISE to compile the ramclock, this line has to be removed.
-   //IBUFG ref_buf (.O(ref_clk), .I(ref_clock));
-	
+   // IBUFG ref_buf (.O(ref_clk), .I(ref_clock));
 	assign ref_clk = ref_clock;
    
    BUFG int_buf (.O(fpga_clock), .I(fpga_clk));
@@ -672,4 +696,19 @@ module ramclock(ref_clock, fpga_clock, ram0_clock, ram1_clock,
 
    assign locked = lock1 && lock2;
    
+endmodule
+
+
+module debounce (input reset, clock, noisy,
+                 output reg clean);
+
+   reg [19:0] count;
+   reg new;
+
+   always @(posedge clock)
+     if (reset) begin new <= noisy; clean <= noisy; count <= 0; end
+     else if (noisy != new) begin new <= noisy; count <= 0; end
+     else if (count == 650000) clean <= new;
+     else count <= count+1;
+
 endmodule
