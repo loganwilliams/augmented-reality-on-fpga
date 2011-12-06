@@ -16,7 +16,7 @@ module ntsc_capture(
 		    output reg [8:0] o_y,
 			 output empty,
 			 output reg wr_en,
-			 output wr_ack,
+			 output read_state_out,
 			 output [3:0] ntsc_raw,
 			 output reg [9:0] midcr,
 			 output reg [9:0] midcb,
@@ -42,13 +42,15 @@ module ntsc_capture(
    reg [17:0] 			     pixel_buffer;
 
    reg 				     read_state;
+   assign read_state_out = read_state;
+   
    
    
 
    ntf n2f(.din(din), .rd_clk(clock_65mhz), .rd_en(rd_en),
 		    .rst(reset), .wr_clk(tv_in_line_clock1), .wr_en(wr_en),
-		    .dout(dout), .empty(empty), .full(full), .valid(valid),
-		    .wr_ack(wr_ack));
+		    .dout(dout), .empty(empty), .full(full), .valid(valid)
+		    );
    
 
    // this module decodes the data and outputs the ycrcb pair
@@ -60,38 +62,33 @@ module ntsc_capture(
    reg [9:0] 			     x = 0;
    reg [8:0] 			     y = 0;
    
-   wire 			     f;
-   wire 			     v;
-   wire 			     h;
-   
    wire 			     sv;
    wire 			     sh;
    reg 				     rh;
    reg 				     rv;
-
-   synchronize syncv(.sig(v), .syncsig(sv), .reset(rv));
-   synchronize synch(.sig(h), .syncsig(sh), .reset(rh));
    
    reg 				     pulseonce;
+
+   // create some convenience variables
+   wire [9:0] 			     cr, cb, lum;
+   wire 			     f, v, h;
    
+   assign cr = ycrcb[19:10];
+   assign cb = ycrcb[9:0];
+   assign lum = ycrcb[29:20];
+
    assign f = fvh[2];
    assign v = fvh[1];
    assign h = fvh[0];
 
-   wire [1:0] 			     color;
-   wire 			     interesting_flag;
-	
-	wire [9:0] cr;
-wire [9:0] 	cb;
-wire [9:0] lum;
-	assign cr = ycrcb[19:10];
-	assign cb = ycrcb[9:0];
-	assign lum = ycrcb[29:20];
+   wire [8:0] 			     corrected_y;
 
-   assign color = 2'b00;
-   assign interesting_flag = 1'b0;
-	
-	assign ntsc_raw = din[28:25];
+   assign corrected_y = y - 25;
+   
+   assign ntsc_raw = din[28:25];
+
+   synchronize syncv(.sig(v), .syncsig(sv), .reset(rv));
+   synchronize synch(.sig(h), .syncsig(sh), .reset(rh));
 
    // synchronize to the external video line clock
    always @ (posedge tv_in_line_clock1) begin
@@ -113,7 +110,9 @@ wire [9:0] lum;
       end
       
       if (((y > 504) | v) & f & ~pulseonce) begin
-	 din <= {36'b0, 1'b0, 1'b1, x, y, color, interesting_flag, 4'b0};
+	 din[26] <= 1;
+	 din[27] <= 0;
+	 
 	 wr_en <= 1;
 	 
 	 pulseonce <= 1;
@@ -122,9 +121,9 @@ wire [9:0] lum;
 	 
       end
       
-      if (~f) begin
-	 pulseonce <= 0;
-      end
+	 if (~f) begin
+	    pulseonce <= 0;
+	 end
       
       if (dv) begin
 
@@ -136,49 +135,70 @@ wire [9:0] lum;
 	       midy <= ycrcb[29:20];
 	    end
 	    
-	    
 	    if (state == 0) begin
+	       
 	       // ORANGE
 	       if ((cb < 10'h190) & (cr > 10'h280) & (lum > 10'h200)) begin
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5]<= 5'b11111;
 		  pixel_buffer[4:0] <= 5'b00000;
+
+		  // we have detected a pixel, so spit out an interesting flag, and
+		  // the current coordinates
+		  din[27] <= 0;
+		  
 		  din[4] <= 1;
-			din[6:5] <= 0;
-			din[25:16] <= x;
-			din[15:7] <= y - 25;
+		  din[6:5] <= 0;
+		  din[25:16] <= x;
+		  din[15:7] <= corrected_y;
+		 
 		  wr_en <= 1;
+		  
 		  // GREEN
 	       end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h190) &
 			    (lum < 10'h300) & (cr > 10'h1D0) & (cb > 10'h120)) begin
+		  
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5] <= 5'b00000;
 		  pixel_buffer[4:0] <= 5'b00000;
+		  din[27] <= 0;
+		  
 		  din[4] <= 1;
 		  din[6:5] <= 2'b11;
 		  din[25:16] <= x;
-		  din[15:7] <= y - 25;
+		  din[15:7] <= corrected_y;
+		 
 		  wr_en <= 1;
+
+		  
 		  // PINK
 	       end else if ((cb > 10'h1F0) & (cr > 10'h280) & (lum > 10'h190)) begin
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5] <= 5'b11111;
 		  pixel_buffer[4:0] <= 5'b11111;
+		  din[27] <= 0;
+		  
 		  din[4] <= 1;
 		  din[6:5] <= 2'b01;
 		  din[25:16] <= x;
-		  din[15:7] <= y - 25;
+		  din[15:7] <= corrected_y;
 		  wr_en <= 1;
+
+		  
 		  // BLUE
 	       end else if ((cb > 10'h200) & (cr < 10'h1F0) & (lum > 10'h1A0)) begin
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5] <= 5'b00000;
 		  pixel_buffer[4:0] <= 5'b11111;
+		  din[27] <= 0;
+		  
 		  din[4] <= 1;
 		  din[6:5] <=2'b10;
 		  din[25:16] <= x;
-		  din[15:7] <= y - 25;
+		  din[15:7] <= corrected_y;
 		  wr_en <= 1;
+
+		  
 	       end else begin 
 		  pixel_buffer[17:10] <= ycrcb[29:22];
 		  pixel_buffer[9:5] <= ycrcb[19:15];
@@ -196,14 +216,16 @@ wire [9:0] lum;
 
 	       din[63:46] <= pixel_buffer;
 
-
+	       // ORANGe
 	       if ((cb < 10'h190) & (cr > 10'h280) & (lum > 10'h200)) begin
 		  din[45:38] <= 8'b11111111;
 		  din[37:33] <= 5'b11111;
 		  din[32:28] <= 5'b00000;
-		  		  din[4] <= 1;
+		  din[4] <= 1;
 		  din[6:5] <= 2'b00;
 		  wr_en <= 1;
+
+	       // GREEN
 	       end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h190) &
 			    (lum < 10'h300) & (cr > 10'h1D0) & (cb > 10'h120)) begin
 		  din[45:38] <= 8'b11111111;
@@ -212,12 +234,16 @@ wire [9:0] lum;
 		  		  din[4] <= 1;
 		  din[6:5] <= 2'b11;
 		  wr_en <= 1;
+
+	       // PINK
 	       end else if ((cb > 10'h1F0) & (cr > 10'h280) & (lum > 10'h190)) begin
 		  din[45:38] <= 8'b11111111;
 		  din[37:33] <= 5'b11111;
 		  din[32:28] <= 5'b11111;
 		  		  din[4] <= 1;
 		  din[6:5] <= 2'b01;
+
+	       // BLUE
 	       end else if ((cb > 10'h200) & (cr < 10'h1F0) & (lum > 10'h1A0)) begin
 		  din[45:38] <= 8'b11111111;
 		  din[37:33] <= 5'b00000;
@@ -228,14 +254,14 @@ wire [9:0] lum;
 		  din[45:38] <= ycrcb[29:22];
 		  din[37:33] <= ycrcb[19:15];
 		  din[32:28] <= ycrcb[9:5];
-		  	       din[6:5] <= 2'b00;
-	       din[4] <= 1'b0;
+		  din[6:5] <= 2'b00;
+		  din[4] <= 1'b0;
 	       end
 	       
 	       din[27] <= 1;
 	       din[26] <= 0;
-	       din[25:16] <= x-1;
-	       din[15:7] <= y - 25;
+	       din[25:16] <= x[9:1]<<1;
+	       din[15:7] <= corrected_y;
 
 	       wr_en <= 1;
 	       
@@ -266,7 +292,6 @@ wire [9:0] lum;
 
       // we have data
       if (read_state) begin
-	 //{ntsc_pixels, ntsc_flag, o_frame_flag, o_x, o_y, o_color, o_i_flag} <= dout[63:4];
 	 ntsc_pixels <= dout[63: 28];
 	 ntsc_flag <= dout[27];
 	 o_frame_flag <= dout[26];
@@ -276,7 +301,6 @@ wire [9:0] lum;
 	 o_i_flag <= dout[4];
 	 
       end else begin
-	 //{ntsc_pixels, ntsc_flag, o_frame_flag, o_x, o_y, o_color, o_i_flag} <= 60'b0;
 	 ntsc_pixels <= 0;
 	 ntsc_flag <= 0;
 	 o_frame_flag <= 0;
