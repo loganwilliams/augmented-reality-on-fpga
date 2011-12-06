@@ -33,9 +33,9 @@ module dumb_lpf(
 
 	always @(*) begin
 		// pulse lpf_flag only when x is even and a pixel is requested
-		lpf_flag = request & ~x[0];
+		lpf_flag = request & ~lpf_x[0];
 		// pulse pixel flag when done_lpf is high and x[0] is even
-		// or 1 cycle after request when x is odd
+		// or 1 cycle after request when lpf_x is odd
 		pixel_flag = done_lpf | pixel_flag_odd;
 
 		// x and y are the next set of coordinates
@@ -43,12 +43,16 @@ module dumb_lpf(
 			x = 0;
 			y = 0;
 		end
-		else if (pixel_flag) begin
-			x = (lpf_x == `IMAGE_WIDTH-1) ? `LOG_WIDTH'd0 : lpf_x+1;
-			y = (lpf_x == `IMAGE_WIDTH-1) ? lpf_y+1 : lpf_y;
+		else if (!pixel_flag) begin
+			x = lpf_x;
+			y = lpf_y;
+		end
+		else if (lpf_x == `IMAGE_WIDTH-1) begin
+			x = `LOG_WIDTH'd0;
+			y = lpf_y+1;
 		end
 		else begin
-			x = lpf_x;
+			x = lpf_x+1;
 			y = lpf_y;
 		end
 	end
@@ -57,7 +61,7 @@ module dumb_lpf(
 		// update lpf_x and lpf_y
 		lpf_x <= x;
 		lpf_y <= y;
-		pixel_flag_odd <= request & x[0];
+		pixel_flag_odd <= request & lpf_x[0];
 	end
 
 	// delay lpf_x, lpf_y | module is located in vga_write_new.v
