@@ -194,6 +194,22 @@ module memory_interface
 		// assign read value to corresponding member of queue
 		mem0_next_read <= mem0_read_queue[LOG_ORD-1:0];
 		mem1_next_read <= mem1_read_queue[LOG_ORD-1:0];
+		
+		// LPF's turn in the queue
+		if (mem0_next_read == LPF) lpf_pixel_read <= mem0_read;
+		else if (mem1_next_read == LPF) lpf_pixel_read <= mem1_read;
+		else lpf_pixel_read <= prev_lpf_pixel_read;
+
+		// PTF's turn
+		if (mem0_next_read == PTF) ptf_pixel_read <= mem0_read;
+		else if (mem1_next_read == PTF) ptf_pixel_read <= mem1_read;
+		else ptf_pixel_read <= prev_ptf_pixel_read;
+
+		// VGA's turn
+		if (mem0_next_read == VGA) vga_pixel <= mem0_read;
+		else if (mem1_next_read == VGA) vga_pixel <= mem1_read;
+		else vga_pixel <= prev_vga_pixel;
+		// this should be it
 	end
 
 	always @(*) begin
@@ -202,22 +218,6 @@ module memory_interface
 		done_vga  = (mem0_done == VGA)  || (mem1_done == VGA);
 		done_lpf  = (mem0_done == LPF)  || (mem1_done == LPF);
 		done_ptf  = (mem0_done == PTF)  || (mem1_done == PTF);
-		
-		// LPF's turn in the queue
-		if (mem0_next_read == LPF) lpf_pixel_read = mem0_read;
-		else if (mem1_next_read == LPF) lpf_pixel_read = mem1_read;
-		else lpf_pixel_read = prev_lpf_pixel_read;
-
-		// PTF's turn
-		if (mem0_next_read == PTF) ptf_pixel_read = mem0_read;
-		else if (mem1_next_read == PTF) ptf_pixel_read = mem1_read;
-		else ptf_pixel_read = prev_ptf_pixel_read;
-
-		// VGA's turn
-		if (mem0_next_read == VGA) vga_pixel = mem0_read;
-		else if (mem1_next_read == VGA) vga_pixel = mem1_read;
-		else vga_pixel = prev_vga_pixel;
-		// this should be it
 	end
 
 	// set addresses of LPF and PTF from (x,y) coordinates
@@ -229,7 +229,7 @@ module memory_interface
 		.x(ptf_x), .y(ptf_y),
 		.loc(nexd_mem_loc), .addr(ptf_addr));
 	address_calculator vga_ac(
-		.x(hcount), .y(vcount),
+		.x(hcount), .y(vcount[8:0]),
 		.loc(disp_mem_loc), .addr(vga_addr));
 	address_calculator ntsc_ac(
 		.x(ntsc_x), .y(ntsc_y),
