@@ -31,6 +31,7 @@ module memory_interface
 		input [`LOG_HEIGHT-1:0] pt_y,
 		input [`LOG_TRUNC-1:0] pt_pixel,
 		output done_pt,
+		output reg ready_pt,
 		// VGA_WRITE
 		input vga_flag,
 		output reg done_vga,
@@ -218,6 +219,10 @@ module memory_interface
 		done_vga  = (mem0_done == VGA)  || (mem1_done == VGA);
 		done_lpf  = (mem0_done == LPF)  || (mem1_done == LPF);
 		done_ptf  = (mem0_done == PTF)  || (mem1_done == PTF);
+
+		if (nexd_mem_block == capt_mem_block) ready_pt = ~ntsc_flag;
+		else if (nexd_mem_block == disp_mem_block) ready_pt = ~vga_flag;
+		else ready_pt = 1'b0;
 	end
 
 	// set addresses of LPF and PTF from (x,y) coordinates
