@@ -248,12 +248,13 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// mouse_clock, mouse_data, keyboard_clock, and keyboard_data are inputs
 
 	// LED Displays
+	/*
 	assign disp_blank = 1'b1;
 	assign disp_clock = 1'b0;
 	assign disp_rs = 1'b0;
 	assign disp_ce_b = 1'b1;
 	assign disp_reset_b = 1'b0;
-	assign disp_data_out = 1'b0;
+	assign disp_data_out = 1'b0;*/
 	// disp_data_in is an input
 
 	// Buttons, Switches, and Individual LEDs
@@ -363,6 +364,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
 	wire empty, wr_ack, wr_en;
 	wire [3:0] nr;
+	wire [9:0] midcr, midcb, midy;
 
 	ntsc_capture ntsc(.clock_65mhz(clock_65mhz),
 			  .clock_27mhz(clock_27mhz),
@@ -380,8 +382,15 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 			  .read_state_out(wr_ack),
 			  .wr_en(wr_en),
 			  .empty(empty),
-			  .ntsc_raw(nr));
+			  .ntsc_raw(nr),
+			  .midcr(midcr),
+			  .midcb(midcb),
+			  .midy(midy));
 	
+	
+	display_16hex ds(reset, clock_27mhz, {16'b0, 6'b0, midy, 6'b0, midcr, 6'b0, midcb}, 
+		disp_blank, disp_clock, disp_rs, disp_ce_b,
+		disp_reset_b, disp_data_out);
 	
 	//debounce dbff(.clock(clock_65mhz), .noisy(~button1), .clean(frame_flag));
 	
