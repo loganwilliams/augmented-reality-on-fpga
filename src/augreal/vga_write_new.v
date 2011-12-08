@@ -38,13 +38,15 @@ module stupid_vga_write
 		.vcount(vcount), .vsync(vsync), .hsync(hsync), .blank(blank));
 
 	// account for delay in memory
-	wire del_hcount;
+	wire [9:0] del_hcount;
+	wire [9:0] del_vcount;
 	wire del_vsync, del_hsync, del_blank;
-	parameter DELAY=7;
-	delay #(.N(DELAY), .LOG(1)) dhc(.clock(vclock), .reset(reset), .x(hcount[0]), .y(del_hcount));
-	delay #(.N(DELAY), .LOG(1)) dhs(.clock(vclock), .reset(reset), .x(hsync), .y(del_hsync));
-	delay #(.N(DELAY), .LOG(1)) dvs(.clock(vclock), .reset(reset), .x(vsync), .y(del_vsync));
-	delay #(.N(DELAY), .LOG(1)) db(.clock(vclock), .reset(reset), .x(blank), .y(del_blank));
+	parameter DELAY=2;
+	delay2 #(.LOG(10)) dhc(.clock(vclock), .reset(reset), .x(hcount), .y(del_hcount));
+	delay2 #(.LOG(10)) dvc(.clock(vclock), .reset(reset), .x(vcount), .y(del_vcount));
+	delay2 #(.LOG(1)) dhs(.clock(vclock), .reset(reset), .x(hsync), .y(del_hsync));
+	delay2 #(.LOG(1)) dvs(.clock(vclock), .reset(reset), .x(vsync), .y(del_vsync));
+	delay2 #(.LOG(1)) db(.clock(vclock), .reset(reset), .x(blank), .y(del_blank));
 	
 	// assign color based on pixel fetched from memory
 	wire [7:0] r;
@@ -52,25 +54,32 @@ module stupid_vga_write
 	wire [7:0] b;
 	reg [35:0] pixel;
 	ycrcb_lut ycc(
-		.ycrcb(del_hcount ? pixel[35:18] : pixel[17:0]),
+		.ycrcb(del_hcount[0] ? pixel[35:18] : pixel[17:0]),
 		.r(r), .g(g), .b(b));
 
-	// generate vga_flag 1 out of every 4 clock cycles
 	reg [1:0] count;
 	always @(posedge clock) begin
+		// start count when both clock and vclock are rising (in sync)
 		if (count != 2'd0) count <= count+1;
 		else if (!vclock && hcount[0]) count <= 1;
 		else count <= 2'd0;
-		vga_flag <= count == 2'd0;
+
+		// grab pixel right before it changes
 		if (count == 2'd3) pixel <= vga_pixel;
 		else pixel <= pixel;
-	end
-
-	// update address every 2 vclock cycles
-	always @(posedge vclock) begin
-		if (hcount[0]) clocked_hcount[9:0] <= hcount[9:0];
-		else clocked_hcount[9:0] <= clocked_hcount[9:0];
-		clocked_vcount[9:0] <= vcount[9:0];
+		
+		// assign address of next pixel
+		// generate vga_flag 1 out of every 4 clock cycles
+		if (count == 2'd2) begin
+			vga_flag <= 1;
+			clocked_hcount[9:0] <= hcount[9:0];
+			clocked_vcount[9:0] <= vcount[9:0];
+		end
+		else begin
+			vga_flag <= 0;
+			clocked_hcount[9:0] <= clocked_hcount[9:0];
+			clocked_vcount[9:0] <= clocked_vcount[9:0];
+		end
 	end
 
 	// assign outputs to VGA chip
@@ -80,9 +89,9 @@ module stupid_vga_write
 			vga_out_green[7:0] <= 8'd0;
 			vga_out_blue[7:0] <= 8'd0;
 		end
-		else if (hcount == 10'd320 || vcount == 10'd240
-				|| hcount == a_x || hcount == b_x || hcount == c_x || hcount == d_x
-				|| vcount == a_y || vcount == b_y || vcount == c_y || vcount == d_y) begin
+		else if (del_hcount == 10'd320 || del_vcount == 10'd240
+				|| del_hcount == a_x || del_hcount == b_x || del_hcount == c_x || del_hcount == d_x
+				|| del_vcount == a_y || del_vcount == b_y || del_vcount == c_y || del_vcount == d_y) begin
 			vga_out_red[7:0] <= 8'hFF;
 			vga_out_green[7:0] <= 8'hFF;
 			vga_out_blue[7:0] <= 8'hFF;
@@ -100,7 +109,7 @@ module stupid_vga_write
 	
 	always @(*) begin
 		vga_out_sync_b = 1'b1;
-		vga_out_pixel_clock = ~vclock;
+		vga_out_pixel_clock = vclock;
 	end
 endmodule
 
@@ -167,7 +176,29 @@ module stupid_xvga
 	end
 endmodule
 
-module delay #(parameter N=2, LOG=1) 
+module delay2 #(parameter LOG=1)
+	(
+		input clock,
+		input reset,
+		input [LOG-1:0] x,
+		output reg [LOG-1:0] y
+	);
+	
+	reg [LOG-1:0] d;
+	
+	always @(posedge clock) begin
+		if(reset) begin
+			d <= 0;
+			y <= 0;
+		end
+		else begin
+			d <= x;
+			y <= d;
+		end
+	end
+endmodule
+
+module delay #(parameter N=3, LOG=1) 
 	(
 		input clock,
 		input reset,
@@ -181,10 +212,6 @@ module delay #(parameter N=2, LOG=1)
 		if (reset) begin
 			d <= 0;
 			y <= 0;
-		end
-		else if (N == 2) begin
-			d[LOG-1:0] <= x[LOG-1:0];
-			y[LOG-1:0] <= d[LOG-1:0];
 		end
 		else begin
 			d[LOG-1:0] <= x[LOG-1:0];
