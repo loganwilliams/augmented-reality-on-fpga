@@ -138,7 +138,10 @@ module ntsc_capture(
 	    if (state == 0) begin
 	       
 	       // ORANGE
-	       if ((cb < 10'h190) & (cr > 10'h280) & (lum > 10'h200)) begin
+	       if ((cb < `ORANGE_CB_MAX) & 
+		   (cr > `ORANGE_CR_MIN) & 
+		   (lum > `ORANGE_LUM_MIN)) begin
+		  
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5]<= 5'b11111;
 		  pixel_buffer[4:0] <= 5'b00000;
@@ -155,8 +158,12 @@ module ntsc_capture(
 		  wr_en <= 1;
 		  
 		  // GREEN
-	       end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h190) &
-			    (lum < 10'h300) & (cr > 10'h1D0) & (cb > 10'h120)) begin
+	       end else if ((cb < `GREEN_CB_MAX) & 
+			    (cr < `GREEN_CR_MAX) & 
+			    (lum > `GREEN_LUM_MIN) &
+			    (lum < `GREEN_LUM_MAX) & 
+			    (cr > `GREEN_CR_MIN) & 
+			    (cb > `GREEN_CB_MIN)) begin
 		  
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5] <= 5'b00000;
@@ -172,7 +179,10 @@ module ntsc_capture(
 
 		  
 		  // PINK
-	       end else if ((cb > 10'h1F0) & (cr > 10'h280) & (lum > 10'h190)) begin
+	       end else if ((cb > `PINK_CB_MIN) & 
+			    (cr > `PINK_CR_MIN) & 
+			    (lum > `PINK_LUM_MIN)) begin
+		  
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5] <= 5'b11111;
 		  pixel_buffer[4:0] <= 5'b11111;
@@ -186,7 +196,10 @@ module ntsc_capture(
 
 		  
 		  // BLUE
-	       end else if ((cb > 10'h200) & (cr < 10'h1F0) & (lum > 10'h1A0)) begin
+	       end else if ((cb > `BLUE_CB_MIN) & 
+			    (cr < `BLUE_CR_MAX) & 
+			    (lum > `BLUE_LUM_MIN)) begin
+		  
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5] <= 5'b00000;
 		  pixel_buffer[4:0] <= 5'b11111;
@@ -216,8 +229,10 @@ module ntsc_capture(
 
 	       din[63:46] <= pixel_buffer;
 
-	       // ORANGe
-	       if ((cb < 10'h190) & (cr > 10'h280) & (lum > 10'h200)) begin
+	       // ORANGE
+	       if ((cb < `ORANGE_CB_MAX) & 
+		   (cr > `ORANGE_CR_MIN) & 
+		   (lum > `ORANGE_LUM_MIN)) begin
 		  din[45:38] <= 8'b11111111;
 		  din[37:33] <= 5'b11111;
 		  din[32:28] <= 5'b00000;
@@ -225,42 +240,60 @@ module ntsc_capture(
 		  din[6:5] <= 2'b00;
 		  wr_en <= 1;
 
-	       // GREEN
-	       end else if ((cb < 10'h1E0) & (cr < 10'h208) & (lum > 10'h190) &
-			    (lum < 10'h300) & (cr > 10'h1D0) & (cb > 10'h120)) begin
+		  // GREEN
+	       end else if ((cb < `GREEN_CB_MAX) & 
+			    (cr < `GREEN_CR_MAX) & 
+			    (lum > `GREEN_LUM_MIN) &
+			    (lum < `GREEN_LUM_MAX) & 
+			    (cr > `GREEN_CR_MIN) & 
+			    (cb > `GREEN_CB_MIN)) begin
+		  
 		  din[45:38] <= 8'b11111111;
 		  din[37:33] <= 5'b00000;
 		  din[32:28] <= 5'b00000;
-		  		  din[4] <= 1;
+		  din[4] <= 1;
 		  din[6:5] <= 2'b11;
 		  wr_en <= 1;
 
-	       // PINK
-	       end else if ((cb > 10'h1F0) & (cr > 10'h280) & (lum > 10'h190)) begin
+
+		  // PINK
+	       end else if ((cb > `PINK_CB_MIN) & 
+			    (cr > `PINK_CR_MIN) & 
+			    (lum > `PINK_LUM_MIN)) begin
+		  
+		  
 		  din[45:38] <= 8'b11111111;
 		  din[37:33] <= 5'b11111;
 		  din[32:28] <= 5'b11111;
-		  		  din[4] <= 1;
+		  din[4] <= 1;
 		  din[6:5] <= 2'b01;
 
-	       // BLUE
-	       end else if ((cb > 10'h200) & (cr < 10'h1F0) & (lum > 10'h1A0)) begin
+
+		  // BLUE
+	       end else if ((cb > `BLUE_CB_MIN) & 
+			    (cr < `BLUE_CR_MAX) & 
+			    (lum > `BLUE_LUM_MIN)) begin
+		  
 		  din[45:38] <= 8'b11111111;
 		  din[37:33] <= 5'b00000;
 		  din[32:28] <= 5'b11111;	
 		  din[4] <= 1;
 		  din[6:5] <= 2'b10;
-	       end else begin
+		  
+	       end else begin // if ((cb > BLUE_CB_MIN) &...
+		  
 		  din[45:38] <= ycrcb[29:22];
 		  din[37:33] <= ycrcb[19:15];
 		  din[32:28] <= ycrcb[9:5];
 		  din[6:5] <= 2'b00;
 		  din[4] <= 1'b0;
-	       end
+		  
+	       end // else: !if((cb > BLUE_CB_MIN) &...
+	       
 	       
 	       din[27] <= 1;
 	       din[26] <= 0;
-	       din[25:16] <= x[9:1]<<1;
+	       din[25:16] <= x;
 	       din[15:7] <= corrected_y;
 
 	       wr_en <= 1;

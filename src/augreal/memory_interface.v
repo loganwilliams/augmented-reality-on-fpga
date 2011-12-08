@@ -31,6 +31,7 @@ module memory_interface
 		input [`LOG_HEIGHT-1:0] pt_y,
 		input [`LOG_TRUNC-1:0] pt_pixel,
 		output reg done_pt,
+		output reg ready_pt,
 		// VGA_WRITE
 		input vga_flag,
 		output reg done_vga,
@@ -225,6 +226,10 @@ module memory_interface
 		done_vga  = (mem0_done == VGA)  || (mem1_done == VGA);
 		done_lpf  = (mem0_done == LPF)  || (mem1_done == LPF);
 		done_pt   = (mem0_done == PT)   || (mem1_done == PT);
+
+		if (nexd_mem_block == capt_mem_block) ready_pt = ~ntsc_flag;
+		else if (nexd_mem_block == disp_mem_block) ready_pt = ~vga_flag;
+		else ready_pt = 1'b0;
 	end
 
 	// set addresses of LPF and PTF from (x,y) coordinates
@@ -305,24 +310,22 @@ module zbt_map(
 	// delaying of signals associated to writing
 	reg [71:0] delayed_write_data;
 	reg [1:0] delayed_we;
-	reg [7:0] delayed_bwe;
 
 	always @(posedge clock) begin
 		delayed_write_data[71:36] <= delayed_write_data[35:0];
 		delayed_write_data[35:0] <= write_data[35:0];
 		delayed_we[1] <= delayed_we[0];
 		delayed_we[0] <= we;
-		delayed_bwe[7:4] <= delayed_bwe[3:0];
-		delayed_bwe[3:0] <= bwe[3:0];
 	end
 
 	// to ram itself
 	assign ram_cen_b = ~cen;
 	assign ram_address = addr;
+	assign ram_we_b = ~we;
+	assign ram_bwe_b[3:0] = ~bwe[3:0];
 	
+	// delay write data
 	assign ram_data = delayed_we ? delayed_write_data[71:36] : {36{1'bZ}};
-	assign ram_we_b = ~delayed_we[1];
-	assign ram_bwe_b[3:0] = ~delayed_bwe[7:4];
 endmodule
 
 module address_calculator(
