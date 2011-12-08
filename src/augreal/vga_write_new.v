@@ -88,15 +88,23 @@ module stupid_vga_write
 			vga_out_red[7:0] <= 8'd0;
 			vga_out_green[7:0] <= 8'd0;
 			vga_out_blue[7:0] <= 8'd0;
-		end
-		else if (del_hcount == 10'd320 || del_vcount == 10'd240
-				|| del_hcount == a_x || del_hcount == b_x || del_hcount == c_x || del_hcount == d_x
-				|| del_vcount == a_y || del_vcount == b_y || del_vcount == c_y || del_vcount == d_y) begin
+		end else if (del_hcount == a_x || del_hcount == b_x) begin
+		   vga_out_red[7:0] <= 8'hFF;
+		   vga_out_green[7:0] <= 8'h00;
+		   vga_out_blue[7:0] <= 8'hFF;
+		end else if (del_hcount == c_x || del_hcount == d_x) begin
+		   vga_out_red[7:0] <= 8'hFF;
+		   vga_out_green[7:0] <= 8'hFF;
+		   vga_out_blue[7:0] <= 8'h00;
+		end else if (del_vcount == a_y || del_vcount == b_y) begin
+		   vga_out_red[7:0] <= 8'h00;
+		   vga_out_green[7:0] <= 8'hFF;
+		   vga_out_blue[7:0] <= 8'hFF;
+		end else if (del_vcount == c_y || del_vcount == d_y) begin
 			vga_out_red[7:0] <= 8'hFF;
-			vga_out_green[7:0] <= 8'hFF;
-			vga_out_blue[7:0] <= 8'hFF;
-		end
-		else begin
+			vga_out_green[7:0] <= 8'h00;
+			vga_out_blue[7:0] <= 8'h00;
+		end else begin
 			vga_out_red[7:0] <= r[7:0];
 			vga_out_green[7:0] <= g[7:0];
 			vga_out_blue[7:0] <= b[7:0];
