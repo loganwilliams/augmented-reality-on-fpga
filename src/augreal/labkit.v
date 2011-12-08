@@ -193,10 +193,10 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//////////////////////////////////////////////////////////////////////////// 
   
 	// TODO: change global clock_65mhz to clock_50mhz
-	wire clock_65mhz, clock_25mhz, locked_ram, locked_25mhz;
+	wire clock_65mhz, clock_50mhz_inv, clock_25mhz, locked_ram, locked_25mhz;
 	clock_gen cgen(.reset_button(button0), .clock_27mhz(clock_27mhz),
 	.clock_feedback_in(clock_feedback_in), .clock_feedback_out(clock_feedback_out),
-	.clock_50mhz(clock_65mhz), .clock_25mhz(clock_25mhz),
+	.clock_50mhz(clock_65mhz), .clock_25mhz(clock_25mhz), .clock_50mhz_inv(clock_50mhz_inv),
 	.ram0_clk(ram0_clk), .ram1_clk(ram1_clk), .locked_ram(locked_ram), .locked_25mhz(locked_25mhz));
 	assign led[0] = ~locked_ram;
 	assign led[1] = ~locked_25mhz;

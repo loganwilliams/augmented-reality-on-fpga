@@ -74,36 +74,33 @@ module stupid_vga_write
 	end
 
 	// assign outputs to VGA chip
+	always @(posedge vclock) begin
+		if (del_blank) begin
+			vga_out_red[7:0] <= 8'd0;
+			vga_out_green[7:0] <= 8'd0;
+			vga_out_blue[7:0] <= 8'd0;
+		end
+		else if (hcount == 10'd320 || vcount == 10'd240
+				|| hcount == a_x || hcount == b_x || hcount == c_x || hcount == d_x
+				|| vcount == a_y || vcount == b_y || vcount == c_y || vcount == d_y) begin
+			vga_out_red[7:0] <= 8'hFF;
+			vga_out_green[7:0] <= 8'hFF;
+			vga_out_blue[7:0] <= 8'hFF;
+		end
+		else begin
+			vga_out_red[7:0] <= r[7:0];
+			vga_out_green[7:0] <= g[7:0];
+			vga_out_blue[7:0] <= b[7:0];
+		end
+
+		vga_out_blank_b <= ~del_blank;
+		vga_out_hsync <= del_hsync;
+		vga_out_vsync <= del_vsync;
+	end
+	
 	always @(*) begin
-		vga_out_red[7:0] = del_blank ? 8'd0 :
-									(hcount == 320 | vcount == 240) ? 8'hFF :
-				   (hcount == a_x | vcount == a_y) ? 8'hFF :
-				   (hcount == b_x | vcount == b_y) ? 8'hFF :
-				   (hcount == c_x | vcount == c_y) ? 8'hFF :
-				   (hcount == d_x | vcount == d_y) ? 8'hFF :
-									r[7:0] ;
-									
-		vga_out_green[7:0] = del_blank ? 8'd0 :
-									(hcount == 320 | vcount == 240) ? 8'hFF :
-				     				   (hcount == a_x | vcount == a_y) ? 8'hFF :
-				   (hcount == b_x | vcount == b_y) ? 8'hFF :
-				   (hcount == c_x | vcount == c_y) ? 8'hFF :
-				   (hcount == d_x | vcount == d_y) ? 8'hFF :
-									g[7:0];
-									
-		vga_out_blue[7:0] = del_blank ? 8'd0 :
-									(hcount == 320 | vcount == 240) ? 8'hFF :
-				    				   (hcount == a_x | vcount == a_y) ? 8'hFF :
-				   (hcount == b_x | vcount == b_y) ? 8'hFF :
-				   (hcount == c_x | vcount == c_y) ? 8'hFF :
-				   (hcount == d_x | vcount == d_y) ? 8'hFF :
-									b[7:0];
-									
-		vga_out_blank_b = ~del_blank;
 		vga_out_sync_b = 1'b1;
 		vga_out_pixel_clock = ~vclock;
-		vga_out_hsync = del_hsync;
-		vga_out_vsync = del_vsync;
 	end
 endmodule
 
