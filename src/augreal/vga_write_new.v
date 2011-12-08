@@ -52,7 +52,7 @@ module stupid_vga_write
 	wire [7:0] b;
 	reg [35:0] pixel;
 	ycrcb_lut ycc(
-		.ycrcb(~del_hcount ? pixel[35:18] : pixel[17:0]),
+		.ycrcb(del_hcount ? pixel[35:18] : pixel[17:0]),
 		.r(r), .g(g), .b(b));
 
 	// generate vga_flag 1 out of every 4 clock cycles
