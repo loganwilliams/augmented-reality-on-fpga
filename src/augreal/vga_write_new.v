@@ -23,7 +23,10 @@ module stupid_vga_write
 		output reg vga_out_vsync,
 		// ADDRESSING
 		output reg [`LOG_HCOUNT-1:0] clocked_hcount,
-		output reg [`LOG_VCOUNT-1:0] clocked_vcount
+		output reg [`LOG_VCOUNT-1:0] clocked_vcount,
+		
+		input [9:0] a_x, b_x, c_x, d_x,
+		input [8:0] a_y, b_y, c_y, d_y
 	);
 
 	// generate hcount, vcount, syncs, and blank
@@ -51,7 +54,7 @@ module stupid_vga_write
 	ycrcb_lut ycc(
 		.ycrcb(del_hcount ? pixel[35:18] : pixel[17:0]),
 		.r(r), .g(g), .b(b));
-	
+
 	// generate vga_flag 1 out of every 4 clock cycles
 	reg [1:0] count;
 	always @(posedge clock) begin
@@ -72,9 +75,30 @@ module stupid_vga_write
 
 	// assign outputs to VGA chip
 	always @(*) begin
-		vga_out_red[7:0] = del_blank ? 8'd0 : r[7:0];
-		vga_out_green[7:0] = del_blank ? 8'd0 : g[7:0];
-		vga_out_blue[7:0] = del_blank ? 8'd0 : b[7:0];
+		vga_out_red[7:0] = del_blank ? 8'd0 :
+									(hcount == 320 | vcount == 240) ? 8'hFF :
+				   (hcount == a_x | vcount == a_y) ? 8'hFF :
+				   (hcount == b_x | vcount == b_y) ? 8'hFF :
+				   (hcount == c_x | vcount == c_y) ? 8'hFF :
+				   (hcount == d_x | vcount == d_y) ? 8'hFF :
+									r[7:0] ;
+									
+		vga_out_green[7:0] = del_blank ? 8'd0 :
+									(hcount == 320 | vcount == 240) ? 8'hFF :
+				     				   (hcount == a_x | vcount == a_y) ? 8'hFF :
+				   (hcount == b_x | vcount == b_y) ? 8'hFF :
+				   (hcount == c_x | vcount == c_y) ? 8'hFF :
+				   (hcount == d_x | vcount == d_y) ? 8'hFF :
+									g[7:0];
+									
+		vga_out_blue[7:0] = del_blank ? 8'd0 :
+									(hcount == 320 | vcount == 240) ? 8'hFF :
+				    				   (hcount == a_x | vcount == a_y) ? 8'hFF :
+				   (hcount == b_x | vcount == b_y) ? 8'hFF :
+				   (hcount == c_x | vcount == c_y) ? 8'hFF :
+				   (hcount == d_x | vcount == d_y) ? 8'hFF :
+									b[7:0];
+									
 		vga_out_blank_b = ~del_blank;
 		vga_out_sync_b = 1'b1;
 		vga_out_pixel_clock = ~vclock;
