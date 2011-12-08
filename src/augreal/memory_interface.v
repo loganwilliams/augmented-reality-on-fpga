@@ -30,7 +30,7 @@ module memory_interface
 		input [`LOG_WIDTH-1:0] pt_x,
 		input [`LOG_HEIGHT-1:0] pt_y,
 		input [`LOG_TRUNC-1:0] pt_pixel,
-		output done_pt,
+		output reg done_pt,
 		// VGA_WRITE
 		input vga_flag,
 		output reg done_vga,
@@ -51,6 +51,9 @@ module memory_interface
 		// WR FLAGS
 		output reg mem0_wr,
 		output reg mem1_wr,
+		// BWE FLAGS
+		output reg [3:0] mem0_bwe,
+		output reg [3:0] mem1_bwe,
 		// TESTING
 		output [3:0] debug_blocks,
 		output [7:0] debug_locs
@@ -61,20 +64,10 @@ module memory_interface
 	parameter NTSC = 4'b1000;
 	parameter VGA  = 4'b0100;
 	parameter LPF  = 4'b0010;
-	parameter PTF  = 4'b0001;
+	parameter PT   = 4'b0001;
 	parameter NONE = 4'b0000;
 	parameter LOG_ORD = 4;
 	/****************************/
-
-	// PT_FETCHER
-	wire ptf_flag;
-	wire ptf_wr;
-	wire [`LOG_WIDTH-1:0] ptf_x;
-	wire [`LOG_HEIGHT-1:0] ptf_y;
-	wire [`LOG_MEM-1:0] ptf_pixel_write;
-	reg done_ptf;
-	reg [`LOG_MEM-1:0] ptf_pixel_read;
-	// INSTANTIATE pt_fetcher here
 
 	// BLOCK OF SRAM IMAGE IS IN
 	reg capt_mem_block;
@@ -92,7 +85,7 @@ module memory_interface
 	wire [`LOG_ADDR-1:0] ntsc_addr;
 	wire [`LOG_ADDR-1:0] vga_addr;
 	wire [`LOG_ADDR-1:0] lpf_addr;
-	wire [`LOG_ADDR-1:0] ptf_addr;
+	wire [`LOG_ADDR-1:0] pt_addr;
 
 	// PARTIAL DONE FLAGS
 	reg [3:0] mem0_done;
@@ -109,7 +102,6 @@ module memory_interface
 	// (for stable vga_pixel, lpf_pixel_read, and ptf_pixel_read)
 	reg [`LOG_MEM-1:0] prev_vga_pixel;
 	reg [`LOG_MEM-1:0] prev_lpf_pixel_read;
-	reg [`LOG_MEM-1:0] prev_ptf_pixel_read;
 
 	// DEBUG
 	assign debug_blocks = {capt_mem_block,proc_mem_block,nexd_mem_block,disp_mem_block};
@@ -122,30 +114,41 @@ module memory_interface
 			mem0_addr 	<= ntsc_addr;
 			mem0_write 	<= ntsc_pixel;
 			mem0_wr 	<= 1;
+			mem0_bwe	<= 4'b1111;
 			mem0_done 	<= NTSC;
 		end
 		else if (!disp_mem_block && vga_flag) begin
 			mem0_addr 	<= vga_addr;
 			mem0_write 	<= mem0_write;
 			mem0_wr 	<= 0;
+			mem0_bwe	<= 4'b1111;
 			mem0_done 	<= VGA;
 		end
 		else if (!proc_mem_block && lpf_flag) begin
 			mem0_addr 	<= lpf_addr;
 			mem0_write 	<= lpf_pixel_write;
 			mem0_wr 	<= lpf_wr;
+			mem0_bwe	<= 4'b1111;
 			mem0_done 	<= LPF;
 		end
-		else if (!nexd_mem_block && ptf_flag) begin
-			mem0_addr 	<= ptf_addr;
-			mem0_write 	<= ptf_pixel_write;
-			mem0_wr 	<= ptf_wr;
-			mem0_done 	<= PTF;
-		end 
+		else if (!nexd_mem_block && pt_flag) begin
+			mem0_addr 	<= pt_addr;
+			mem0_done 	<= PT;
+			mem0_wr 	<= 1;
+			if (pt_x[0] == 1'b0) begin
+				mem0_write 	<= {pt_pixel, 18'd0};
+				mem0_bwe	<= 4'b1100;
+			end
+			else begin // pt_x[0] == 1'b1
+				mem0_write 	<= {18'd0, pt_pixel};
+				mem0_bwe	<= 4'b0011;
+			end
+		end
 		else begin // nothing's happening
 			mem0_addr 	<= 0;
 			mem0_write 	<= 0;
 			mem0_wr 	<= 0;
+			mem0_bwe	<= 4'b1111;
 			mem0_done 	<= NONE;
 		end
 
@@ -153,42 +156,51 @@ module memory_interface
 			mem1_addr 	<= ntsc_addr;
 			mem1_write 	<= ntsc_pixel;
 			mem1_wr 	<= 1;
+			mem1_bwe	<= 4'b1111;
 			mem1_done 	<= NTSC;
 		end
 		else if (disp_mem_block && vga_flag) begin
 			mem1_addr 	<= vga_addr;
 			mem1_write	<= mem1_write;
 			mem1_wr 	<= 0;
+			mem1_bwe	<= 4'b1111;
 			mem1_done 	<= VGA;
 		end
 		else if (proc_mem_block && lpf_flag) begin
 			mem1_addr 	<= lpf_addr;
 			mem1_write 	<= lpf_pixel_write;
 			mem1_wr 	<= lpf_wr;
+			mem1_bwe	<= 4'b1111;
 			mem1_done 	<= LPF;
 		end
-		else if (nexd_mem_block && ptf_flag) begin
-			mem1_addr 	<= ptf_addr;
-			mem1_write 	<= ptf_pixel_write;
-			mem1_wr 	<= ptf_wr;
-			mem1_done 	<= PTF;
+		else if (nexd_mem_block && pt_flag) begin
+			mem1_addr 	<= pt_addr;
+			mem1_done 	<= PT;
+			mem1_wr 	<= 1;
+			if (pt_x[0] == 1'b0) begin
+				mem1_write 	<= {pt_pixel, 18'd0};
+				mem1_bwe	<= 4'b1100;
+			end
+			else begin // pt_x[0] == 1'b1
+				mem1_write 	<= {18'd0, pt_pixel};
+				mem1_bwe	<= 4'b0011;
+			end
 		end
 		else begin // nothing's happening
 			mem1_addr 	<= 0;
 			mem1_write 	<= 0;
 			mem1_wr 	<= 0;
+			mem1_bwe	<= 4'b1111;
 			mem1_done 	<= NONE;
 		end
 
 		// add new queue members, if any
 		if (mem0_done == VGA) mem0_read_queue[LOG_ORD-1:0] <= VGA;
 		else if (mem0_done == LPF && !lpf_wr) mem0_read_queue[LOG_ORD-1:0] <= LPF;
-		else if (mem0_done == PTF && !ptf_wr) mem0_read_queue[LOG_ORD-1:0] <= PTF;
 		else mem0_read_queue[LOG_ORD-1:0] <= NONE;
 
 		if (mem1_done == VGA) mem1_read_queue[LOG_ORD-1:0] <= VGA;
 		else if (mem1_done == LPF && !lpf_wr) mem1_read_queue[LOG_ORD-1:0] <= LPF;
-		else if (mem1_done == PTF && !ptf_wr) mem1_read_queue[LOG_ORD-1:0] <= PTF;
 		else mem1_read_queue[LOG_ORD-1:0] <= NONE;
 
 		// assign read value to corresponding member of queue
@@ -199,11 +211,6 @@ module memory_interface
 		if (mem0_next_read == LPF) lpf_pixel_read <= mem0_read;
 		else if (mem1_next_read == LPF) lpf_pixel_read <= mem1_read;
 		else lpf_pixel_read <= prev_lpf_pixel_read;
-
-		// PTF's turn
-		if (mem0_next_read == PTF) ptf_pixel_read <= mem0_read;
-		else if (mem1_next_read == PTF) ptf_pixel_read <= mem1_read;
-		else ptf_pixel_read <= prev_ptf_pixel_read;
 
 		// VGA's turn
 		if (mem0_next_read == VGA) vga_pixel <= mem0_read;
@@ -217,7 +224,7 @@ module memory_interface
 		done_ntsc = (mem0_done == NTSC) || (mem1_done == NTSC);
 		done_vga  = (mem0_done == VGA)  || (mem1_done == VGA);
 		done_lpf  = (mem0_done == LPF)  || (mem1_done == LPF);
-		done_ptf  = (mem0_done == PTF)  || (mem1_done == PTF);
+		done_pt   = (mem0_done == PT)   || (mem1_done == PT);
 	end
 
 	// set addresses of LPF and PTF from (x,y) coordinates
@@ -225,9 +232,9 @@ module memory_interface
 	address_calculator lpf_ac(
 		.x(lpf_x), .y(lpf_y), 
 		.loc(proc_mem_loc), .addr(lpf_addr));
-	address_calculator ptf_ac(
-		.x(ptf_x), .y(ptf_y),
-		.loc(nexd_mem_loc), .addr(ptf_addr));
+	address_calculator pt_ac(
+		.x(pt_x), .y(pt_y),
+		.loc(nexd_mem_loc), .addr(pt_addr));
 	address_calculator vga_ac(
 		.x(hcount), .y(vcount[8:0]),
 		.loc(disp_mem_loc), .addr(vga_addr));
@@ -271,59 +278,52 @@ module memory_interface
 		// retain previous output pixel values
 		prev_vga_pixel <= vga_pixel;
 		prev_lpf_pixel_read <= lpf_pixel_read;
-		prev_ptf_pixel_read <= ptf_pixel_read;
 	end
 endmodule
 
-module zbt_6111(clk, cen, we, addr, write_data, read_data,
-		ram_clk, ram_we_b, ram_address, ram_data, ram_cen_b);
+// maps outputs of memory interface to the inputs, outputs, and inouts
+// of the ram modules themselves
+// delays we, write_data, and bwe by 2 clock cycles
+// modified version of zbt_6111
+module zbt_map(
+	input clock, // system clock
+	input cen, // clock enable
+	input we, // write enable (active HIGH)
+	input [3:0] bwe, // byte write enable (active HIGH)
+	input [18:0] addr, // memory address
+	input [35:0] write_data, // data to write
+	output [35:0] read_data, // data read from memory
+	output ram_we_b, // physical line to ram we_b
+	output [3:0] ram_bwe_b, // physical line to ram bwe_b
+	output [18:0] ram_address, // physical line to ram address
+	inout [35:0] ram_data, // physical line to ram data
+	output ram_cen_b); // physical line to ram clock enable
 
-	input clk;			// system clock
-	input cen;			// clock enable for gating ZBT cycles
-	input we;			// write enable (active HIGH)
-	input [18:0] addr;		// memory address
-	input [35:0] write_data;	// data to write
-	output [35:0] read_data;	// data read from memory
-	output 	 ram_clk;	// physical line to ram clock
-	output 	 ram_we_b;	// physical line to ram we_b
-	output [18:0] ram_address;	// physical line to ram address
-	inout [35:0]  ram_data;	// physical line to ram data
-	output 	 ram_cen_b;	// physical line to ram clock enable
-
-	// clock enable (should be synchronous and one cycle high at a time)
-	wire ram_cen_b = ~cen;
-
-	// create delayed ram_we signal: note the delay is by two cycles!
-	// ie we present the data to be written two cycles after we is raised 
-	// this means the bus is tri-stated two cycles after we is raised.
-
-	reg [1:0] we_delay;
-
-	always @(posedge clk) begin
-		we_delay <= cen ? {we_delay[0],we} : we_delay;
-	end
-
-	// create two-stage pipeline for write data
-	reg [35:0]  write_data_old1;
-	reg [35:0]  write_data_old2;
-
-	always @(posedge clk) begin
-		if (cen) {write_data_old2, write_data_old1} <= {write_data_old1, write_data};
-	end
-	
-	// wire to ZBT RAM signals
-	assign ram_we_b = ~we;
-	assign ram_clk = 1'b0;  // gph 2011-Nov-10
-	                              // set to zero as place holder
-	//assign      ram_clk = ~clk;     // RAM is not happy with our data hold
-                                   // times if its clk edges equal FPGA's
-                                   // so we clock it on the falling edges
-                                   // and thus let data stabilize longer
-
-	assign ram_address = addr;
-	assign ram_data = we_delay[1] ? write_data_old2 : {36{1'bZ}};
+	// to memory_interface
 	assign read_data = ram_data;
-endmodule // zbt_6111
+
+	// delaying of signals associated to writing
+	reg [71:0] delayed_write_data;
+	reg [1:0] delayed_we;
+	reg [7:0] delayed_bwe;
+
+	always @(posedge clock) begin
+		delayed_write_data[71:36] <= delayed_write_data[35:0];
+		delayed_write_data[35:0] <= write_data[35:0];
+		delayed_we[1] <= delayed_we[0];
+		delayed_we[0] <= we;
+		delayed_bwe[7:4] <= delayed_bwe[3:0];
+		delayed_bwe[3:0] <= bwe[3:0];
+	end
+
+	// to ram itself
+	assign ram_cen_b = ~cen;
+	assign ram_address = addr;
+	
+	assign ram_data = delayed_we ? delayed_write_data[71:36] : {36{1'bZ}};
+	assign ram_we_b = ~delayed_we[1];
+	assign ram_bwe_b[3:0] = ~delayed_bwe[7:4];
+endmodule
 
 module address_calculator(
 		input [`LOG_WIDTH-1:0] x,
