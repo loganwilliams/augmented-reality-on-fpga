@@ -117,14 +117,14 @@ module object_recognition(
 	WAITING_FOR_DIVS: begin
 	   // if all of the dividers are done
 	   if (&divsready) begin
-	      a_x <= averagex[0];
-	      a_y <= averagey[0];
-	      b_x <= averagex[1];
-	      b_y <= averagey[1];
-	      c_x <= averagex[2];
-	      c_y <= averagey[2];
-	      d_x <= averagex[3];
-	      d_y <= averagey[3];
+	      a_x <= (averagex[0] >> 1) + (a_x >> 1);
+	      a_y <= (averagey[0] >> 1) + (a_y >> 1);
+	      b_x <= (averagex[1] >> 1) + (b_x >> 1);
+	      b_y <= (averagey[1] >> 1) + (b_y >> 1);
+	      c_x <= (averagex[2] >> 1) + (c_x >> 1);
+	      c_y <= (averagey[2] >> 1) + (c_y >> 1);
+	      d_x <= (averagex[3] >> 1) + (d_x >> 1);
+	      d_y <= (averagey[3] >> 1) + (d_y >> 1);
 
 	      top <= (averagex[1] - averagex[0]) * (averagex[1] - averagex[0]) + (averagey[1] - averagey[0]) * (averagey[1] - averagey[0]);
 	      bottom <= (averagex[2] - averagex[3]) * (averagex[2] - averagex[3]) + (averagey[2] - averagey[3]) * (averagey[2] - averagey[3]);
@@ -156,6 +156,18 @@ module object_recognition(
 	   // if the vsync is over
 	   if (~frame_flag) begin
 	      state <= COUNTING;
+			sumx[0] <= 0;
+        sumy[0] <= 0;
+        num[0] <= 0;
+        sumx[1] <= 0;
+        sumy[1] <= 0;
+        num[1] <= 0;
+        sumx[2] <= 0;
+        sumy[2] <= 0;
+        num[2] <= 0;
+        sumx[3] <= 0;
+        sumy[3] <= 0;
+        num[3] <= 0;
 	   end
 	end // case: WAITING_FOR_SQRT
 	   

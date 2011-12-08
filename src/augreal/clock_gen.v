@@ -94,7 +94,7 @@ module ramclock(ref_clock, fpga_clock, fpga_clock_d2, fpga_clock_inv, ram0_clock
 		.RST(dcm_reset),
 		.CLK0(fpga_clk),
 		.CLKDV(fpga_clk_d2),
-		.CLK180(fpga_clk_inv),
+		.CLK90(fpga_clk_inv),
 		.LOCKED(lock1));
    // synthesis attribute DLL_FREQUENCY_MODE of int_dcm is "LOW"
    // synthesis attribute DUTY_CYCLE_CORRECTION of int_dcm is "TRUE"

@@ -69,8 +69,8 @@ module ntsc_capture(
    reg [9:0] 			     x = 0;
    reg [8:0] 			     y = 0;
    
-   wire 			     sv;
-   wire 			     sh;
+   reg 			     sv;
+   reg 			     sh;
    reg 				     rh;
    reg 				     rv;
    
@@ -94,26 +94,32 @@ module ntsc_capture(
    
    assign ntsc_raw = din[28:25];
 
-   synchronize syncv(.sig(v), .syncsig(sv), .reset(rv));
-   synchronize synch(.sig(h), .syncsig(sh), .reset(rh));
+   always @(*) begin
+      sh <= (~rh & sh) | h;
+		sv <= (~rv & sv) | v;
+   end
 
+	
    // synchronize to the external video line clock
    always @ (posedge tv_in_line_clock1) begin
-      
-      if (sv) begin
-	 y <= f;
-	 x <= 0;
-	 rv <= 1;
-      end else rv <= 0;
       
       if (sh) begin
 	 y <= y + 2;
 	 x <= 0;
 	 rh <= 1;
-      end else begin
+      end else if (x > 1) begin
 	 rh <= 0;
       end
+		
+		if (sv) begin
+		y <= f;
+		x <= 0;
+		rv <= 1;
+		end else if (y > 1) begin
+		rv <= 0;
+		end
       
+		
       if (((y > 504) | v) & f & ~pulseonce) begin
 	 din[26] <= 1;
 	 din[27] <= 0;
@@ -131,7 +137,6 @@ module ntsc_capture(
 	 end
       
       if (dv) begin
-
 	 if (y >= 25 && y < 505 && x < 640) begin // above 480 lines are blanked
 	    
 	    if (x == 320 && y == 265) begin
@@ -308,8 +313,9 @@ module ntsc_capture(
 	       
 	    end // else: !if(state == 0)
 
-	    x <= x + 1; // increment the x coordinate
 	 end // if (y < 480 && x < 640)
+	 x <= x + 1;
+	 
       end // if (dv)
       
 
@@ -364,7 +370,8 @@ module synchronize(
 		   output reg syncsig);
    
    always @(*) begin
-      if (sig) syncsig <= 1;
+	      if (sig) syncsig <= 1;
+
       if (reset) syncsig <= 0;
    end
 endmodule
