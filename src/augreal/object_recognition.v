@@ -156,6 +156,18 @@ module object_recognition(
 	   // if the vsync is over
 	   if (~frame_flag) begin
 	      state <= COUNTING;
+			sumx[0] <= 0;
+        sumy[0] <= 0;
+        num[0] <= 0;
+        sumx[1] <= 0;
+        sumy[1] <= 0;
+        num[1] <= 0;
+        sumx[2] <= 0;
+        sumy[2] <= 0;
+        num[2] <= 0;
+        sumx[3] <= 0;
+        sumy[3] <= 0;
+        num[3] <= 0;
 	   end
 	end // case: WAITING_FOR_SQRT
 	   
