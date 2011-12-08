@@ -1,3 +1,7 @@
+`default_nettype none
+// comment out when testing
+`include "params.v"
+
 module ntsc_capture(
 		    input 	      clock_65mhz, // the main system clock
 		    input 	      clock_27mhz,
@@ -9,7 +13,7 @@ module ntsc_capture(
 		    input [19:0]      tv_in_ycrcb, //       |
 		    output reg [35:0] ntsc_pixels, // outputs two sets of pixels in Y/Cr/Cb/Y/Cr/Cb format
 		    output reg 	      ntsc_flag, // a flag that goes high when a pixel is being output
-		    output reg o_color, // these outputs are for object_recognition. this indicates the color of the recognized pixel
+		    output reg [1:0] o_color, // these outputs are for object_recognition. this indicates the color of the recognized pixel
 		    output reg 	      o_i_flag, // a flag that indicates the data is good
 		    output reg 	      o_frame_flag,
 		    output reg [9:0]  o_x,
@@ -44,14 +48,17 @@ module ntsc_capture(
    reg 				     read_state;
    assign read_state_out = read_state;
    
+   //wire 			     bufclock;
    
    
+   //BUFG invclock(.I(clock_65mhz), .O(bufclock));
 
    ntf n2f(.din(din), .rd_clk(clock_65mhz), .rd_en(rd_en),
 		    .rst(reset), .wr_clk(tv_in_line_clock1), .wr_en(wr_en),
 		    .dout(dout), .empty(empty), .full(full), .valid(valid)
 		    );
    
+	
 
    // this module decodes the data and outputs the ycrcb pair
    ntsc_decode decode(.clk(tv_in_line_clock1), .reset(reset),
@@ -92,15 +99,13 @@ module ntsc_capture(
 
    // synchronize to the external video line clock
    always @ (posedge tv_in_line_clock1) begin
-      rv <= 0;
       
       if (sv) begin
 	 y <= f;
 	 x <= 0;
 	 rv <= 1;
-      end
+      end else rv <= 0;
       
-      // something weird is happening here
       if (sh) begin
 	 y <= y + 2;
 	 x <= 0;
@@ -138,9 +143,9 @@ module ntsc_capture(
 	    if (state == 0) begin
 	       
 	       // ORANGE
-	       if ((cb < ORANGE_CB_MAX) & 
-		   (cr > ORANGE_CR_MIN) & 
-		   (lum > ORANGE_LUM_MIN)) begin
+	       if ((cb < `ORANGE_CB_MAX) & 
+		   (cr > `ORANGE_CR_MIN) & 
+		   (lum > `ORANGE_LUM_MIN)) begin
 		  
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5]<= 5'b11111;
@@ -158,15 +163,16 @@ module ntsc_capture(
 		  wr_en <= 1;
 		  
 		  // GREEN
-	       end else if ((cb < GREEN_CB_MAX) & 
-			    (cr < GREEN_CR_MAX) & 
-			    (lum > GREEN_LUM_MIN) &
-			    (lum < GREEN_LUM_MAX) & 
-			    (cr > GREEN_CR_MIN) & 
-			    (cb > GREEN_CB_MIN)) begin
+	       end else if (
+			    (lum < `GREEN_LUM_MAX) & 
+				 (lum > `GREEN_LUM_MIN) &
+			    (cr > `GREEN_CR_MIN) & 
+				 (cr < `GREEN_CR_MAX) &
+			    (cb > `GREEN_CB_MIN) &
+				 (cb < `GREEN_CB_MAX)) begin
 		  
 		  pixel_buffer[17:10] <= 8'b11111111;
-		  pixel_buffer[9:5] <= 5'b00000;
+		  pixel_buffer[9:5] <= 5'b11000;
 		  pixel_buffer[4:0] <= 5'b00000;
 		  din[27] <= 0;
 		  
@@ -179,9 +185,9 @@ module ntsc_capture(
 
 		  
 		  // PINK
-	       end else if ((cb > PINK_CB_MIN) & 
-			    (cr > PINK_CR_MIN) & 
-			    (lum > PINK_LUM_MIN)) begin
+	       end else if ((cb > `PINK_CB_MIN) & 
+			    (cr > `PINK_CR_MIN) & 
+			    (lum > `PINK_LUM_MIN)) begin
 		  
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5] <= 5'b11111;
@@ -196,9 +202,9 @@ module ntsc_capture(
 
 		  
 		  // BLUE
-	       end else if ((cb > BLUE_CB_MIN) & 
-			    (cr < BLUE_CR_MAX) & 
-			    (lum > BLUE_LUM_MIN)) begin
+	       end else if ((cb > `BLUE_CB_MIN) & 
+			    (cr < `BLUE_CR_MAX) & 
+			    (lum > `BLUE_LUM_MIN)) begin
 		  
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5] <= 5'b00000;
@@ -218,6 +224,8 @@ module ntsc_capture(
 		  pixel_buffer[4:0] <= ycrcb[9:5];
 		  wr_en <= 0;
 	       end
+			 
+			 
 
 	       state <= 1;
 
@@ -229,37 +237,37 @@ module ntsc_capture(
 
 	       din[63:46] <= pixel_buffer;
 
+
 	       // ORANGE
-	       if ((cb < ORANGE_CB_MAX) & 
-		   (cr > ORANGE_CR_MIN) & 
-		   (lum > ORANGE_LUM_MIN)) begin
+	       if ((cb < `ORANGE_CB_MAX) & 
+		   (cr > `ORANGE_CR_MIN) & 
+		   (lum > `ORANGE_LUM_MIN)) begin
 		  din[45:38] <= 8'b11111111;
 		  din[37:33] <= 5'b11111;
 		  din[32:28] <= 5'b00000;
 		  din[4] <= 1;
 		  din[6:5] <= 2'b00;
-		  wr_en <= 1;
 
 		  // GREEN
-	       end else if ((cb < GREEN_CB_MAX) & 
-			    (cr < GREEN_CR_MAX) & 
-			    (lum > GREEN_LUM_MIN) &
-			    (lum < GREEN_LUM_MAX) & 
-			    (cr > GREEN_CR_MIN) & 
-			    (cb > GREEN_CB_MIN)) begin
+	       end else if (
+			    (lum < `GREEN_LUM_MAX) & 
+				 (lum > `GREEN_LUM_MIN) &
+			    (cr > `GREEN_CR_MIN) & 
+				 (cr < `GREEN_CR_MAX) &
+			    (cb > `GREEN_CB_MIN) &
+				 (cb < `GREEN_CB_MAX)) begin
 		  
 		  din[45:38] <= 8'b11111111;
-		  din[37:33] <= 5'b00000;
+		  din[37:33] <= 5'b11000;
 		  din[32:28] <= 5'b00000;
 		  din[4] <= 1;
 		  din[6:5] <= 2'b11;
-		  wr_en <= 1;
 
 
 		  // PINK
-	       end else if ((cb > PINK_CB_MIN) & 
-			    (cr > PINK_CR_MIN) & 
-			    (lum > PINK_LUM_MIN)) begin
+	       end else if ((cb > `PINK_CB_MIN) & 
+			    (cr > `PINK_CR_MIN) & 
+			    (lum > `PINK_LUM_MIN)) begin
 		  
 		  
 		  din[45:38] <= 8'b11111111;
@@ -270,9 +278,9 @@ module ntsc_capture(
 
 
 		  // BLUE
-	       end else if ((cb > BLUE_CB_MIN) & 
-			    (cr < BLUE_CR_MAX) & 
-			    (lum > BLUE_LUM_MIN)) begin
+	       end else if ((cb > `BLUE_CB_MIN) & 
+			    (cr < `BLUE_CR_MAX) & 
+			    (lum > `BLUE_LUM_MIN)) begin
 		  
 		  din[45:38] <= 8'b11111111;
 		  din[37:33] <= 5'b00000;
@@ -289,6 +297,7 @@ module ntsc_capture(
 		  din[4] <= 1'b0;
 		  
 	       end // else: !if((cb > BLUE_CB_MIN) &...
+	       
 	       
 	       
 	       din[27] <= 1;
@@ -313,6 +322,7 @@ module ntsc_capture(
    end // always @ (posedge tv_in_line_clock1)
 
    assign rd_en = ~empty;
+	reg undelntsc;
    
    // Synchronize outputs to main system clock
    always @ (posedge clock_65mhz) begin
@@ -322,7 +332,6 @@ module ntsc_capture(
       end else begin
 	 read_state <= 0;
       end
-
       // we have data
       if (read_state) begin
 	 ntsc_pixels <= dout[63: 28];
@@ -335,7 +344,7 @@ module ntsc_capture(
 	 
       end else begin
 	 ntsc_pixels <= 0;
-	 ntsc_flag <= 0;
+	 undelntsc <= 0;
 	 o_frame_flag <= 0;
 	 o_x <= 0;
 	 o_y <= 0;

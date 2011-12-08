@@ -52,12 +52,26 @@
 `define ORANGE_CR_MIN 10'h280
 `define ORANGE_LUM_MIN 10'h200
 
+/*
 `define GREEN_CB_MAX 10'h1E0
 `define GREEN_CB_MIN 10'h120
 `define GREEN_CR_MAX 10'h208
 `define GREEN_CR_MIN 10'h1D0
 `define GREEN_LUM_MIN 10'h190
 `define GREEN_LUM_MAX 10'h300
+*/
+
+`define GREEN_LUM_MAX 10'h290
+`define GREEN_LUM_MIN 10'h190
+
+`define GREEN_CR_MAX 10'h240
+`define GREEN_CR_MIN 10'h200
+
+`define GREEN_CB_MAX 10'h180
+`define GREEN_CB_MIN 10'h090
+
+
+
 
 `define PINK_CB_MIN 10'h1F0
 `define PINK_CR_MIN 10'h280

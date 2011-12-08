@@ -365,7 +365,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire empty, wr_ack, wr_en;
 	wire [3:0] nr;
 	wire [9:0] midcr, midcb, midy;
-
+	wire [1:0] color;
+	wire i_flag;
 	ntsc_capture ntsc(.clock_65mhz(clock_65mhz),
 			  .clock_27mhz(clock_27mhz),
 			  .reset(reset), 
@@ -385,12 +386,29 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 			  .ntsc_raw(nr),
 			  .midcr(midcr),
 			  .midcb(midcb),
-			  .midy(midy));
+			  .midy(midy),
+			  .o_i_flag(i_flag),
+			  .o_color(color));
 	
 	
 	display_16hex ds(reset, clock_27mhz, {16'b0, 6'b0, midy, 6'b0, midcr, 6'b0, midcb}, 
 		disp_blank, disp_clock, disp_rs, disp_ce_b,
 		disp_reset_b, disp_data_out);
+		
+	wire [9:0] a_x, b_x, c_x, d_x;
+	wire [8:0] a_y, b_y, c_y, d_y;
+	
+	
+	object_recognition objr(.clk(clock_65mhz),
+									 .reset(reset),
+									 .color(color),
+									 .interesting_x(ntsc_x),
+									 .interesting_y(ntsc_y),
+									 .frame_flag(frame_flag_cleaned),
+									 .a_x(a_x), .a_y(a_y),
+									 .b_x(b_x), .b_y(b_y),
+									 .c_x(c_x), .c_y(c_y),
+									 .d_x(d_x), .d_y(d_y));
 	
 	//debounce dbff(.clock(clock_65mhz), .noisy(~button1), .clean(frame_flag));
 	
@@ -551,7 +569,11 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.vga_out_hsync(vga_out_hsync), 
 		.vga_out_vsync(vga_out_vsync),
 		.clocked_hcount(hcount),
-		.clocked_vcount(vcount));
+		.clocked_vcount(vcount),
+		.a_x(a_x), .a_y(a_y),
+		.b_x(b_x), .b_y(b_y),
+		.c_x(c_x), .c_y(c_y),
+		.d_x(d_x), .d_y(d_y));
 	// use above if using vga
 	
 	// use below if testing vga
