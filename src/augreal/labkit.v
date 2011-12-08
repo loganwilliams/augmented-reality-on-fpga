@@ -367,7 +367,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire [9:0] midcr, midcb, midy;
 	wire [1:0] color;
 	wire i_flag;
-	ntsc_capture ntsc(.clock_65mhz(clock_65mhz),
+	ntsc_capture ntsc(.clock_65mhz(clock_50mhz_inv),
 			  .clock_27mhz(clock_27mhz),
 			  .reset(reset), 
 			  .tv_in_reset_b(tv_in_reset_b),
@@ -597,17 +597,16 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//assign analyzer1_data = 16'h0;
 	//assign analyzer2_data = 16'h0;
 	//assign analyzer3_data = 16'h0;
-	//assign analyzer4_data = 16'h0;
+	assign analyzer4_data = 16'h0;
 
 	// user-defined analyzers
 
 	//	assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, vga_flag, done_vga, done_ntsc, fvh, 7'b0};
 	//	assign analyzer3_data = {nx[9:0], ntsc_flag, debug_state, 4'b0};
 
-   assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, done_ntsc, ntsc_pixels[9:0], 3'd0};
-   assign analyzer3_data = {ram0_address[18:3]};
-   assign analyzer2_data = {ram0_address[2:0], ram1_address[18:6]};
-   assign analyzer4_data = {ram1_address[5:0], ram0_data[9:0]};
+   assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, done_vga, done_ntsc, vga_flag, fvh, ntsc_x[9:3]};
+   assign analyzer2_data = {ntsc_x[2:0], ntsc_y[8:0], empty, wr_en, wr_ack, 1'b0};
+	assign analyzer3_data = {ntsc_pixels[15:0]};
    
    assign analyzer3_clock = tv_in_line_clock1;
    assign analyzer1_clock = clock_27mhz;

@@ -163,7 +163,6 @@ module ntsc_capture(
 		  wr_en <= 1;
 		  
 		  // GREEN
-<<<<<<< HEAD
 	       end else if (
 			    (lum < `GREEN_LUM_MAX) & 
 				 (lum > `GREEN_LUM_MIN) &
@@ -171,15 +170,7 @@ module ntsc_capture(
 				 (cr < `GREEN_CR_MAX) &
 			    (cb > `GREEN_CB_MIN) &
 				 (cb < `GREEN_CB_MAX)) begin
-=======
-	       end else if ((cb < `GREEN_CB_MAX) & 
-			    (cr < `GREEN_CR_MAX) & 
-			    (lum > `GREEN_LUM_MIN) &
-			    (lum < `GREEN_LUM_MAX) & 
-			    (cr > `GREEN_CR_MIN) & 
-			    (cb > `GREEN_CB_MIN)) begin
->>>>>>> 5bb72cba0b05cff0f49dadbbbdf4eba23b72a315
-		  
+
 		  pixel_buffer[17:10] <= 8'b11111111;
 		  pixel_buffer[9:5] <= 5'b11000;
 		  pixel_buffer[4:0] <= 5'b00000;
@@ -352,7 +343,7 @@ module ntsc_capture(
 	 
       end else begin
 	 ntsc_pixels <= 0;
-	 undelntsc <= 0;
+	 ntsc_flag <= 0;
 	 o_frame_flag <= 0;
 	 o_x <= 0;
 	 o_y <= 0;
