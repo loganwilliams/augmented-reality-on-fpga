@@ -447,21 +447,21 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// use above if not using memory_interface
 
 	// use below if using memory_interface
-	
+
+	// default values	
 	assign ram0_ce_b = 1'b0;
 	assign ram0_oe_b = 1'b0;
 	assign ram0_adv_ld = 1'b0;
-	assign ram0_bwe_b = 4'h0;
 
 	assign ram1_ce_b = 1'b0;
 	assign ram1_oe_b = 1'b0;
 	assign ram1_adv_ld = 1'b0;
-	assign ram1_bwe_b = 4'h0;
 	
-		// from memory_interface to zbt_6111 module
-	
+	// memory_interface	
 	wire mem0_wr;
 	wire mem1_wr;
+	wire [3:0] mem0_bwe;
+	wire [3:0] mem1_bwe;
 	wire [`LOG_ADDR-1:0] mem0_addr;
 	wire [`LOG_ADDR-1:0] mem1_addr;
 	wire [`LOG_MEM-1:0] mem0_read;
@@ -472,57 +472,62 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire [3:0] debug_blocks;
 	
 	wire [`LOG_HCOUNT-1:0] hcount;
-   wire [`LOG_VCOUNT-1:0]      vcount;
-
+	wire [`LOG_VCOUNT-1:0] vcount;
 
 	wire mem0_wrt, mem1_wrt, mem0_wrr, mem1_wrr;
+	wire [3:0] mem0_bwer;
+	wire [3:0] mem1_bwer;
 	wire [35:0] mem0_writet, mem1_writet, mem0_writer, mem1_writer;
 	wire [`LOG_ADDR-1:0] mem0_addrr, mem1_addrr, mem0_addrt, mem1_addrt;
 
 	memory_interface mi(
-		.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag_cleaned), 
-		.ntsc_flag(ntsc_flag_cleaned),.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
+		.clock(clock_65mhz), .reset(reset), 
+		.frame_flag(frame_flag_cleaned), .ntsc_flag(ntsc_flag_cleaned),
+		.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
 		.vga_flag(vga_flag),.done_vga(done_vga),.vga_pixel(vga_pixel),
 		.vcount(vcount), .hcount(hcount), .vsync(vga_out_vsync),
 		.mem0_addr(mem0_addrr),.mem1_addr(mem1_addrr), 
 		.mem0_read(mem0_read),.mem1_read(mem1_read), 
 		.mem0_write(mem0_writer),.mem1_write(mem1_writer), 
 		.mem0_wr(mem0_wrr),.mem1_wr(mem1_wrr),
+		.mem0_bwe(mem0_bwer),.mem1_bwe(mem1_bwer),
 		.ntsc_x(ntsc_x), .ntsc_y(ntsc_y));
 
-
-   wire 		       enter_clean;
-
-   debounce db3(.clock(clock_65mhz), .reset(reset), .noisy(~button_enter),
+	wire enter_clean;
+	debounce db3(
+		.clock(clock_65mhz), .reset(reset), .noisy(~button_enter),
 		.clean(enter_clean));
-   
-	
-   zbt_test_pattern ztp(.clock(clock_65mhz), .reset(reset), .start(enter_clean),
+   	
+	zbt_test_pattern ztp(
+			.clock(clock_65mhz), .reset(reset), .start(enter_clean),
 			.mem0_addr(mem0_addrt), .mem1_addr(mem1_addrt),
 			.mem0_write(mem0_writet), .mem1_write(mem1_writet),
 			.mem0_wr(mem0_wrt), .mem1_wr(mem1_wrt));
-   
-	
+   	
 	assign mem0_wr = (enter_clean) ? mem0_wrt : mem0_wrr;
+	assign mem0_bwe = (enter_clean) ? 4'b1111 : mem0_bwer;
 	assign mem0_addr = (enter_clean) ? mem0_addrt : mem0_addrr;
 	assign mem0_write = (enter_clean) ? mem0_writet : mem0_writer;
 	assign mem1_wr = (enter_clean) ? mem1_wrt : mem1_wrr;
+	assign mem1_bwe = (enter_clean) ? 4'b1111 : mem1_bwer;
 	assign mem1_addr = (enter_clean) ? mem1_addrt : mem1_addrr;
 	assign mem1_write = (enter_clean) ? mem1_writet : mem1_writer;
 	
-	zbt_6111 mem0(
-		.clk(clock_65mhz), .cen(1'b1), 
-		.we(mem0_wr), .addr(mem0_addr),
+	zbt_map mem0(
+		.clock(clock_65mhz), .cen(1'b1), 
+		.we(mem0_wr), .bwe(mem0_bwe), .addr(mem0_addr),
 		.write_data(mem0_write), .read_data(mem0_read), 
-		.ram_we_b(ram0_we_b), .ram_address(ram0_address), 
-		.ram_data(ram0_data), .ram_cen_b(ram0_cen_b));
+		.ram_we_b(ram0_we_b), .ram_bwe_b(ram0_bwe_b),
+		.ram_address(ram0_address), .ram_data(ram0_data),
+		.ram_cen_b(ram0_cen_b));
 	
-	zbt_6111 mem1(
-		.clk(clock_65mhz), .cen(1'b1), 
-		.we(mem1_wr), .addr(mem1_addr),
+	zbt_map mem1(
+		.clock(clock_65mhz), .cen(1'b1), 
+		.we(mem1_wr), .bwe(mem1_bwe), .addr(mem1_addr),
 		.write_data(mem1_write), .read_data(mem1_read), 
-		.ram_we_b(ram1_we_b), .ram_address(ram1_address), 
-		.ram_data(ram1_data), .ram_cen_b(ram1_cen_b));
+		.ram_we_b(ram1_we_b), .ram_bwe_b(ram1_bwe_b),
+		.ram_address(ram1_address), .ram_data(ram1_data), 
+		.ram_cen_b(ram1_cen_b));
 	
 	// use above if using memory_interface
 	/*
@@ -599,10 +604,10 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//	assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, vga_flag, done_vga, done_ntsc, fvh, 7'b0};
 	//	assign analyzer3_data = {nx[9:0], ntsc_flag, debug_state, 4'b0};
 
-   assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, done_vga, done_ntsc, vga_flag,  fvh, empty, wr_en, wr_ack, nr};
+   assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, done_ntsc, ntsc_pixels[9:0], 3'd0};
    assign analyzer3_data = {ram0_address[18:3]};
    assign analyzer2_data = {ram0_address[2:0], ram1_address[18:6]};
-   assign analyzer4_data = {ram1_address[5:0], ntsc_x[9:0]};
+   assign analyzer4_data = {ram1_address[5:0], ram0_data[9:0]};
    
    assign analyzer3_clock = tv_in_line_clock1;
    assign analyzer1_clock = clock_27mhz;
