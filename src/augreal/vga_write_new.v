@@ -88,19 +88,19 @@ module stupid_vga_write
 			vga_out_red[7:0] <= 8'd0;
 			vga_out_green[7:0] <= 8'd0;
 			vga_out_blue[7:0] <= 8'd0;
-		end else if (del_hcount == a_x || del_hcount == b_x) begin
+		end else if (del_hcount == a_x || del_vcount == a_y) begin
 		   vga_out_red[7:0] <= 8'hFF;
 		   vga_out_green[7:0] <= 8'h00;
 		   vga_out_blue[7:0] <= 8'hFF;
-		end else if (del_hcount == c_x || del_hcount == d_x) begin
+		end else if (del_hcount == b_x || del_vcount == b_y) begin
 		   vga_out_red[7:0] <= 8'hFF;
 		   vga_out_green[7:0] <= 8'hFF;
 		   vga_out_blue[7:0] <= 8'h00;
-		end else if (del_vcount == a_y || del_vcount == b_y) begin
+		end else if (del_hcount == c_x || del_vcount == c_y) begin
 		   vga_out_red[7:0] <= 8'h00;
 		   vga_out_green[7:0] <= 8'hFF;
 		   vga_out_blue[7:0] <= 8'hFF;
-		end else if (del_vcount == c_y || del_vcount == d_y) begin
+		end else if (del_hcount == d_x || del_vcount == d_y) begin
 			vga_out_red[7:0] <= 8'hFF;
 			vga_out_green[7:0] <= 8'h00;
 			vga_out_blue[7:0] <= 8'h00;
@@ -117,7 +117,7 @@ module stupid_vga_write
 	
 	always @(*) begin
 		vga_out_sync_b = 1'b1;
-		vga_out_pixel_clock = vclock;
+		vga_out_pixel_clock = ~vclock;
 	end
 endmodule
 

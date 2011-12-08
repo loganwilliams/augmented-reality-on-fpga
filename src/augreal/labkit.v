@@ -397,6 +397,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		
 	wire [9:0] a_x, b_x, c_x, d_x;
 	wire [8:0] a_y, b_y, c_y, d_y;
+	wire corners_flag;
 	
 	
 	object_recognition objr(.clk(clock_65mhz),
@@ -409,7 +410,8 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 									 .a_x(a_x), .a_y(a_y),
 									 .b_x(b_x), .b_y(b_y),
 									 .c_x(c_x), .c_y(c_y),
-									 .d_x(d_x), .d_y(d_y));
+									 .d_x(d_x), .d_y(d_y),
+									 .corners_flag(corners_flag));
 	
 	//debounce dbff(.clock(clock_65mhz), .noisy(~button1), .clean(frame_flag));
 	
@@ -606,7 +608,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//	assign analyzer3_data = {nx[9:0], ntsc_flag, debug_state, 4'b0};
 
    assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, done_vga, done_ntsc, vga_flag, fvh, ntsc_x[9:3]};
-   assign analyzer2_data = {ntsc_x[2:0], ntsc_y[8:0], empty, wr_en, wr_ack, 1'b0};
+   assign analyzer2_data = {ntsc_x[2:0], ntsc_y[8:0], empty, wr_en, wr_ack, i_flag};
 	assign analyzer3_data = {ntsc_pixels[15:0]};
    
    assign analyzer3_clock = tv_in_line_clock1;

@@ -123,14 +123,25 @@ module object_recognition(
 	WAITING_FOR_DIVS: begin
 	   // if all of the dividers are done
 	   if (&divsready) begin
-	      a_x <= ((a_x[0] << G) - a_x[0]) >> G + (averagex[0] >> 1);
-	      a_y <= ((a_y[0] << G) - a_y[0]) >> G + (averagey[0] >> 1);
-	      b_x <= ((b_x[0] << G) - b_x[0]) >> G + (averagex[1] >> 1);
-	      b_y <= ((b_y[0] << G) - b_y[0]) >> G + (averagey[1] >> 1);
-	      c_x <= ((c_x[0] << G) - c_x[0]) >> G + (averagex[2] >> 1);
-	      c_y <= ((c_y[0] << G) - c_y[0]) >> G + (averagey[2] >> 1);
-	      d_x <= ((d_x[0] << G) - d_x[0]) >> G + (averagex[3] >> 1);
-	      d_y <= ((d_y[0] << G) - d_y[0]) >> G + (averagey[3] >> 1);
+		/*
+	      a_x <= ({a_x, {G{1'b0}}} - a_x) >> G + (averagex[0] >> G);
+	      a_y <= ({a_y, {G{1'b0}}} - a_y) >> G + (averagey[0] >> G);
+	      b_x <= ({b_x, {G{1'b0}}} - b_x) >> G + (averagex[1] >> G);
+	      b_y <= ({b_y, {G{1'b0}}} - b_y) >> G + (averagey[1] >> G);
+	      c_x <= ({c_x, {G{1'b0}}} - c_x) >> G + (averagex[2] >> G);
+	      c_y <= ({c_y, {G{1'b0}}} - c_y) >> G + (averagey[2] >> G);
+	      d_x <= ({d_x, {G{1'b0}}} - d_x) >> G + (averagex[3] >> G);
+	      d_y <= ({d_y, {G{1'b0}}} - d_y) >> G + (averagey[3] >> G);
+			*/
+			
+			a_x <= averagex[0] >> 2 + a_x >> 2 + a_x >> 1;
+			b_x <= averagex[1] >> 2 + b_x >> 2 + b_x >> 1;
+			c_x <= averagex[2] >> 2 + c_x >> 2 + c_x >> 1;
+			d_x <= averagex[3] >> 2 + d_x >> 2 + d_x >> 1;
+			a_y <= averagey[0] >> 2 + a_y >> 2 + a_y >> 1;
+			b_y <= averagey[1] >> 2 + b_y >> 2 + b_y >> 1;
+			c_y <= averagey[2] >> 2 + c_y >> 2 + c_y >> 1;
+			d_y <= averagey[3] >> 2 + d_y >> 2 + d_y >> 1;
 
 	      top <= (averagex[1] - averagex[0]) * (averagex[1] - averagex[0]) + (averagey[1] - averagey[0]) * (averagey[1] - averagey[0]);
 	      bottom <= (averagex[2] - averagex[3]) * (averagex[2] - averagex[3]) + (averagey[2] - averagey[3]) * (averagey[2] - averagey[3]);
