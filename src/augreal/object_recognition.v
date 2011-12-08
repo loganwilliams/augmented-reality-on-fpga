@@ -1,5 +1,6 @@
 // Logan Williams
 
+
 module object_recognition(
 			  input 	   clk,
 			  input reset,
@@ -20,6 +21,11 @@ module object_recognition(
 			  output reg [8:0] d_y,
 			  output reg 	   corners_flag);
 
+   // Geometric averaging parameter
+   //     n = 1 / (2 ^ G)
+
+   parameter G = 3;
+   
    reg [1:0] 				   state; 				   
 
    reg [31:0] 				   sumx [0:3];
@@ -117,14 +123,14 @@ module object_recognition(
 	WAITING_FOR_DIVS: begin
 	   // if all of the dividers are done
 	   if (&divsready) begin
-	      a_x <= (averagex[0] >> 1) + (a_x >> 1);
-	      a_y <= (averagey[0] >> 1) + (a_y >> 1);
-	      b_x <= (averagex[1] >> 1) + (b_x >> 1);
-	      b_y <= (averagey[1] >> 1) + (b_y >> 1);
-	      c_x <= (averagex[2] >> 1) + (c_x >> 1);
-	      c_y <= (averagey[2] >> 1) + (c_y >> 1);
-	      d_x <= (averagex[3] >> 1) + (d_x >> 1);
-	      d_y <= (averagey[3] >> 1) + (d_y >> 1);
+	      a_x <= ((a_x[0] << G) - a_x[0]) >> G + (averagex[0] >> 1);
+	      a_y <= ((a_y[0] << G) - a_y[0]) >> G + (averagey[0] >> 1);
+	      b_x <= ((b_x[0] << G) - b_x[0]) >> G + (averagex[1] >> 1);
+	      b_y <= ((b_y[0] << G) - b_y[0]) >> G + (averagey[1] >> 1);
+	      c_x <= ((c_x[0] << G) - c_x[0]) >> G + (averagex[2] >> 1);
+	      c_y <= ((c_y[0] << G) - c_y[0]) >> G + (averagey[2] >> 1);
+	      d_x <= ((d_x[0] << G) - d_x[0]) >> G + (averagex[3] >> 1);
+	      d_y <= ((d_y[0] << G) - d_y[0]) >> G + (averagey[3] >> 1);
 
 	      top <= (averagex[1] - averagex[0]) * (averagex[1] - averagex[0]) + (averagey[1] - averagey[0]) * (averagey[1] - averagey[0]);
 	      bottom <= (averagex[2] - averagex[3]) * (averagex[2] - averagex[3]) + (averagey[2] - averagey[3]) * (averagey[2] - averagey[3]);
