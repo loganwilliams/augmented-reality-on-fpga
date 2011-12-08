@@ -117,14 +117,14 @@ module object_recognition(
 	WAITING_FOR_DIVS: begin
 	   // if all of the dividers are done
 	   if (&divsready) begin
-	      a_x <= averagex[0];
-	      a_y <= averagey[0];
-	      b_x <= averagex[1];
-	      b_y <= averagey[1];
-	      c_x <= averagex[2];
-	      c_y <= averagey[2];
-	      d_x <= averagex[3];
-	      d_y <= averagey[3];
+	      a_x <= (averagex[0] >> 1) + (a_x >> 1);
+	      a_y <= (averagey[0] >> 1) + (a_y >> 1);
+	      b_x <= (averagex[1] >> 1) + (b_x >> 1);
+	      b_y <= (averagey[1] >> 1) + (b_y >> 1);
+	      c_x <= (averagex[2] >> 1) + (c_x >> 1);
+	      c_y <= (averagey[2] >> 1) + (c_y >> 1);
+	      d_x <= (averagex[3] >> 1) + (d_x >> 1);
+	      d_y <= (averagey[3] >> 1) + (d_y >> 1);
 
 	      top <= (averagex[1] - averagex[0]) * (averagex[1] - averagex[0]) + (averagey[1] - averagey[0]) * (averagey[1] - averagey[0]);
 	      bottom <= (averagex[2] - averagex[3]) * (averagex[2] - averagex[3]) + (averagey[2] - averagey[3]) * (averagey[2] - averagey[3]);

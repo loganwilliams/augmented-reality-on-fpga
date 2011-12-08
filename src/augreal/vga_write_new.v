@@ -52,7 +52,7 @@ module stupid_vga_write
 	wire [7:0] b;
 	reg [35:0] pixel;
 	ycrcb_lut ycc(
-		.ycrcb(del_hcount ? pixel[35:18] : pixel[17:0]),
+		.ycrcb(del_hcount ? pixel[17:0] : pixel[35:18]),
 		.r(r), .g(g), .b(b));
 
 	// generate vga_flag 1 out of every 4 clock cycles
@@ -80,8 +80,8 @@ module stupid_vga_write
 			vga_out_green[7:0] <= 8'd0;
 			vga_out_blue[7:0] <= 8'd0;
 		end
-		else if (hcount == 10'd320 || vcount == 10'd240
-				|| hcount == a_x || hcount == b_x || hcount == c_x || hcount == d_x
+		else if (
+				   hcount == a_x || hcount == b_x || hcount == c_x || hcount == d_x
 				|| vcount == a_y || vcount == b_y || vcount == c_y || vcount == d_y) begin
 			vga_out_red[7:0] <= 8'hFF;
 			vga_out_green[7:0] <= 8'hFF;

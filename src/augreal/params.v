@@ -77,6 +77,6 @@
 `define PINK_CR_MIN 10'h280
 `define PINK_LUM_MIN 10'h190
 
-`define BLUE_CB_MIN 10'h200
-`define BLUE_CR_MAX 10'h1F0
+`define BLUE_CB_MIN 10'h210
+`define BLUE_CR_MAX 10'h1E0
 `define BLUE_LUM_MIN 10'h1A0
