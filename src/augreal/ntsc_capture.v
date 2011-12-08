@@ -1,56 +1,63 @@
-module ntsc_capture(
-		    input 	      clock_65mhz, // the main system clock
-		    input 	      clock_27mhz,
-		    input 	      reset, // reset line
-		    output 	      tv_in_reset_b, // these are all labkit wires
-		    output 	      tv_in_i2c_clock, //   |
-		    inout 	      tv_in_i2c_data, //    |
-		    input 	      tv_in_line_clock1, // |
-		    input [19:0]      tv_in_ycrcb, //       |
-		    output reg [35:0] ntsc_pixels, // outputs two sets of pixels in Y/Cr/Cb/Y/Cr/Cb format
-		    output reg 	      ntsc_flag, // a flag that goes high when a pixel is being output
-		    output reg o_color, // these outputs are for object_recognition. this indicates the color of the recognized pixel
-		    output reg 	      o_i_flag, // a flag that indicates the data is good
-		    output reg 	      o_frame_flag,
-		    output reg [9:0]  o_x,
-		    output reg [8:0] o_y,
-			 output empty,
-			 output reg wr_en,
-			 output read_state_out,
-			 output [3:0] ntsc_raw,
-			 output reg [9:0] midcr,
-			 output reg [9:0] midcb,
-			 output reg [9:0] midy
-		    ); // a flag that indicates when a new frame begins
+`default_nettype none
+  // comment out when testing
+`include "params.v"
+
+  module ntsc_capture(
+		      input 		clock_65mhz, // the main system clock
+		      input 		clock_27mhz,
+		      input 		reset, // reset line
+		      output 		tv_in_reset_b, // these are all labkit wires
+		      output 		tv_in_i2c_clock, //   |
+		      inout 		tv_in_i2c_data, //    |
+		      input 		tv_in_line_clock1, // |
+		      input [19:0] 	tv_in_ycrcb, //       |
+		      output reg [35:0] ntsc_pixels, // outputs two sets of pixels in Y/Cr/Cb/Y/Cr/Cb format
+		      output reg 	ntsc_flag, // a flag that goes high when a pixel is being output
+		      output reg [1:0] 	o_color, // these outputs are for object_recognition. this indicates the color of the recognized pixel
+		      output reg 	o_i_flag, // a flag that indicates the data is good
+		      output reg 	o_frame_flag,
+		      output reg [9:0] 	o_x,
+		      output reg [8:0] 	o_y,
+		      output 		empty,
+		      output reg 	wr_en,
+		      output 		read_state_out,
+		      output [3:0] 	ntsc_raw,
+		      output reg [9:0] 	midcr,
+		      output reg [9:0] 	midcb,
+		      output reg [9:0] 	midy
+		      ); // a flag that indicates when a new frame begins
 
    // initialize the adv7185 video ADC
    adv7185init adv7185(.reset(reset), .clock_27mhz(clock_27mhz), .source(1'b0),
 		       .tv_in_reset_b(tv_in_reset_b), .tv_in_i2c_clock(tv_in_i2c_clock),
 		       .tv_in_i2c_data(tv_in_i2c_data));
 
-   wire [29:0] 			     ycrcb;
-   wire [2:0] 			     fvh;
+   wire [29:0] 				ycrcb;
+   wire [2:0] 				fvh;
    
-   wire 			     dv;
+   wire 				dv;
 
-   reg [63:0] 			     din;
+   reg [63:0] 				din;
    //reg 				     wr_en = 0;
-   wire 			     rd_en;
-   wire [63:0] 			     dout;
-   wire 			     full, valid;
+   wire 				rd_en;
+   wire [63:0] 				dout;
+   wire 				full, valid;
 
-   reg [17:0] 			     pixel_buffer;
+   reg [17:0] 				pixel_buffer;
 
-   reg 				     read_state;
+   reg 					read_state;
    assign read_state_out = read_state;
    
+   //wire 			     bufclock;
    
    
+   //BUFG invclock(.I(clock_65mhz), .O(bufclock));
 
    ntf n2f(.din(din), .rd_clk(clock_65mhz), .rd_en(rd_en),
-		    .rst(reset), .wr_clk(tv_in_line_clock1), .wr_en(wr_en),
-		    .dout(dout), .empty(empty), .full(full), .valid(valid)
-		    );
+	   .rst(reset), .wr_clk(tv_in_line_clock1), .wr_en(wr_en),
+	   .dout(dout), .empty(empty), .full(full), .valid(valid)
+	   );
+   
    
 
    // this module decodes the data and outputs the ycrcb pair
@@ -58,20 +65,20 @@ module ntsc_capture(
 		      .tv_in_ycrcb(tv_in_ycrcb[19:10]), .ycrcb(ycrcb),
 		      .v(fvh[1]), .h(fvh[0]), .data_valid(dv), .f(fvh[2]));
 
-   reg 				     state = 0;
-   reg [9:0] 			     x = 0;
-   reg [8:0] 			     y = 0;
+   reg 					state = 0;
+   reg [9:0] 				x = 0;
+   reg [8:0] 				y = 0;
    
-   wire 			     sv;
-   wire 			     sh;
-   reg 				     rh;
-   reg 				     rv;
+   reg 					sv;
+   reg 					sh;
+   reg 					rh;
+   reg 					rv;
    
-   reg 				     pulseonce;
+   reg 					pulseonce;
 
    // create some convenience variables
-   wire [9:0] 			     cr, cb, lum;
-   wire 			     f, v, h;
+   wire [9:0] 				cr, cb, lum;
+   wire 				f, v, h;
    
    assign cr = ycrcb[19:10];
    assign cb = ycrcb[9:0];
@@ -81,33 +88,37 @@ module ntsc_capture(
    assign v = fvh[1];
    assign h = fvh[0];
 
-   wire [8:0] 			     corrected_y;
+   wire [8:0] 				corrected_y;
 
    assign corrected_y = y - 25;
    
    assign ntsc_raw = din[28:25];
 
-   synchronize syncv(.sig(v), .syncsig(sv), .reset(rv));
-   synchronize synch(.sig(h), .syncsig(sh), .reset(rh));
+   always @(*) begin
+      sh <= (~rh & sh) | h;
+      sv <= (~rv & sv) | v;
+   end
 
+   
    // synchronize to the external video line clock
    always @ (posedge tv_in_line_clock1) begin
-      rv <= 0;
+      
+      if (sh) begin
+	 y <= y + 2;
+	 x <= 0;
+	 rh <= 1;
+      end else if (x > 1) begin
+	 rh <= 0;
+      end
       
       if (sv) begin
 	 y <= f;
 	 x <= 0;
 	 rv <= 1;
+      end else if (y > 1) begin
+	 rv <= 0;
       end
       
-      // something weird is happening here
-      if (sh) begin
-	 y <= y + 2;
-	 x <= 0;
-	 rh <= 1;
-      end else begin
-	 rh <= 0;
-      end
       
       if (((y > 504) | v) & f & ~pulseonce) begin
 	 din[26] <= 1;
@@ -121,12 +132,11 @@ module ntsc_capture(
 	 
       end
       
-	 if (~f) begin
-	    pulseonce <= 0;
-	 end
+      if (~f) begin
+	 pulseonce <= 0;
+      end
       
       if (dv) begin
-
 	 if (y >= 25 && y < 505 && x < 640) begin // above 480 lines are blanked
 	    
 	    if (x == 320 && y == 265) begin
@@ -151,30 +161,31 @@ module ntsc_capture(
 		  din[27] <= 0;
 		  
 		  din[4] <= 1;
-		  din[6:5] <= 0;
+		  din[6:5] <= 2'b00;
 		  din[25:16] <= x;
 		  din[15:7] <= corrected_y;
-		 
+		  
 		  wr_en <= 1;
 		  
 		  // GREEN
-	       end else if ((cb < `GREEN_CB_MAX) & 
-			    (cr < `GREEN_CR_MAX) & 
-			    (lum > `GREEN_LUM_MIN) &
+	       end else if (
 			    (lum < `GREEN_LUM_MAX) & 
+			    (lum > `GREEN_LUM_MIN) &
 			    (cr > `GREEN_CR_MIN) & 
-			    (cb > `GREEN_CB_MIN)) begin
-		  
+			    (cr < `GREEN_CR_MAX) &
+			    (cb > `GREEN_CB_MIN) &
+			    (cb < `GREEN_CB_MAX)) begin
+
 		  pixel_buffer[17:10] <= 8'b11111111;
-		  pixel_buffer[9:5] <= 5'b00000;
-		  pixel_buffer[4:0] <= 5'b00000;
+		  pixel_buffer[9:5] <= 5'b10000;
+		  pixel_buffer[4:0] <= 5'b10000;
 		  din[27] <= 0;
 		  
 		  din[4] <= 1;
 		  din[6:5] <= 2'b11;
 		  din[25:16] <= x;
 		  din[15:7] <= corrected_y;
-		 
+		  
 		  wr_en <= 1;
 
 		  
@@ -218,6 +229,8 @@ module ntsc_capture(
 		  pixel_buffer[4:0] <= ycrcb[9:5];
 		  wr_en <= 0;
 	       end
+	       
+	       
 
 	       state <= 1;
 
@@ -229,6 +242,7 @@ module ntsc_capture(
 
 	       din[63:46] <= pixel_buffer;
 
+
 	       // ORANGE
 	       if ((cb < `ORANGE_CB_MAX) & 
 		   (cr > `ORANGE_CR_MIN) & 
@@ -238,7 +252,6 @@ module ntsc_capture(
 		  din[32:28] <= 5'b00000;
 		  din[4] <= 1;
 		  din[6:5] <= 2'b00;
-		  wr_en <= 1;
 
 		  // GREEN
 	       end else if ((cb < `GREEN_CB_MAX) & 
@@ -249,11 +262,10 @@ module ntsc_capture(
 			    (cb > `GREEN_CB_MIN)) begin
 		  
 		  din[45:38] <= 8'b11111111;
-		  din[37:33] <= 5'b00000;
-		  din[32:28] <= 5'b00000;
+		  din[37:33] <= 5'b10000;
+		  din[32:28] <= 5'b10000;
 		  din[4] <= 1;
 		  din[6:5] <= 2'b11;
-		  wr_en <= 1;
 
 
 		  // PINK
@@ -291,6 +303,7 @@ module ntsc_capture(
 	       end // else: !if((cb > BLUE_CB_MIN) &...
 	       
 	       
+	       
 	       din[27] <= 1;
 	       din[26] <= 0;
 	       din[25:16] <= x;
@@ -300,8 +313,9 @@ module ntsc_capture(
 	       
 	    end // else: !if(state == 0)
 
-	    x <= x + 1; // increment the x coordinate
 	 end // if (y < 480 && x < 640)
+	 x <= x + 1;
+	 
       end // if (dv)
       
 
@@ -313,6 +327,7 @@ module ntsc_capture(
    end // always @ (posedge tv_in_line_clock1)
 
    assign rd_en = ~empty;
+   reg undelntsc;
    
    // Synchronize outputs to main system clock
    always @ (posedge clock_65mhz) begin
@@ -322,7 +337,6 @@ module ntsc_capture(
       end else begin
 	 read_state <= 0;
       end
-
       // we have data
       if (read_state) begin
 	 ntsc_pixels <= dout[63: 28];
@@ -357,6 +371,7 @@ module synchronize(
    
    always @(*) begin
       if (sig) syncsig <= 1;
+
       if (reset) syncsig <= 0;
    end
 endmodule
@@ -751,11 +766,11 @@ endmodule
 // 1: Enable
 `define TEMPORAL_DECIMATION_CONTROL             2'h0
 // 0: Supress frames, start with even field
-  // 1: Supress frames, start with odd field
-  // 2: Supress even fields only
-  // 3: Supress odd fields only
+// 1: Supress frames, start with odd field
+// 2: Supress even fields only
+// 3: Supress odd fields only
 `define TEMPORAL_DECIMATION_RATE                4'h0
-  // 0-F: Number of fields/frames to skip
+// 0-F: Number of fields/frames to skip
 
 `define ADV7185_REGISTER_E {1'b0, `TEMPORAL_DECIMATION_RATE, `TEMPORAL_DECIMATION_CONTROL, `TEMPORAL_DECIMATION_ENABLE}
 
@@ -764,28 +779,28 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define POWER_SAVE_CONTROL                      2'h0
-  // 0: Full operation
-  // 1: CVBS only
-  // 2: Digital only
-  // 3: Power save mode
+// 0: Full operation
+// 1: CVBS only
+// 2: Digital only
+// 3: Power save mode
 `define POWER_DOWN_SOURCE_PRIORITY              1'b0
-  // 0: Power-down pin has priority
-  // 1: Power-down control bit has priority
+// 0: Power-down pin has priority
+// 1: Power-down control bit has priority
 `define POWER_DOWN_REFERENCE                    1'b0
-  // 0: Reference is functional
-  // 1: Reference is powered down
+// 0: Reference is functional
+// 1: Reference is powered down
 `define POWER_DOWN_LLC_GENERATOR                1'b0
-  // 0: LLC generator is functional
-  // 1: LLC generator is powered down
+// 0: LLC generator is functional
+// 1: LLC generator is powered down
 `define POWER_DOWN_CHIP                         1'b0
-  // 0: Chip is functional
-  // 1: Input pads disabled and clocks stopped
+// 0: Chip is functional
+// 1: Input pads disabled and clocks stopped
 `define TIMING_REACQUIRE                        1'b0
-  // 0: Normal operation
-  // 1: Reacquire video signal (bit will automatically reset)
+// 0: Normal operation
+// 1: Reacquire video signal (bit will automatically reset)
 `define RESET_CHIP                              1'b0
-  // 0: Normal operation
-  // 1: Reset digital core and I2C interface (bit will automatically reset)
+// 0: Normal operation
+// 1: Reset digital core and I2C interface (bit will automatically reset)
 
 `define ADV7185_REGISTER_F {`RESET_CHIP, `TIMING_REACQUIRE, `POWER_DOWN_CHIP, `POWER_DOWN_LLC_GENERATOR, `POWER_DOWN_REFERENCE, `POWER_DOWN_SOURCE_PRIORITY, `POWER_SAVE_CONTROL}
 
@@ -794,23 +809,23 @@ endmodule
 ///////////////////////////////////////////////////////////////////////////////
 
 `define PEAK_WHITE_UPDATE                       1'b1
-  // 0: Update gain once per line
-  // 1: Update gain once per field
+// 0: Update gain once per line
+// 1: Update gain once per field
 `define AVERAGE_BIRIGHTNESS_LINES               1'b1
-  // 0: Use lines 33 to 310
-  // 1: Use lines 33 to 270
+// 0: Use lines 33 to 310
+// 1: Use lines 33 to 270
 `define MAXIMUM_IRE                             3'h0
-  // 0: PAL: 133, NTSC: 122
-  // 1: PAL: 125, NTSC: 115
-  // 2: PAL: 120, NTSC: 110
-  // 3: PAL: 115, NTSC: 105
-  // 4: PAL: 110, NTSC: 100
-  // 5: PAL: 105, NTSC: 100
-  // 6-7: PAL: 100, NTSC: 100
+// 0: PAL: 133, NTSC: 122
+// 1: PAL: 125, NTSC: 115
+// 2: PAL: 120, NTSC: 110
+// 3: PAL: 115, NTSC: 105
+// 4: PAL: 110, NTSC: 100
+// 5: PAL: 105, NTSC: 100
+// 6-7: PAL: 100, NTSC: 100
 `define COLOR_KILL                              1'b1
-  // 0: Disable color kill
-  // 1: Enable color kill
-  
+// 0: Disable color kill
+// 1: Enable color kill
+
 `define ADV7185_REGISTER_33 {1'b1, `COLOR_KILL, 1'b1, `MAXIMUM_IRE, `AVERAGE_BIRIGHTNESS_LINES, `PEAK_WHITE_UPDATE}
 
 `define ADV7185_REGISTER_10 8'h00
@@ -872,7 +887,7 @@ module adv7185init (reset, clock_27mhz, source, tv_in_reset_b,
    output tv_in_reset_b; // Reset signal to ADV7185
    output tv_in_i2c_clock; // I2C clock output to ADV7185
    output tv_in_i2c_data; // I2C data line to ADV7185
-   input source; // 0: composite, 1: s-video
+   input  source; // 0: composite, 1: s-video
    
    initial begin
       $display("ADV7185 Initialization values:");
@@ -899,8 +914,8 @@ module adv7185init (reset, clock_27mhz, source, tv_in_reset_b,
    //
    
    reg [7:0] clk_div_count, reset_count;
-   reg clock_slow;
-   wire reset_slow;
+   reg 	     clock_slow;
+   wire      reset_slow;
    
    initial
      begin
@@ -933,7 +948,7 @@ module adv7185init (reset, clock_27mhz, source, tv_in_reset_b,
    
    reg load;
    reg [7:0] data;
-   wire ack, idle;
+   wire      ack, idle;
    
    i2c i2c(.reset(reset_slow), .clock4x(clock_slow), .data(data), .load(load),
 	   .ack(ack), .idle(idle), .scl(tv_in_i2c_clock),
@@ -944,259 +959,259 @@ module adv7185init (reset, clock_27mhz, source, tv_in_reset_b,
    //
    
    reg [7:0] state;
-   reg tv_in_reset_b;
-   reg old_source;
+   reg 	     tv_in_reset_b;
+   reg 	     old_source;
    
    always @(posedge clock_slow)
-      if (reset_slow)
-	begin
-	   state <= 0;
-	   load <= 0;
-	   tv_in_reset_b <= 0;
-	   old_source <= 0;
-	end
-      else
-	case (state)
-	  8'h00:
-	    begin
-	       // Assert reset
-	       load <= 1'b0;
-	       tv_in_reset_b <= 1'b0;
-	       if (!ack)
-		 state <= state+1;
-	    end
-	  8'h01:
-	    state <= state+1;
-	  8'h02:
-	    begin
-	       // Release reset
-	       tv_in_reset_b <= 1'b1;
-	       state <= state+1;
-	      	    end
-	  8'h03:
-	    begin
-	       // Send ADV7185 address
-	       data <= 8'h8A;
-	       load <= 1'b1;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h04:
-	    begin
-	       // Send subaddress of first register
-	       data <= 8'h00;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h05:
-	    begin
-	       // Write to register 0
-	       data <= `ADV7185_REGISTER_0 | {5'h00, {3{source}}};
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h06:
-	    begin
-	       // Write to register 1
-	       data <= `ADV7185_REGISTER_1;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h07:
-	    begin
-	       // Write to register 2
-	       data <= `ADV7185_REGISTER_2;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h08:
-	    begin
-	       // Write to register 3
-	       data <= `ADV7185_REGISTER_3;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h09:
-	    begin
-	       // Write to register 4
-	       data <= `ADV7185_REGISTER_4;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h0A:
-	    begin
-	       // Write to register 5
-	       data <= `ADV7185_REGISTER_5;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h0B:
-	    begin
-	       // Write to register 6
-	       data <= 8'h00; // Reserved register, write all zeros
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h0C:
-	    begin
-	       // Write to register 7
-	       data <= `ADV7185_REGISTER_7;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h0D:
-	    begin
-	       // Write to register 8
-	       data <= `ADV7185_REGISTER_8;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h0E:
-	    begin
-	       // Write to register 9
-	       data <= `ADV7185_REGISTER_9;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h0F: begin
-	     // Write to register A
-	     data <= `ADV7185_REGISTER_A;
-	   if (ack)
-	     state <= state+1;
-	  end
-	  8'h10:
-	    begin
-	       // Write to register B
-	       data <= `ADV7185_REGISTER_B;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h11:
-	    begin
-	       // Write to register C
-	       data <= `ADV7185_REGISTER_C;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h12:
-	    begin
-	       // Write to register D
-	       data <= `ADV7185_REGISTER_D;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h13:
-	    begin
-	       // Write to register E
-	       data <= `ADV7185_REGISTER_E;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h14:
-	    begin
-	       // Write to register F
-	       data <= `ADV7185_REGISTER_F;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h15:
-	    begin
-	       // Wait for I2C transmitter to finish
-	       load <= 1'b0;
-	       if (idle)
-		 state <= state+1;
-	    end
-	  8'h16:
-	    begin
-	       // Write address
-	       data <= 8'h8A;
-	       load <= 1'b1;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h17:
-	    begin
-	       data <= 8'h33;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h18:
-	    begin
-	       data <= `ADV7185_REGISTER_33;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h19:
-	    begin
-	       load <= 1'b0;
-	       if (idle)
-		 state <= state+1;
-	    end
-	  
-	  8'h1A: begin
-	     data <= 8'h8A;
-	     load <= 1'b1;
-	     if (ack)
-	       state <= state+1;
-	  end
-	  8'h1B:
-	    begin
-	       data <= 8'h33;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h1C:
-	    begin
-	       load <= 1'b0;
-	       if (idle)
-		 state <= state+1;
-	    end
-	  8'h1D:
-	    begin
-	       load <= 1'b1;
-	       data <= 8'h8B;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h1E:
-	    begin
-	       data <= 8'hFF;
-	       if (ack)
-		 state <= state+1;
-	    end
-	  8'h1F:
-	    begin
-	       load <= 1'b0;
-	       if (idle)
-		 state <= state+1;
-	    end
-	  8'h20:
-	    begin
-	       // Idle
-	       if (old_source != source) state <= state+1;
-	       old_source <= source;
-	    end
-	  8'h21: begin
-	     // Send ADV7185 address
-	     data <= 8'h8A;
-	     load <= 1'b1;
-	     if (ack) state <= state+1;
-	  end
-	  8'h22: begin
-	     // Send subaddress of register 0
-	     data <= 8'h00;
-	     if (ack) state <= state+1;
-	  end
-	  8'h23: begin
-	     // Write to register 0
-	     data <= `ADV7185_REGISTER_0 | {5'h00, {3{source}}};
-	     if (ack) state <= state+1;
-	  end
-	  8'h24: begin
-	     // Wait for I2C transmitter to finish
-	     load <= 1'b0;
-	     if (idle) state <= 8'h20;
-	  end
+     if (reset_slow)
+       begin
+	  state <= 0;
+	  load <= 0;
+	  tv_in_reset_b <= 0;
+	  old_source <= 0;
+       end
+     else
+       case (state)
+	 8'h00:
+	   begin
+	      // Assert reset
+	      load <= 1'b0;
+	      tv_in_reset_b <= 1'b0;
+	      if (!ack)
+		state <= state+1;
+	   end
+	 8'h01:
+	   state <= state+1;
+	 8'h02:
+	   begin
+	      // Release reset
+	      tv_in_reset_b <= 1'b1;
+	      state <= state+1;
+	   end
+	 8'h03:
+	   begin
+	      // Send ADV7185 address
+	      data <= 8'h8A;
+	      load <= 1'b1;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h04:
+	   begin
+	      // Send subaddress of first register
+	      data <= 8'h00;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h05:
+	   begin
+	      // Write to register 0
+	      data <= `ADV7185_REGISTER_0 | {5'h00, {3{source}}};
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h06:
+	   begin
+	      // Write to register 1
+	      data <= `ADV7185_REGISTER_1;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h07:
+	   begin
+	      // Write to register 2
+	      data <= `ADV7185_REGISTER_2;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h08:
+	   begin
+	      // Write to register 3
+	      data <= `ADV7185_REGISTER_3;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h09:
+	   begin
+	      // Write to register 4
+	      data <= `ADV7185_REGISTER_4;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h0A:
+	   begin
+	      // Write to register 5
+	      data <= `ADV7185_REGISTER_5;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h0B:
+	   begin
+	      // Write to register 6
+	      data <= 8'h00; // Reserved register, write all zeros
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h0C:
+	   begin
+	      // Write to register 7
+	      data <= `ADV7185_REGISTER_7;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h0D:
+	   begin
+	      // Write to register 8
+	      data <= `ADV7185_REGISTER_8;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h0E:
+	   begin
+	      // Write to register 9
+	      data <= `ADV7185_REGISTER_9;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h0F: begin
+	    // Write to register A
+	    data <= `ADV7185_REGISTER_A;
+	    if (ack)
+	      state <= state+1;
+	 end
+	 8'h10:
+	   begin
+	      // Write to register B
+	      data <= `ADV7185_REGISTER_B;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h11:
+	   begin
+	      // Write to register C
+	      data <= `ADV7185_REGISTER_C;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h12:
+	   begin
+	      // Write to register D
+	      data <= `ADV7185_REGISTER_D;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h13:
+	   begin
+	      // Write to register E
+	      data <= `ADV7185_REGISTER_E;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h14:
+	   begin
+	      // Write to register F
+	      data <= `ADV7185_REGISTER_F;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h15:
+	   begin
+	      // Wait for I2C transmitter to finish
+	      load <= 1'b0;
+	      if (idle)
+		state <= state+1;
+	   end
+	 8'h16:
+	   begin
+	      // Write address
+	      data <= 8'h8A;
+	      load <= 1'b1;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h17:
+	   begin
+	      data <= 8'h33;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h18:
+	   begin
+	      data <= `ADV7185_REGISTER_33;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h19:
+	   begin
+	      load <= 1'b0;
+	      if (idle)
+		state <= state+1;
+	   end
+	 
+	 8'h1A: begin
+	    data <= 8'h8A;
+	    load <= 1'b1;
+	    if (ack)
+	      state <= state+1;
+	 end
+	 8'h1B:
+	   begin
+	      data <= 8'h33;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h1C:
+	   begin
+	      load <= 1'b0;
+	      if (idle)
+		state <= state+1;
+	   end
+	 8'h1D:
+	   begin
+	      load <= 1'b1;
+	      data <= 8'h8B;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h1E:
+	   begin
+	      data <= 8'hFF;
+	      if (ack)
+		state <= state+1;
+	   end
+	 8'h1F:
+	   begin
+	      load <= 1'b0;
+	      if (idle)
+		state <= state+1;
+	   end
+	 8'h20:
+	   begin
+	      // Idle
+	      if (old_source != source) state <= state+1;
+	      old_source <= source;
+	   end
+	 8'h21: begin
+	    // Send ADV7185 address
+	    data <= 8'h8A;
+	    load <= 1'b1;
+	    if (ack) state <= state+1;
+	 end
+	 8'h22: begin
+	    // Send subaddress of register 0
+	    data <= 8'h00;
+	    if (ack) state <= state+1;
+	 end
+	 8'h23: begin
+	    // Write to register 0
+	    data <= `ADV7185_REGISTER_0 | {5'h00, {3{source}}};
+	    if (ack) state <= state+1;
+	 end
+	 8'h24: begin
+	    // Wait for I2C transmitter to finish
+	    load <= 1'b0;
+	    if (idle) state <= 8'h20;
+	 end
        endcase
    
 endmodule
@@ -1208,18 +1223,18 @@ module i2c (reset, clock4x, data, load, idle, ack, scl, sda);
    input reset;
    input clock4x;
    input [7:0] data;
-   input load;
-   output ack;
-   output idle;
-   output scl;
-   output sda;
+   input       load;
+   output      ack;
+   output      idle;
+   output      scl;
+   output      sda;
 
-   reg [7:0] ldata;
-   reg ack, idle;
-   reg scl;
-   reg sdai;
+   reg [7:0]   ldata;
+   reg 	       ack, idle;
+   reg 	       scl;
+   reg 	       sdai;
    
-   reg [7:0] state;
+   reg [7:0]   state;
 
    assign sda = sdai ? 1'bZ : 1'b0;
    
@@ -1453,4 +1468,4 @@ module i2c (reset, clock4x, data, load, idle, ack, scl, sda);
 
 endmodule
 
-	
+

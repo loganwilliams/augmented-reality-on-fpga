@@ -18,9 +18,10 @@ module dumb_lpf(
 	output reg [`LOG_TRUNC-1:0] pixel,
 	output reg [9:0] x_out,
 	output reg [8:0] y_out,
-	output reg pixel_flag
+	output pixel_flag
 );
 
+	reg advanced_pixel_flag;
 	reg [`LOG_WIDTH-1:0] x;
 	reg [`LOG_HEIGHT-1:0] y;
 	reg pixel_flag_odd;
@@ -36,7 +37,7 @@ module dumb_lpf(
 		lpf_flag = request & ~lpf_x[0];
 		// pulse pixel flag when done_lpf is high and x[0] is even
 		// or 1 cycle after request when lpf_x is odd
-		pixel_flag = done_lpf | pixel_flag_odd;
+		advanced_pixel_flag = done_lpf | pixel_flag_odd;
 
 		// x and y are the next set of coordinates
 		if (reset || frame_flag) begin
@@ -67,6 +68,7 @@ module dumb_lpf(
 	// delay lpf_x, lpf_y | module is located in vga_write_new.v
 	delay #(.N(4), .LOG(1)) dx(.clock(clock), .reset(reset), .x(lpf_x), .y(x_out));
 	delay #(.N(4), .LOG(1)) dy(.clock(clock), .reset(reset), .x(lpf_y), .y(y_out));
+	delay #(.N(3), .LOG(1)) df(.clock(clock), .reset(reset), .x(advanced_pixel_flag), .y(pixel_flag));
 
 	always @(*) begin
 		pixel = (x_out[0] == 1'b0) ? lpf_pixel_read[`LOG_MEM-1:`LOG_TRUNC] : lpf_pixel_read[`LOG_TRUNC-1:0];

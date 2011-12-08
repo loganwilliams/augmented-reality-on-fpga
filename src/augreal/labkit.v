@@ -193,10 +193,10 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//////////////////////////////////////////////////////////////////////////// 
   
 	// TODO: change global clock_65mhz to clock_50mhz
-	wire clock_65mhz, clock_25mhz, locked_ram, locked_25mhz;
+	wire clock_65mhz, clock_50mhz_inv, clock_25mhz, locked_ram, locked_25mhz;
 	clock_gen cgen(.reset_button(button0), .clock_27mhz(clock_27mhz),
 	.clock_feedback_in(clock_feedback_in), .clock_feedback_out(clock_feedback_out),
-	.clock_50mhz(clock_65mhz), .clock_25mhz(clock_25mhz),
+	.clock_50mhz(clock_65mhz), .clock_25mhz(clock_25mhz), .clock_50mhz_inv(clock_50mhz_inv),
 	.ram0_clk(ram0_clk), .ram1_clk(ram1_clk), .locked_ram(locked_ram), .locked_25mhz(locked_25mhz));
 	assign led[0] = ~locked_ram;
 	assign led[1] = ~locked_25mhz;
@@ -365,8 +365,9 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire empty, wr_ack, wr_en;
 	wire [3:0] nr;
 	wire [9:0] midcr, midcb, midy;
-
-	ntsc_capture ntsc(.clock_65mhz(clock_65mhz),
+	wire [1:0] color;
+	wire i_flag;
+	ntsc_capture ntsc(.clock_65mhz(clock_50mhz_inv),
 			  .clock_27mhz(clock_27mhz),
 			  .reset(reset), 
 			  .tv_in_reset_b(tv_in_reset_b),
@@ -385,12 +386,32 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 			  .ntsc_raw(nr),
 			  .midcr(midcr),
 			  .midcb(midcb),
-			  .midy(midy));
+			  .midy(midy),
+			  .o_i_flag(i_flag),
+			  .o_color(color));
 	
 	
 	display_16hex ds(reset, clock_27mhz, {16'b0, 6'b0, midy, 6'b0, midcr, 6'b0, midcb}, 
 		disp_blank, disp_clock, disp_rs, disp_ce_b,
 		disp_reset_b, disp_data_out);
+		
+	wire [9:0] a_x, b_x, c_x, d_x;
+	wire [8:0] a_y, b_y, c_y, d_y;
+	wire corners_flag;
+	
+	
+	object_recognition objr(.clk(clock_65mhz),
+									 .reset(reset),
+									 .color(color),
+									 .interesting_x(ntsc_x),
+									 .interesting_y(ntsc_y),
+									 .frame_flag(frame_flag_cleaned),
+									 .interesting_flag(i_flag),
+									 .a_x(a_x), .a_y(a_y),
+									 .b_x(b_x), .b_y(b_y),
+									 .c_x(c_x), .c_y(c_y),
+									 .d_x(d_x), .d_y(d_y),
+									 .corners_flag(corners_flag));
 	
 	//debounce dbff(.clock(clock_65mhz), .noisy(~button1), .clean(frame_flag));
 	
@@ -556,7 +577,11 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.vga_out_hsync(vga_out_hsync), 
 		.vga_out_vsync(vga_out_vsync),
 		.clocked_hcount(hcount),
-		.clocked_vcount(vcount));
+		.clocked_vcount(vcount),
+		.a_x(a_x), .a_y(a_y),
+		.b_x(b_x), .b_y(b_y),
+		.c_x(c_x), .c_y(c_y),
+		.d_x(d_x), .d_y(d_y));
 	// use above if using vga
 	
 	// use below if testing vga
@@ -575,17 +600,16 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//assign analyzer1_data = 16'h0;
 	//assign analyzer2_data = 16'h0;
 	//assign analyzer3_data = 16'h0;
-	//assign analyzer4_data = 16'h0;
+	assign analyzer4_data = 16'h0;
 
 	// user-defined analyzers
 
 	//	assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, vga_flag, done_vga, done_ntsc, fvh, 7'b0};
 	//	assign analyzer3_data = {nx[9:0], ntsc_flag, debug_state, 4'b0};
 
-   assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, done_ntsc, ntsc_pixels[9:0], 3'd0};
-   assign analyzer3_data = {ram0_address[18:3]};
-   assign analyzer2_data = {ram0_address[2:0], ram1_address[18:6]};
-   assign analyzer4_data = {ram1_address[5:0], ram0_data[9:0]};
+   assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, done_vga, done_ntsc, vga_flag, fvh, ntsc_x[9:3]};
+   assign analyzer2_data = {ntsc_x[2:0], ntsc_y[8:0], empty, wr_en, wr_ack, i_flag};
+	assign analyzer3_data = {ntsc_pixels[15:0]};
    
    assign analyzer3_clock = tv_in_line_clock1;
    assign analyzer1_clock = clock_27mhz;
