@@ -82,37 +82,60 @@ module stupid_vga_write
 		end
 	end
 
+	// pipeline crosshair calculations
+	reg[3:0] crosshairs;
+	reg out_blank;
+	reg out_hsync;
+	reg out_vsync;
+	reg [7:0] out_r;
+	reg [7:0] out_g;
+	reg [7:0] out_b;
+	always @(posedge vclock) begin
+		crosshairs[0] <= (del_hcount == a_x | del_vcount == a_y);
+		crosshairs[1] <= (del_hcount == b_x | del_vcount == b_y);
+		crosshairs[2] <= (del_hcount == c_x | del_vcount == c_y);
+		crosshairs[3] <= (del_hcount == d_x | del_vcount == d_y);
+
+		// delay blank, hsync, vsync, r, g, b once more
+		out_blank <= del_blank;
+		out_hsync <= del_hsync;
+		out_vsync <= del_vsync;
+		out_r <= r;
+		out_g <= g;
+		out_b <= b;
+	end
+
 	// assign outputs to VGA chip
 	always @(posedge vclock) begin
-		if (del_blank) begin
+		if (out_blank) begin
 			vga_out_red[7:0] <= 8'd0;
 			vga_out_green[7:0] <= 8'd0;
 			vga_out_blue[7:0] <= 8'd0;
-		end else if (del_hcount == a_x || del_vcount == a_y) begin
-		   vga_out_red[7:0] <= 8'hFF;
-		   vga_out_green[7:0] <= 8'h00;
-		   vga_out_blue[7:0] <= 8'hFF;
-		end else if (del_hcount == b_x || del_vcount == b_y) begin
-		   vga_out_red[7:0] <= 8'hFF;
-		   vga_out_green[7:0] <= 8'hFF;
-		   vga_out_blue[7:0] <= 8'h00;
-		end else if (del_hcount == c_x || del_vcount == c_y) begin
-		   vga_out_red[7:0] <= 8'h00;
-		   vga_out_green[7:0] <= 8'hFF;
-		   vga_out_blue[7:0] <= 8'hFF;
-		end else if (del_hcount == d_x || del_vcount == d_y) begin
+		end else if (crosshairs[0]) begin
+			vga_out_red[7:0] <= 8'hFF;
+			vga_out_green[7:0] <= 8'h00;
+			vga_out_blue[7:0] <= 8'hFF;
+		end else if (crosshairs[1]) begin
+			vga_out_red[7:0] <= 8'hFF;
+			vga_out_green[7:0] <= 8'hFF;
+			vga_out_blue[7:0] <= 8'h00;
+		end else if (crosshairs[2]) begin
+			vga_out_red[7:0] <= 8'h00;
+			vga_out_green[7:0] <= 8'hFF;
+			vga_out_blue[7:0] <= 8'hFF;
+		end else if (crosshairs[3]) begin
 			vga_out_red[7:0] <= 8'hFF;
 			vga_out_green[7:0] <= 8'h00;
 			vga_out_blue[7:0] <= 8'h00;
 		end else begin
-			vga_out_red[7:0] <= r[7:0];
-			vga_out_green[7:0] <= g[7:0];
-			vga_out_blue[7:0] <= b[7:0];
+			vga_out_red[7:0] <= out_r[7:0];
+			vga_out_green[7:0] <= out_g[7:0];
+			vga_out_blue[7:0] <= out_b[7:0];
 		end
 
-		vga_out_blank_b <= ~del_blank;
-		vga_out_hsync <= del_hsync;
-		vga_out_vsync <= del_vsync;
+		vga_out_blank_b <= ~out_blank;
+		vga_out_hsync <= out_hsync;
+		vga_out_vsync <= out_vsync;
 	end
 	
 	always @(*) begin
