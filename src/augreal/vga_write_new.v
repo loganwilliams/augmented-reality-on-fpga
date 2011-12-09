@@ -16,9 +16,9 @@ module stupid_vga_write
 		output reg [7:0] vga_out_red,
 		output reg [7:0] vga_out_green,
 		output reg [7:0] vga_out_blue,
-		output reg vga_out_sync_b,
+		output vga_out_sync_b,
 		output reg vga_out_blank_b,
-		output reg vga_out_pixel_clock,
+		output vga_out_pixel_clock,
 		output reg vga_out_hsync,
 		output reg vga_out_vsync,
 		// ADDRESSING
@@ -139,10 +139,26 @@ module stupid_vga_write
 		vga_out_vsync <= out_vsync;
 	end
 	
-	always @(*) begin
-		vga_out_sync_b = 1'b1;
-		vga_out_pixel_clock = ~vclock;
-	end
+	// generate video clock
+	wire vga_out_pixel_clk;
+	wire clk_fb, clock_fb;
+	wire lock_vga;
+	BUFG bufgv1(.O(vga_out_pixel_clock), .I(vga_out_pixel_clk));
+	BUFG bufgv2(.O(clock_fb), .I(clk_fb));
+	DCM vga_dcm (.CLKFB(clock_fb),
+		.CLKIN(vclock),
+		.CLK0(clk_fb),
+		.CLK270(vga_out_pixel_clk),
+		.LOCKED(lock_vga));
+   // synthesis attribute DLL_FREQUENCY_MODE of vga_dcm is "LOW"
+   // synthesis attribute DUTY_CYCLE_CORRECTION of vga_dcm is "TRUE"
+   // synthesis attribute STARTUP_WAIT of vga_dcm is "FALSE"
+   // synthesis attribute DFS_FREQUENCY_MODE of vga_dcm is "LOW"
+   // synthesis attribute CLK_FEEDBACK of vga_dcm  is "1X"
+   // synthesis attribute CLKOUT_PHASE_SHIFT of vga_dcm is "FIXED"
+   // synthesis attribute PHASE_SHIFT of vga_dcm is 0
+	
+	assign vga_out_sync_b = 1'b1;
 endmodule
 
 ////////////////////////////////////////////////////////////////////////////////
