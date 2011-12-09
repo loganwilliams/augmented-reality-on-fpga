@@ -26,7 +26,9 @@ module stupid_vga_write
 		output reg [`LOG_VCOUNT-1:0] clocked_vcount,
 		
 		input [9:0] a_x, b_x, c_x, d_x,
-		input [8:0] a_y, b_y, c_y, d_y
+		input [8:0] a_y, b_y, c_y, d_y,
+		
+		output vga_will_request
 	);
 
 	// generate hcount, vcount, syncs, and blank
@@ -80,6 +82,8 @@ module stupid_vga_write
 			clocked_hcount[9:0] <= clocked_hcount[9:0];
 			clocked_vcount[9:0] <= clocked_vcount[9:0];
 		end
+		
+		vga_will_request <= (count == 2'd1);
 	end
 
 	// pipeline crosshair calculations
