@@ -66,8 +66,8 @@ module dumb_lpf(
 	end
 
 	// delay lpf_x, lpf_y | module is located in vga_write_new.v
-	delay #(.N(4), .LOG(1)) dx(.clock(clock), .reset(reset), .x(lpf_x), .y(x_out));
-	delay #(.N(4), .LOG(1)) dy(.clock(clock), .reset(reset), .x(lpf_y), .y(y_out));
+	delay #(.N(4), .LOG(10)) dx(.clock(clock), .reset(reset), .x(lpf_x), .y(x_out));
+	delay #(.N(4), .LOG(9)) dy(.clock(clock), .reset(reset), .x(lpf_y), .y(y_out));
 	delay #(.N(3), .LOG(1)) df(.clock(clock), .reset(reset), .x(advanced_pixel_flag), .y(pixel_flag));
 
 	always @(*) begin
