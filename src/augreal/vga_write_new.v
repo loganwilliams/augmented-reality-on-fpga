@@ -141,13 +141,10 @@ module stupid_vga_write
 	
 	// generate video clock
 	wire vga_out_pixel_clk;
-	wire clk_fb, clock_fb;
 	wire lock_vga;
 	BUFG bufgv1(.O(vga_out_pixel_clock), .I(vga_out_pixel_clk));
-	BUFG bufgv2(.O(clock_fb), .I(clk_fb));
-	DCM vga_dcm (.CLKFB(clock_fb),
+	DCM vga_dcm (
 		.CLKIN(vclock),
-		.CLK0(clk_fb),
 		.CLK270(vga_out_pixel_clk),
 		.LOCKED(lock_vga));
    // synthesis attribute DLL_FREQUENCY_MODE of vga_dcm is "LOW"
@@ -155,7 +152,7 @@ module stupid_vga_write
    // synthesis attribute STARTUP_WAIT of vga_dcm is "FALSE"
    // synthesis attribute DFS_FREQUENCY_MODE of vga_dcm is "LOW"
    // synthesis attribute CLK_FEEDBACK of vga_dcm  is "1X"
-   // synthesis attribute CLKOUT_PHASE_SHIFT of vga_dcm is "FIXED"
+   // synthesis attribute CLKOUT_PHASE_SHIFT of vga_dcm is "NONE"
    // synthesis attribute PHASE_SHIFT of vga_dcm is 0
 	
 	assign vga_out_sync_b = 1'b1;
