@@ -720,7 +720,10 @@ NET "analyzer4_data<2>" LOC="v7" |IOSTANDARD=LVTTL;
 NET "analyzer4_data<1>" LOC="u7" |IOSTANDARD=LVTTL;
 NET "analyzer4_data<0>" LOC="u8" |IOSTANDARD=LVTTL;
 NET "analyzer4_clock" LOC="ad9" |IOSTANDARD=LVTTL;
-NET "clock_27mhz" TNM_NET = clock_27mhz;
+
 TIMESPEC TS_clock_27mhz = PERIOD "clock_27mhz" 27 MHz HIGH 50%;
 TIMESPEC TS_clock_65mhz = PERIOD "clock_65mhz" 50 MHz HIGH 50%;
 TIMESPEC TS_clock_25mhz = PERIOD "clock_25mhz" 25 MHz HIGH 50%;
+TIMESPEC TS_ram0_clock = PERIOD "ram0_clk" 50 MHz HIGH 50%;
+TIMESPEC TS_ram1_clock = PERIOD "ram1_clk" 50 MHz HIGH 50%;
+TIMESPEC TS_tv_in_line_clock1 = PERIOD "tv_in_line_clock1" 27 MHz HIGH 50%;
