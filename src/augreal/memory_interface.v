@@ -55,6 +55,10 @@ module memory_interface
 		// BWE FLAGS
 		output reg [3:0] mem0_bwe,
 		output reg [3:0] mem1_bwe,
+		
+		input nwr,
+		input vwr,
+		
 		// TESTING
 		output [3:0] debug_blocks,
 		output [7:0] debug_locs
@@ -227,8 +231,8 @@ module memory_interface
 		done_lpf  = (mem0_done == LPF)  || (mem1_done == LPF);
 		done_pt   = (mem0_done == PT)   || (mem1_done == PT);
 
-		if (nexd_mem_block == capt_mem_block) ready_pt = ~ntsc_flag;
-		else if (nexd_mem_block == disp_mem_block) ready_pt = ~vga_flag;
+		if (nexd_mem_block == capt_mem_block) ready_pt = ~nwr;
+		else if (nexd_mem_block == disp_mem_block) ready_pt = ~vwr;
 		else ready_pt = 1'b0;
 	end
 

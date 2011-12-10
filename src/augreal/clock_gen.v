@@ -6,7 +6,8 @@ module clock_gen(
 		input clock_feedback_in,
 		output clock_feedback_out,
 		output clock_50mhz,
-		output clock_50mhz_inv,
+		output clock_50mhz_90,
+		output clock_50mhz_270,
 		output clock_25mhz,
 		output ram0_clk,
 		output ram1_clk,
@@ -27,7 +28,7 @@ module clock_gen(
 	BUFG vclk2(.O(clock_50mhz_buf),.I(clock_50mhz_unbuf));
 	
 	ramclock rc(.ref_clock(clock_50mhz_buf), .fpga_clock(clock_50mhz), .fpga_clock_d2(clock_25mhz),
-		    .fpga_clock_inv(clock_50mhz_inv), .ram0_clock(ram0_clk), .ram1_clock(ram1_clk),
+		    .fpga_clock_90(clock_50mhz_90), .fpga_clock_270(clock_50mhz_270), .ram0_clock(ram0_clk), .ram1_clock(ram1_clk),
 		    .clock_feedback_in(clock_feedback_in), .clock_feedback_out(clock_feedback_out), 
 		    .locked(locked_ram));
 	
@@ -66,19 +67,20 @@ endmodule
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-module ramclock(ref_clock, fpga_clock, fpga_clock_d2, fpga_clock_inv, ram0_clock, ram1_clock, 
+module ramclock(ref_clock, fpga_clock, fpga_clock_d2, fpga_clock_90, fpga_clock_270, ram0_clock, ram1_clock, 
 	        clock_feedback_in, clock_feedback_out, locked);
    
    input ref_clock;                 // Reference clock input
    output fpga_clock;               // Output clock to drive FPGA logic
    output fpga_clock_d2;
-   output fpga_clock_inv;
+   output fpga_clock_90;
+	output fpga_clock_270;
    output ram0_clock, ram1_clock;   // Output clocks for each RAM chip
    input  clock_feedback_in;        // Output to feedback trace
    output clock_feedback_out;       // Input from feedback trace
    output locked;                   // Indicates that clock outputs are stable
    
-   wire  ref_clk, fpga_clk, fpga_clk_d2, fpga_clk_inv, ram_clk, fb_clk, lock1, lock2, dcm_reset, ram_clock;
+   wire  ref_clk, fpga_clk, fpga_clk_d2, fpga_clk_90, fpga_clk_270, ram_clk, fb_clk, lock1, lock2, dcm_reset, ram_clock;
 
    ////////////////////////////////////////////////////////////////////////////
    
@@ -87,14 +89,16 @@ module ramclock(ref_clock, fpga_clock, fpga_clock_d2, fpga_clock_inv, ram0_clock
    
    BUFG int_buf (.O(fpga_clock), .I(fpga_clk));
    BUFG int_buf_d2 (.O(fpga_clock_d2), .I(fpga_clk_d2));
-   BUFG int_buf_inv (.O(fpga_clock_inv), .I(fpga_clk_inv));
+   BUFG int_buf_inv (.O(fpga_clock_90), .I(fpga_clk_90));
+	BUFG int_buf_270 (.O(fpga_clock_270), .I(fpga_clk_270));
 
    DCM int_dcm (.CLKFB(fpga_clock),
 		.CLKIN(ref_clk),
 		.RST(dcm_reset),
 		.CLK0(fpga_clk),
 		.CLKDV(fpga_clk_d2),
-		.CLK90(fpga_clk_inv),
+		.CLK90(fpga_clk_90),
+		.CLK180(fpga_clk_270),
 		.LOCKED(lock1));
    // synthesis attribute DLL_FREQUENCY_MODE of int_dcm is "LOW"
    // synthesis attribute DUTY_CYCLE_CORRECTION of int_dcm is "TRUE"

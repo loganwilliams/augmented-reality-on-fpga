@@ -13,6 +13,9 @@ module projective_transform(
 			    input [8:0]       d_y, //  |
 			    input 	      corners_flag, // (object_recognition ->)
 
+			    input done_pt,
+			    
+
 
 			    input 	      ptflag, // Okay to send new data (memory_interface ->) 
 			    output reg [17:0] pt_pixel_write, // Pixel data output (-> memory_interface)
@@ -32,8 +35,8 @@ module projective_transform(
    reg [18:0] 				      i_a_y;
    reg [19:0] 				      i_b_x;
    reg [18:0] 				      i_b_y;
-   reg [19:0] 				      i_c_x;
-   reg [18:0] 				      i_c_y;
+   reg [20:0] 				      i_c_x;
+   reg [19:0] 				      i_c_y;
 
    // iterator incrementors
    reg [19:0] 				      delta_a_x;
@@ -67,12 +70,12 @@ module projective_transform(
    reg [9:0] 				      divisor_e;
    reg [9:0] 				      divisor_f;
 
-   wire [19:0] 				      quotient_a;
-   wire [19:0] 				      quotient_b;
-   wire [19:0] 				      quotient_c;
-   wire [19:0] 				      quotient_d;
-   wire [19:0] 				      quotient_e;
-   wire [19:0] 				      quotient_f;
+   wire signed [19:0] 				      quotient_a;
+   wire signed [19:0] 				      quotient_b;
+   wire signed [19:0] 				      quotient_c;
+   wire signed [19:0] 				      quotient_d;
+   wire signed [19:0] 				      quotient_e;
+   wire signed [19:0] 				      quotient_f;
    
    reg 					      startdivs;
 
@@ -80,15 +83,11 @@ module projective_transform(
    reg [9:0] 				      o_x;
    reg [8:0] 				      o_y;
 
-   reg [4:0] 				      counter;
-   reg 					      counting = 0;
-
    // create some registers for dealing with possible delays
    // in memory_write
    reg [17:0] 				      pixel_save [0:5];
-   reg [2:0] 					      waiting_for_write = 0;
-   reg [2:0] 					      waiting_for_write_max = 0;
-   
+   reg [2:0] 				      waiting_for_write = 0;
+   reg [2:0] 				      waiting_for_write_max = 0;
    
    parameter WAIT_FOR_CORNERS = 0;
    parameter WAIT_FOR_DIVIDERS = 1;
@@ -177,8 +176,9 @@ module projective_transform(
 	// then echoes that value and new coords to the memory management module.
 	// then it increments the iterators accordingly.
 	WAIT_FOR_PIXEL: begin
+	   
 	   // a new pixel has arrived, process accordingly
-	   if (pixel_flag || (waiting_for_write > 0)) begin
+	   if (pixel_flag || (|waiting_for_write)) begin
 	      if (ptflag) begin
 		 request_pixel <= 1;
 		 
@@ -192,9 +192,11 @@ module projective_transform(
 		 
 		 // output the new pixel coordinates
 		 if (waiting_for_write > 0) begin
-		    pt_pixel_write <= pixel_save[waiting_for_write_max - waiting_for_write];
+		    pt_pixel_write <= (o_x[5] & o_y[5]) ? 18'b111111111111110000 : 18'b000000001000010000;
+		    
+		    //pt_pixel_write <= pixel_save[waiting_for_write_max - waiting_for_write];
 		 end else begin
-		    pt_pixel_write <= pixel;
+		    pt_pixel_write <= (o_x[5] & o_y[5]) ? 18'b111111111111110000 : 18'b000000001000010000;
 		 end
 		 
 		 pt_x <= i_c_x >> 10;
@@ -242,7 +244,7 @@ module projective_transform(
 		 end
 		 
 		 // the end of the frame
-		 if (o_x == 639 && o_y == 479) begin
+		 if ((o_x == 639 && o_y == 479)) begin
 		    // reset the iterator variables
 		    o_x <= 0;
 		    o_y <= 0;
@@ -251,110 +253,58 @@ module projective_transform(
 		    
 		    // go back to waiting
 		    state <= WAIT_FOR_CORNERS;
+		    pt_wr <= 0;
+		    
 		 end
-	      end else if (pixel_flag) begin // if (ptflag)
-		 waiting_for_write <= waiting_for_write + 1; // set a flag
-		 waiting_for_write_max <= waiting_for_write + 1;
+	      end else begin // if (ptflag)
+		 if (pixel_flag) begin
+		    waiting_for_write <= waiting_for_write + 1; // set a flag
+		    waiting_for_write_max <= waiting_for_write + 1;
+		    
+     		    pixel_save[waiting_for_write] <= pixel; // store the current pixel data
+		 end
 		 
-     		 pixel_save[waiting_for_write] <= pixel; // store the current pixel data
 		 request_pixel <= 0; // memory_interface is delayed, we do not
 		 // want to deal with new pixels right now
 
 		 pt_wr <= 0;
-		 
-		 
-	      end // else: !if(ptflag)
+	      end
 	      
-	   end // if (pixel_flag)
+	   end else pt_wr <= 0; // if (pixel_flag || (waiting_for_write > 0))
+	   
+/*
+	   if (sent_last & ~done_pt) begin
+	      waiting_for_write <= waiting_for_write + 1;
+	      waiting_for_write_max <= waiting_for_write + 1;
 
+	      pixel_save[waiting_for_write] <= last_pixel;
+	      pt_wr <= 0;
+	      request_pixel <= 0;
+
+	      o_x <= o_x - 1;
+	      i_c_x <= i_c_x - delta_c_x;
+	      i_c_y <= i_c_y - delta_c_y;
+	      
+	   end
+*/	      
 	   // if the divider is done
 	   if (rfd_a & rfd_b) begin
 	      // save deltas
 	      delta_c_x_next <= quotient_a;
 	      delta_c_y_next <= quotient_b;
 	   end
+
+	   if (frame_flag) begin
+	      state <= WAIT_FOR_CORNERS;
+	      pt_wr <= 0;
+	      o_x <= 0;
+
+	      o_y <= 0;
+	   end
+ 
 	   
 	end // case: WAIT_FOR_PIXEL
 	
       endcase // case (state)
    end // always @ (posedge clk)    
 endmodule // projective_transform
-
-// The divider module divides one number by another. It
-// produces a signal named "ready" when the quotient output
-// is ready, and takes a signal named "start" to indicate
-// the the input dividend and divider is ready.
-//    sign -- 0 for unsigned, 1 for twos complement
-
-// It uses a simple restoring divide algorithm.
-// http://en.wikipedia.org/wiki/Division_(digital)#Restoring_division
-module divider #(parameter WIDTH = 8) (ready, start, quotient, 
-				       remainder, dividend, 
-				       divider, sign, clk);
-
-   input         clk;
-   input         sign;
-   input 	 start;
-   input [WIDTH-1:0] dividend, divider;
-   output [WIDTH-1:0] quotient, remainder;
-   output 	      ready;
-
-   reg [WIDTH-1:0]    quotient, quotient_temp;
-   reg [WIDTH*2-1:0]  dividend_copy, divider_copy, diff;
-   reg 		      negative_output;
-   
-   wire [WIDTH-1:0]   remainder = (!negative_output) ? 
-                      dividend_copy[31:0] : 
-                      ~dividend_copy[31:0] + 1'b1;
-
-   reg [5:0] 	      bit; 
-   reg 		      del_ready = 1;
-   wire 	      ready = (!bit) & ~del_ready;
-
-   wire [WIDTH-2:0]   zeros = 0;
-   initial bit = 0;
-   initial negative_output = 0;
-
-   always @( posedge clk ) begin
-      del_ready <= !bit;
-      if( start ) begin
-
-         bit = WIDTH;
-         quotient = 0;
-         quotient_temp = 0;
-         dividend_copy = (!sign || !dividend[WIDTH-1]) ? 
-                         {1'b0,zeros,dividend} : 
-                         {1'b0,zeros,~dividend + 1'b1};
-         divider_copy = (!sign || !divider[WIDTH-1]) ? 
-			{1'b0,divider,zeros} : 
-			{1'b0,~divider + 1'b1,zeros};
-
-         negative_output = sign &&
-                           ((divider[WIDTH-1] && !dividend[WIDTH-1]) 
-                            ||(!divider[WIDTH-1] && dividend[WIDTH-1]));
-         
-      end 
-      else if ( bit > 0 ) begin
-
-         diff = dividend_copy - divider_copy;
-
-         quotient_temp = quotient_temp << 1;
-
-         if( !diff[WIDTH*2-1] ) begin
-
-            dividend_copy = diff;
-            quotient_temp[0] = 1'd1;
-
-         end
-
-         quotient = (!negative_output) ? 
-                    quotient_temp : 
-                    ~quotient_temp + 1'b1;
-
-         divider_copy = divider_copy >> 1;
-         bit = bit - 1'b1;
-
-      end
-   end
-endmodule
-
