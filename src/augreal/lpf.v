@@ -8,16 +8,16 @@ module dumb_lpf(
 	// memory_interface
 	input done_lpf,
 	output reg lpf_flag,
-	output reg lpf_wr,
+	output lpf_wr,
 	output reg [`LOG_WIDTH-1:0] lpf_x,
 	output reg [`LOG_HEIGHT-1:0] lpf_y,
-	output reg [`LOG_MEM-1:0] lpf_pixel_write,
+	output [`LOG_MEM-1:0] lpf_pixel_write,
 	input [`LOG_MEM-1:0] lpf_pixel_read,
 	// projective_transform
 	input request,
 	output reg [`LOG_TRUNC-1:0] pixel,
-	output reg [9:0] x_out,
-	output reg [8:0] y_out,
+	output [9:0] x_out,
+	output [8:0] y_out,
 	output pixel_flag
 );
 
@@ -27,10 +27,8 @@ module dumb_lpf(
 	reg pixel_flag_odd;
 
 	// never writing
-	always @(*) begin
-		lpf_wr = 1'b0;
-		lpf_pixel_write = `LOG_MEM'd0;
-	end
+	assign lpf_wr = 1'b0;
+	assign lpf_pixel_write = `LOG_MEM'd0;
 
 	always @(*) begin
 		// pulse lpf_flag only when x is even and a pixel is requested
