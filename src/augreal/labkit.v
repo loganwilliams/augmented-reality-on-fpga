@@ -460,7 +460,7 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 				.pixel_flag(pixel_flag),
 				.testing(lpf_testing));
 	
-	projective_transform_srl pt(.clk(clock_50mhz_90),
+	projective_transform_srl pt(.clk(clock_65mhz),
 				.frame_flag(frame_flag_cleaned),
 				.pixel(pixel_out_lpf),
 				.pixel_flag(pixel_flag),

@@ -61,7 +61,9 @@ module memory_interface
 		
 		// TESTING
 		output [3:0] debug_blocks,
-		output [7:0] debug_locs
+		output [7:0] debug_locs,
+		
+		output pt_conflict
 	);
 
 	/******** PARAMETERS ********/
@@ -111,6 +113,8 @@ module memory_interface
 	// DEBUG
 	assign debug_blocks = {capt_mem_block,proc_mem_block,nexd_mem_block,disp_mem_block};
 	assign debug_locs = {capt_mem_loc, proc_mem_loc, nexd_mem_loc, disp_mem_loc};
+	
+	assign pt_conflict = (capt_mem_block == nexd_mem_block);
 	
 	// ADDRESSING
 	wire [18:0] ntsc_loc_offset;

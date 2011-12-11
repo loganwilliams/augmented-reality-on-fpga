@@ -61,7 +61,7 @@ module dumb_lpf(
 		// update lpf_x and lpf_y
 		lpf_x <= x;
 		lpf_y <= y;
-		pixel_flag_odd <= (request & (done_lpf | lpf_x[0]));
+		pixel_flag_odd <= (request & lpf_x[0]);
 	end
 
 	// delay lpf_x, lpf_y | module is located in vga_write_new.v
