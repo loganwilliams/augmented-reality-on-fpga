@@ -438,6 +438,11 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire pt_wr;
 	wire ready_pt;
 	
+	wire lpf_testing;
+	debounce db4(
+		.clock(clock_65mhz), .reset(reset), .noisy(~switch[0]),
+		.clean(lpf_testing));
+	
 	dumb_lpf dlpf(.clock(clock_65mhz),
 				.reset(reset),
 				.frame_flag(frame_flag_cleaned),
@@ -450,12 +455,13 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 				.lpf_pixel_read(lpf_pixel_read),
 				.request(request),
 				.pixel(pixel_out_lpf),
-				.pixel_flag(pixel_flag));
+				.pixel_flag(pixel_flag),
+				.testing(lpf_testing));
 	
 	projective_transform pt(.clk(clock_65mhz),
 				.frame_flag(frame_flag_cleaned),
 				.pixel(pixel_out_lpf),
-				.pixel_flag(ready_pt),
+				.pixel_flag(pixel_flag),
 				.done_pt(done_pt),
 				.a_x(10'd50), .a_y(10'd50),
 				.b_x(10'd350), .b_y(10'd100),
@@ -553,7 +559,7 @@ module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.mem0_bwe(mem0_bwer),.mem1_bwe(mem1_bwer),
 		.ntsc_x(ntsc_x), .ntsc_y(ntsc_y),
 		.ready_pt(ready_pt),
-		.lpf_flag(1'b0), .lpf_wr(lpf_wr),
+		.lpf_flag(lpf_flag), .lpf_wr(lpf_wr),
 		.lpf_pixel_read(lpf_pixel_read),
 		.lpf_pixel_write(lpf_pixel_write),
 		.done_lpf(done_lpf),

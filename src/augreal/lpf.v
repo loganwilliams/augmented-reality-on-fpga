@@ -18,7 +18,8 @@ module dumb_lpf(
 	output reg [`LOG_TRUNC-1:0] pixel,
 	output [9:0] x_out,
 	output [8:0] y_out,
-	output pixel_flag
+	output pixel_flag,
+	input testing
 );
 
 	reg advanced_pixel_flag;
@@ -46,7 +47,7 @@ module dumb_lpf(
 			x = lpf_x;
 			y = lpf_y;
 		end
-		else if (lpf_x == `IMAGE_WIDTH-1) begin
+		else if (lpf_x > `IMAGE_WIDTH-2) begin
 			x = `LOG_WIDTH'd0;
 			y = lpf_y+1;
 		end
@@ -69,6 +70,9 @@ module dumb_lpf(
 	delay #(.N(3), .LOG(1)) df(.clock(clock), .reset(reset), .x(advanced_pixel_flag), .y(pixel_flag));
 
 	always @(*) begin
-		pixel = (x_out[0] == 1'b0) ? lpf_pixel_read[`LOG_MEM-1:`LOG_TRUNC] : lpf_pixel_read[`LOG_TRUNC-1:0];
+		if (!testing)
+			pixel = (x_out[0] == 1'b0) ? lpf_pixel_read[`LOG_MEM-1:`LOG_TRUNC] : lpf_pixel_read[`LOG_TRUNC-1:0];
+		else
+			pixel = { {8{x_out[3]}}, 10'd0};
 	end
 endmodule
