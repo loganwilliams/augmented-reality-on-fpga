@@ -65,7 +65,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
+module labkit (beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	       ac97_bit_clock,
 	       
 	       vga_out_red, vga_out_green, vga_out_blue, vga_out_sync_b,
@@ -399,17 +399,15 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 			  .ntsc_will_request(nwr));
 	
 	
-
+	display_16hex ds(reset, clock_27mhz, {16'b0, 6'b0, midy, 6'b0, midcr, 6'b0, midcb}, 
+		disp_blank, disp_clock, disp_rs, disp_ce_b,
+		disp_reset_b, disp_data_out);
 		
 	//wire [9:0] a_x, b_x, c_x, d_x;
 	//wire [8:0] a_y, b_y, c_y, d_y;
 	reg [9:0] c_x = 400;
-	reg [8:0] c_y = 100;
+	reg [8:0] c_y = 400;
 	wire corners_flag;
-	
-	display_16hex ds(reset, clock_27mhz, {6'b0, c_x, 6'b0, midy, 6'b0, midcr, 6'b0, midcb}, 
-		disp_blank, disp_clock, disp_rs, disp_ce_b,
-		disp_reset_b, disp_data_out);
 	
 	
 	object_recognition objr(.clk(clock_65mhz),
@@ -445,7 +443,7 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.clock(clock_65mhz), .reset(reset), .noisy(~switch[0]),
 		.clean(lpf_testing));
 	
-	dumb_lpf dlpf(.clock(clock_50mhz_90),
+	dumb_lpf dlpf(.clock(clock_65mhz),
 				.reset(reset),
 				.frame_flag(frame_flag_cleaned),
 				.done_lpf(done_lpf),
@@ -460,15 +458,15 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 				.pixel_flag(pixel_flag),
 				.testing(lpf_testing));
 	
-	projective_transform_srl pt(.clk(clock_50mhz_90),
+	projective_transform pt(.clk(clock_65mhz),
 				.frame_flag(frame_flag_cleaned),
 				.pixel(pixel_out_lpf),
 				.pixel_flag(pixel_flag),
 				.done_pt(done_pt),
-				.a_x(10'd20), .a_y(10'd400),
-				.b_x(10'd40), .b_y(10'd100),
+				.a_x(10'd50), .a_y(10'd50),
+				.b_x(10'd350), .b_y(10'd100),
 				.c_x(c_x), .c_y(c_y),
-				.d_x(10'd500), .d_y(10'd300),
+				.d_x(10'd20), .d_y(10'd450),
 				.corners_flag(corners_flag),
 				.ptflag(ready_pt),
 				.pt_pixel_write(pt_pixel),
@@ -669,10 +667,10 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	**************************************/
 	// comment & uncomment below as necessary if not used
 	assign analyzer1_clock = 1'b1;
-	//assign analyzer2_clock = 1'b1;
+	assign analyzer2_clock = 1'b1;
 	assign analyzer3_clock = 1'b1;
 	assign analyzer4_clock = 1'b1;
-	//assign analyzer1_data = 16'h0;
+	assign analyzer1_data = 16'h0;
 	assign analyzer2_data = 16'h0;
 	assign analyzer3_data = 16'h0;
 	assign analyzer4_data = 16'h0;
@@ -681,12 +679,6 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
 	//	assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, vga_flag, done_vga, done_ntsc, fvh, 7'b0};
 	//	assign analyzer3_data = {nx[9:0], ntsc_flag, debug_state, 4'b0};
-	
-	//assign analyzer1_data = {pt_x[9:0], pt_flag, 5'b0};
-	//assign analyzer2_data = {pt_y[8:0], 7'b0};
-	
-	assign analyzer1_data = {pixel_flag, pixel_out_lpf[14:0]};
-	
 /*
    assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, done_vga, done_ntsc, vga_flag, fvh, lpf_x[6:0]};
    //assign analyzer2_data = {ntsc_x[2:0], ntsc_y[8:0], empty, wr_en, wr_ack, i_flag};
@@ -696,12 +688,12 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	assign analyzer2_data = {request, pixel_flag, corners_flag, done_pt, 12'b0};
 	assign analyzer4_data = {pt_y[8:0], pt_wr, done_lpf, ready_pt, mem0_bwe[3], mem0_bwe[1], mem1_bwe[3], mem1_bwe[1]};
   */
-
-  // assign analyzer3_clock = tv_in_line_clock1;
-  // assign analyzer1_clock = clock_27mhz;
+/*  
+   assign analyzer3_clock = tv_in_line_clock1;
+   assign analyzer1_clock = clock_27mhz;
    assign analyzer2_clock = clock_65mhz;
-  // assign analyzer4_clock = clock_25mhz;
-
+   assign analyzer4_clock = clock_25mhz;
+*/
 endmodule
 
 module debounce (input reset, clock, noisy,

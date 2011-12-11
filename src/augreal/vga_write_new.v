@@ -16,9 +16,9 @@ module stupid_vga_write
 		output reg [7:0] vga_out_red,
 		output reg [7:0] vga_out_green,
 		output reg [7:0] vga_out_blue,
-		output reg vga_out_sync_b,
+		output vga_out_sync_b,
 		output reg vga_out_blank_b,
-		output reg vga_out_pixel_clock,
+		output vga_out_pixel_clock,
 		output reg vga_out_hsync,
 		output reg vga_out_vsync,
 		// ADDRESSING
@@ -26,7 +26,9 @@ module stupid_vga_write
 		output reg [`LOG_VCOUNT-1:0] clocked_vcount,
 		
 		input [9:0] a_x, b_x, c_x, d_x,
-		input [8:0] a_y, b_y, c_y, d_y
+		input [8:0] a_y, b_y, c_y, d_y,
+		
+		output reg vga_will_request
 	);
 
 	// generate hcount, vcount, syncs, and blank
@@ -54,6 +56,7 @@ module stupid_vga_write
 	wire [7:0] b;
 	reg [35:0] pixel;
 	ycrcb_lut ycc(
+		.clock(vclock),
 		.ycrcb(del_hcount[0] ? pixel[35:18] : pixel[17:0]),
 		.r(r), .g(g), .b(b));
 
@@ -80,30 +83,28 @@ module stupid_vga_write
 			clocked_hcount[9:0] <= clocked_hcount[9:0];
 			clocked_vcount[9:0] <= clocked_vcount[9:0];
 		end
+
+		vga_will_request <= (count == 2'd2);
 	end
 
 	// pipeline crosshair calculations
-	reg[3:0] crosshairs;
-	reg out_blank;
-	reg out_hsync;
-	reg out_vsync;
-	reg [7:0] out_r;
-	reg [7:0] out_g;
-	reg [7:0] out_b;
+	reg [3:0] pre_crosshairs;
+	reg [3:0] crosshairs;
 	always @(posedge vclock) begin
-		crosshairs[0] <= (del_hcount == a_x | del_vcount == a_y);
-		crosshairs[1] <= (del_hcount == b_x | del_vcount == b_y);
-		crosshairs[2] <= (del_hcount == c_x | del_vcount == c_y);
-		crosshairs[3] <= (del_hcount == d_x | del_vcount == d_y);
-
-		// delay blank, hsync, vsync, r, g, b once more
-		out_blank <= del_blank;
-		out_hsync <= del_hsync;
-		out_vsync <= del_vsync;
-		out_r <= r;
-		out_g <= g;
-		out_b <= b;
+		pre_crosshairs[0] <= (del_hcount == a_x | del_vcount == a_y);
+		pre_crosshairs[1] <= (del_hcount == b_x | del_vcount == b_y);
+		pre_crosshairs[2] <= (del_hcount == c_x | del_vcount == c_y);
+		pre_crosshairs[3] <= (del_hcount == d_x | del_vcount == d_y);
+		crosshairs <= pre_crosshairs;
 	end
+	
+	// delay blank, hsync, vsync to account for r,g,b 2 cycle delay
+	wire out_hsync;
+	wire out_vsync;
+	wire out_blank;
+	delay2 #(.LOG(1)) dhso(.clock(vclock), .reset(reset), .x(del_hsync), .y(out_hsync));
+	delay2 #(.LOG(1)) dvso(.clock(vclock), .reset(reset), .x(del_vsync), .y(out_vsync));
+	delay2 #(.LOG(1)) dbo(.clock(vclock), .reset(reset), .x(del_blank), .y(out_blank));
 
 	// assign outputs to VGA chip
 	always @(posedge vclock) begin
@@ -128,20 +129,34 @@ module stupid_vga_write
 			vga_out_green[7:0] <= 8'h00;
 			vga_out_blue[7:0] <= 8'h00;
 		end else begin
-			vga_out_red[7:0] <= out_r[7:0];
-			vga_out_green[7:0] <= out_g[7:0];
-			vga_out_blue[7:0] <= out_b[7:0];
+			vga_out_red[7:0] <= r[7:0];
+			vga_out_green[7:0] <= g[7:0];
+			vga_out_blue[7:0] <= b[7:0];
 		end
 
 		vga_out_blank_b <= ~out_blank;
 		vga_out_hsync <= out_hsync;
 		vga_out_vsync <= out_vsync;
 	end
-	
-	always @(*) begin
-		vga_out_sync_b = 1'b1;
-		vga_out_pixel_clock = ~vclock;
-	end
+	/*
+	// generate video clock
+	wire vga_out_pixel_clk;
+	wire lock_vga;
+	BUFG bufgv1(.O(vga_out_pixel_clock), .I(vga_out_pixel_clk));
+	DCM vga_dcm (
+		.CLKIN(vclock),
+		.CLK180(vga_out_pixel_clk),
+		.LOCKED(lock_vga));
+   // synthesis attribute DLL_FREQUENCY_MODE of vga_dcm is "LOW"
+   // synthesis attribute DUTY_CYCLE_CORRECTION of vga_dcm is "TRUE"
+   // synthesis attribute STARTUP_WAIT of vga_dcm is "FALSE"
+   // synthesis attribute DFS_FREQUENCY_MODE of vga_dcm is "LOW"
+   // synthesis attribute CLK_FEEDBACK of vga_dcm  is "NONE"
+   // synthesis attribute CLKOUT_PHASE_SHIFT of vga_dcm is "NONE"
+   // synthesis attribute PHASE_SHIFT of vga_dcm is 0
+	*/
+	assign vga_out_pixel_clock = ~vclock;
+	assign vga_out_sync_b = 1'b1;
 endmodule
 
 ////////////////////////////////////////////////////////////////////////////////

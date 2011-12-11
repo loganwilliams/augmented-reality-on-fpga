@@ -41,8 +41,8 @@ module memory_interface
 	 	input vsync,
 		// MEMORY
 		// MEM ADDRESSES
-		output reg [`LOG_ADDR-1:0] mem0_addr,
-		output reg [`LOG_ADDR-1:0] mem1_addr, 
+		output [`LOG_ADDR-1:0] mem0_addr,
+		output [`LOG_ADDR-1:0] mem1_addr, 
 		// MEM READ	
 		input [`LOG_MEM-1:0] mem0_read,
 		input [`LOG_MEM-1:0] mem1_read,
@@ -111,33 +111,96 @@ module memory_interface
 	// DEBUG
 	assign debug_blocks = {capt_mem_block,proc_mem_block,nexd_mem_block,disp_mem_block};
 	assign debug_locs = {capt_mem_loc, proc_mem_loc, nexd_mem_loc, disp_mem_loc};
+	
+	// ADDRESSING
+	wire [18:0] ntsc_loc_offset;
+	wire [18:0] ntsc_y_offset;
+	wire [18:0] ntsc_x_offset;
+	
+	wire [18:0] vga_loc_offset;
+	wire [18:0] vga_y_offset;
+	wire [18:0] vga_x_offset;
+	
+	wire [18:0] lpf_loc_offset;
+	wire [18:0] lpf_y_offset;
+	wire [18:0] lpf_x_offset;
+	
+	wire [18:0] pt_loc_offset;
+	wire [18:0] pt_y_offset;
+	wire [18:0] pt_x_offset;
+
+	reg [18:0] mem0_loc_offset;
+	reg [18:0] mem0_y_offset;
+	reg [18:0] mem0_x_offset;
+
+	reg [18:0] mem1_loc_offset;
+	reg [18:0] mem1_y_offset;
+	reg [18:0] mem1_x_offset;
+	
+	// get offsets (summands) from (x,y,loc)
+	offset_calculator ntsc_oc(
+		.x(ntsc_x), .y(ntsc_y), .loc(capt_mem_loc), 
+		.x_offset(ntsc_x_offset), 
+		.y_offset(ntsc_y_offset), 
+		.loc_offset(ntsc_loc_offset));
+	offset_calculator vga_oc(
+		.x(hcount), .y(vcount), .loc(disp_mem_loc), 
+		.x_offset(vga_x_offset), 
+		.y_offset(vga_y_offset), 
+		.loc_offset(vga_loc_offset));
+	offset_calculator lpf_oc(
+		.x(lpf_x), .y(lpf_y), .loc(proc_mem_loc), 
+		.x_offset(lpf_x_offset), 
+		.y_offset(lpf_y_offset), 
+		.loc_offset(lpf_loc_offset));
+	offset_calculator pt_oc(
+		.x(pt_x), .y(pt_y), .loc(nexd_mem_loc), 
+		.x_offset(pt_x_offset), 
+		.y_offset(pt_y_offset), 
+		.loc_offset(pt_loc_offset));
+
+	assign mem0_addr = mem0_loc_offset + mem0_x_offset + mem0_y_offset;
+	assign mem1_addr = mem1_loc_offset + mem1_x_offset + mem1_y_offset;
 
 	always @(posedge clock) begin
 		// set address & write & done flags
 		// assign write value to mem0 & mem1 based on who's writing
+		// FIRST BLOCK OF RAM
 		if (!capt_mem_block && ntsc_flag) begin
-			mem0_addr 	<= ntsc_addr;
+			mem0_x_offset <= ntsc_x_offset;
+			mem0_y_offset <= ntsc_y_offset;
+			mem0_loc_offset <= ntsc_loc_offset;
+
 			mem0_write 	<= ntsc_pixel;
 			mem0_wr 	<= 1;
 			mem0_bwe	<= 4'b1111;
 			mem0_done 	<= NTSC;
 		end
 		else if (!disp_mem_block && vga_flag) begin
-			mem0_addr 	<= vga_addr;
+			mem0_x_offset <= vga_x_offset;
+			mem0_y_offset <= vga_y_offset;
+			mem0_loc_offset <= vga_loc_offset;
+
 			mem0_write 	<= mem0_write;
 			mem0_wr 	<= 0;
 			mem0_bwe	<= 4'b1111;
 			mem0_done 	<= VGA;
 		end
 		else if (!proc_mem_block && lpf_flag) begin
-			mem0_addr 	<= lpf_addr;
+			mem0_x_offset <= lpf_x_offset;
+			mem0_y_offset <= lpf_y_offset;
+			mem0_loc_offset <= lpf_loc_offset;
+
 			mem0_write 	<= lpf_pixel_write;
 			mem0_wr 	<= lpf_wr;
 			mem0_bwe	<= 4'b1111;
 			mem0_done 	<= LPF;
 		end
 		else if (!nexd_mem_block && pt_flag) begin
-			mem0_addr 	<= pt_addr;
+			mem0_x_offset <= pt_x_offset;
+			mem0_y_offset <= pt_y_offset;
+			mem0_loc_offset <= pt_loc_offset;
+
 			mem0_done 	<= PT;
 			mem0_wr 	<= 1;
 			if (pt_x[0] == 1'b0) begin
@@ -150,36 +213,52 @@ module memory_interface
 			end
 		end
 		else begin // nothing's happening
-			mem0_addr 	<= 0;
+			mem0_x_offset <= mem0_x_offset;
+			mem0_y_offset <= mem0_y_offset;
+			mem0_loc_offset <= mem0_loc_offset;
+
 			mem0_write 	<= 0;
 			mem0_wr 	<= 0;
 			mem0_bwe	<= 4'b1111;
 			mem0_done 	<= NONE;
 		end
 
+		// SECOND BLOCK OF RAM
 		if (capt_mem_block && ntsc_flag) begin
-			mem1_addr 	<= ntsc_addr;
+			mem1_x_offset <= ntsc_x_offset;
+			mem1_y_offset <= ntsc_y_offset;
+			mem1_loc_offset <= ntsc_loc_offset;
+			
 			mem1_write 	<= ntsc_pixel;
 			mem1_wr 	<= 1;
 			mem1_bwe	<= 4'b1111;
 			mem1_done 	<= NTSC;
 		end
 		else if (disp_mem_block && vga_flag) begin
-			mem1_addr 	<= vga_addr;
+			mem1_x_offset <= vga_x_offset;
+			mem1_y_offset <= vga_y_offset;
+			mem1_loc_offset <= vga_loc_offset;
+			
 			mem1_write	<= mem1_write;
 			mem1_wr 	<= 0;
 			mem1_bwe	<= 4'b1111;
 			mem1_done 	<= VGA;
 		end
 		else if (proc_mem_block && lpf_flag) begin
-			mem1_addr 	<= lpf_addr;
+			mem1_x_offset <= lpf_x_offset;
+			mem1_y_offset <= lpf_y_offset;
+			mem1_loc_offset <= lpf_loc_offset;
+			
 			mem1_write 	<= lpf_pixel_write;
 			mem1_wr 	<= lpf_wr;
 			mem1_bwe	<= 4'b1111;
 			mem1_done 	<= LPF;
 		end
 		else if (nexd_mem_block && pt_flag) begin
-			mem1_addr 	<= pt_addr;
+			mem1_x_offset <= pt_x_offset;
+			mem1_y_offset <= pt_y_offset;
+			mem1_loc_offset <= pt_loc_offset;
+			
 			mem1_done 	<= PT;
 			mem1_wr 	<= 1;
 			if (pt_x[0] == 1'b0) begin
@@ -192,7 +271,10 @@ module memory_interface
 			end
 		end
 		else begin // nothing's happening
-			mem1_addr 	<= 0;
+			mem1_x_offset <= mem1_x_offset;
+			mem1_y_offset <= mem1_y_offset;
+			mem1_loc_offset <= mem1_loc_offset;
+
 			mem1_write 	<= 0;
 			mem1_wr 	<= 0;
 			mem1_bwe	<= 4'b1111;
@@ -214,11 +296,13 @@ module memory_interface
 		
 		// LPF's turn in the queue
 		if (mem0_next_read == LPF) lpf_pixel_read <= mem0_read;
-		if (mem1_next_read == LPF) lpf_pixel_read <= mem1_read;
-		
+		else if (mem1_next_read == LPF) lpf_pixel_read <= mem1_read;
+		//else lpf_pixel_read <= prev_lpf_pixel_read;
+
 		// VGA's turn
 		if (mem0_next_read == VGA) vga_pixel <= mem0_read;
-		if (mem1_next_read == VGA) vga_pixel <= mem1_read;
+		else if (mem1_next_read == VGA) vga_pixel <= mem1_read;
+		//else vga_pixel <= prev_vga_pixel;
 		// this should be it
 	end
 
@@ -233,21 +317,6 @@ module memory_interface
 		else if (nexd_mem_block == disp_mem_block) ready_pt = ~vwr;
 		else ready_pt = 1'b0;
 	end
-
-	// set addresses of LPF and PTF from (x,y) coordinates
-	// addr = y*(image_width/2) + lpf_x/2 + loc*(image_width*image_height/2)
-	address_calculator lpf_ac(
-		.x(lpf_x), .y(lpf_y), 
-		.loc(proc_mem_loc), .addr(lpf_addr));
-	address_calculator pt_ac(
-		.x(pt_x), .y(pt_y),
-		.loc(nexd_mem_loc), .addr(pt_addr));
-	address_calculator vga_ac(
-		.x(hcount), .y(vcount[8:0]),
-		.loc(disp_mem_loc), .addr(vga_addr));
-	address_calculator ntsc_ac(
-		.x(ntsc_x), .y(ntsc_y),
-		.loc(capt_mem_loc), .addr(ntsc_addr));
 
 	always @(posedge clock) begin
 		// update blocks and locations of images in RAM
@@ -282,6 +351,9 @@ module memory_interface
 			disp_mem_loc	<= disp_mem_loc;
 		end
 
+		// retain previous output pixel values
+		prev_vga_pixel <= vga_pixel;
+		prev_lpf_pixel_read <= lpf_pixel_read;
 	end
 endmodule
 
@@ -327,18 +399,20 @@ module zbt_map(
 	assign ram_data = delayed_we ? delayed_write_data[71:36] : {36{1'bZ}};
 endmodule
 
-module address_calculator(
+module offset_calculator(
 		input [`LOG_WIDTH-1:0] x,
 		input [`LOG_HEIGHT-1:0] y,
 		input [1:0] loc,
-		output [`LOG_ADDR-1:0] addr
+		output [18:0] x_offset,
+		output [18:0] y_offset,
+		output [18:0] loc_offset
 	);
-
-	wire [17:0] y_offset;
-	wire [`LOG_IMAGE_ADDR-1:0] loc_offset;
+	
+	assign x_offset[18:0] = {9'd0, x[`LOG_WIDTH-1:1]};
 	loc_lut llut(.loc(loc), .addr_off(loc_offset));
-	y_lut ylut(.y(y), .addr_off(y_offset));
-	assign addr = {9'd0, x[`LOG_WIDTH-1:1]} + {1'b0, y_offset} + loc_offset;
+	wire [17:0] y_off_trunc;
+	y_lut ylut(.y(y), .addr_off(y_off_trunc));
+	assign y_offset[18:0] = {1'b0, y_off_trunc[17:0]};
 endmodule
 
 module loc_lut(

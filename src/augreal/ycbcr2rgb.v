@@ -76,7 +76,9 @@ module ycbcr2rgb
 	end
 endmodule
 
+// 2 cycle delay
 module ycrcb_lut(
+		input clock,
 		input [17:0] ycrcb,
 		output reg [7:0] r,
 		output reg [7:0] g,
@@ -101,23 +103,25 @@ module ycrcb_lut(
 	reg signed [10:0] g_big;
 	reg signed [10:0] b_big;
 
+	always @(posedge clock) begin
+		r_big <= rgb_y + r_cr;
+		g_big <= rgb_y - g_cr - g_cb;
+		b_big <= rgb_y + b_cb;
+		
+		if (r_big < 0) r <= 8'd0;
+		else if (r_big > 255) r <= 8'd255;
+		else r <= r_big[7:0];
+		
+		if (g_big < 0) g <= 8'd0;
+		else if (g_big > 255) g <= 8'd255;
+		else g <= g_big[7:0];
+
+		if (b_big < 0) b <= 8'd0;
+		else if (b_big > 255) b <= 8'd255;
+		else b <= b_big[7:0];
+	end
+
 	always @(*) begin
-		r_big = rgb_y + r_cr;
-		g_big = rgb_y - g_cr - g_cb;
-		b_big = rgb_y + b_cb;
-
-		if (r_big < 0) r = 8'd0;
-		else if (r_big > 255) r = 8'd255;
-		else r = r_big[7:0];
-
-		if (g_big < 0) g = 8'd0;
-		else if (g_big > 255) g = 8'd255;
-		else g = g_big[7:0];
-
-		if (b_big < 0) b = 8'd0;
-		else if (b_big > 255) b = 8'd255;
-		else b = b_big[7:0];
-
 		case (y)
 			8'd0: rgb_y = 10'sd0;
 			8'd1: rgb_y = 10'sd0;

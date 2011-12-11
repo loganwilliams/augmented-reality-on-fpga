@@ -108,6 +108,7 @@ module object_recognition(
 
       case (state)
 	COUNTING: begin
+		corners_flag <= 0;
 	   if (interesting_flag && state == COUNTING) begin
 	      sumx[color] <= sumx[color] + interesting_x;
 	      sumy[color] <= sumy[color] + interesting_y;
@@ -134,14 +135,14 @@ module object_recognition(
 	      d_y <= ({d_y, {G{1'b0}}} - d_y) >> G + (averagey[3] >> G);
 			*/
 			
-			a_x <= averagex[0] >> 2 + a_x >> 2 + a_x >> 1;
-			b_x <= averagex[1] >> 2 + b_x >> 2 + b_x >> 1;
-			c_x <= averagex[2] >> 2 + c_x >> 2 + c_x >> 1;
-			d_x <= averagex[3] >> 2 + d_x >> 2 + d_x >> 1;
-			a_y <= averagey[0] >> 2 + a_y >> 2 + a_y >> 1;
-			b_y <= averagey[1] >> 2 + b_y >> 2 + b_y >> 1;
-			c_y <= averagey[2] >> 2 + c_y >> 2 + c_y >> 1;
-			d_y <= averagey[3] >> 2 + d_y >> 2 + d_y >> 1;
+			a_x <= (averagex[0] >> 1) + (a_x >> 1);
+			b_x <= (averagex[1] >> 1) + (b_x >> 1);
+			c_x <= (averagex[2] >> 1) + (c_x >> 1);
+			d_x <= (averagex[3] >> 1) + (d_x >> 1);
+			a_y <= (averagey[0] >> 1) + (a_y >> 1);
+			b_y <= (averagey[1] >> 1) + (b_y >> 1);
+			c_y <= (averagey[2] >> 1) + (c_y >> 1);
+			d_y <= (averagey[3] >> 1) + (d_y >> 1);
 
 	      top <= (averagex[1] - averagex[0]) * (averagex[1] - averagex[0]) + (averagey[1] - averagey[0]) * (averagey[1] - averagey[0]);
 	      bottom <= (averagex[2] - averagex[3]) * (averagex[2] - averagex[3]) + (averagey[2] - averagey[3]) * (averagey[2] - averagey[3]);
