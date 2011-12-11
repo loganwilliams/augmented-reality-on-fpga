@@ -83,8 +83,8 @@ module stupid_vga_write
 			clocked_hcount[9:0] <= clocked_hcount[9:0];
 			clocked_vcount[9:0] <= clocked_vcount[9:0];
 		end
-		
-		vga_will_request <= (count == 2'd1);
+
+		vga_will_request <= (count == 2'd2);
 	end
 
 	// pipeline crosshair calculations

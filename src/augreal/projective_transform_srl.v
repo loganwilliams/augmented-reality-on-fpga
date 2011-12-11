@@ -1,4 +1,4 @@
-module projective_transform(
+module projective_transform_srl(
 			    input 	      clk, // System clock (global ->)
 			    input 	      frame_flag, // New frame flag (ntsc_capture ->)
 			    input [17:0]      pixel, // Pixel data input (lpf ->)
@@ -132,6 +132,12 @@ module projective_transform(
    divider #(.WIDTH(22)) divf(.clk(clk), .ready(rfd_f), .dividend(dividend_f),
 			      .divider({10'b0,divisor_f}), .quotient(quotient_f), .sign(1'b1), .start(startdivs));
 
+   wire [17:0] 				      buffered_pixel;
+   
+   
+   shift18 buffer(.clock(clk), .ce(pixel_flag), .dout(buffered_pixel), .length(waiting_for_write),
+		  .din(pixel));
+   
    always @(posedge clk) begin
       case(state)
 	WAIT_FOR_CORNERS: begin
@@ -200,40 +206,11 @@ module projective_transform(
 	   if (pixel_flag || (|waiting_for_write)) begin
 	      if (ptflag) begin
 		 
-		 // output the new pixel coordinates
-		 if (waiting_for_write > 0) begin
-		    //pt_pixel_write <= (o_x[5] & o_y[5]) ? 18'b111111111111110000 : 18'b000000001000010000;
-		    
-		    pt_pixel_write <= pixel_save[0];
-		    pixel_save[0] <= pixel_save[1];
-		    pixel_save[1] <= pixel_save[2];
-		    pixel_save[2] <= pixel_save[3];
-		    pixel_save[3] <= pixel_save[4];
-		    pixel_save[4] <= pixel_save[5];
-		    pixel_save[5] <= pixel_save[6];
-		    pixel_save[6] <= pixel_save[7];
-		    pixel_save[7] <= pixel_save[8];
-		    pixel_save[8] <= pixel_save[9];
-		    pixel_save[9] <= pixel_save[10];
-		    pixel_save[10] <= pixel_save[11];
-		    pixel_save[11] <= pixel_save[12];
-		    pixel_save[12] <= pixel_save[13];
-		    pixel_save[13] <= pixel_save[14];
-		    pixel_save[14] <= pixel_save[15];
-		    
+		 pt_pixel_write <= buffered_pixel;
 
-		    if (pixel_flag) begin
-		       pixel_save[waiting_for_write-1] <= pixel;
-		    end else begin
-		       waiting_for_write <= waiting_for_write - 1;
-		    end
-		    
-		       
-		 end else begin
-		    //pt_pixel_write <= (o_x[5] & o_y[5]) ? 18'b111111111111110000 : 18'b000000001000010000;
-			 
-		    pt_pixel_write <= pixel;
-		 end // else: !if(waiting_for_write > 0)
+		 if (~pixel_flag) begin
+		    waiting_for_write <= waiting_for_write - 1;
+		 end
 
 		 if (waiting_for_write < 4) begin
 		    request_pixel <= 1;
@@ -303,8 +280,6 @@ module projective_transform(
 	      end else begin // if (ptflag)
 		 if (pixel_flag) begin
 		    waiting_for_write <= waiting_for_write + 1; // set a flag
-		    
-     		    pixel_save[waiting_for_write] <= pixel; // store the current pixel data
 		 end
 		 
 		 request_pixel <= 0; // memory_interface is delayed, we do not
@@ -314,22 +289,7 @@ module projective_transform(
 	      end
 	      
 	   end else pt_wr <= 0; // if (pixel_flag || (waiting_for_write > 0))
-	   
-/*
-	   if (sent_last & ~done_pt) begin
-	      waiting_for_write <= waiting_for_write + 1;
-	      waiting_for_write_max <= waiting_for_write + 1;
 
-	      pixel_save[waiting_for_write] <= last_pixel;
-	      pt_wr <= 0;
-	      request_pixel <= 0;
-
-	      o_x <= o_x - 1;
-	      i_c_x <= i_c_x - delta_c_x;
-	      i_c_y <= i_c_y - delta_c_y;
-	      
-	   end
-*/	      
 	   // if the divider is done
 	   if (rfd_a & rfd_b) begin
 	      // save deltas
@@ -351,3 +311,84 @@ module projective_transform(
       endcase // case (state)
    end // always @ (posedge clk)    
 endmodule // projective_transform
+
+module shift18(input [17:0] din,
+	       input [3:0] length,
+	       output [17:0] dout,
+	       input clock,
+	       input ce);
+
+   SRL16E s1(.CLK(clock), .CE(ce), .D(din[0]),
+	     .A0(length[0]), .A1(length[1]), 
+	     .A2(length[2]), .A3(length[3]),
+	     .Q(dout[0]));
+   SRL16E s2(.CLK(clock), .CE(ce), .D(din[1]),
+	     .A0(length[0]), .A1(length[1]), 
+	     .A2(length[2]), .A3(length[3]),
+	     .Q(dout[1]));
+   SRL16E s3(.CLK(clock), .CE(ce), .D(din[2]),
+	     .A0(length[0]), .A1(length[1]), 
+	     .A2(length[2]), .A3(length[3]),
+	     .Q(dout[2]));
+   SRL16E s4(.CLK(clock), .CE(ce), .D(din[3]),
+	     .A0(length[0]), .A1(length[1]), 
+	     .A2(length[2]), .A3(length[3]),
+	     .Q(dout[3]));
+   SRL16E s5(.CLK(clock), .CE(ce), .D(din[4]),
+	     .A0(length[0]), .A1(length[1]), 
+	     .A2(length[2]), .A3(length[3]),
+	     .Q(dout[4]));
+   SRL16E s6(.CLK(clock), .CE(ce), .D(din[5]),
+	     .A0(length[0]), .A1(length[1]), 
+	     .A2(length[2]), .A3(length[3]),
+	     .Q(dout[5]));
+   SRL16E s7(.CLK(clock), .CE(ce), .D(din[6]),
+	     .A0(length[0]), .A1(length[1]), 
+	     .A2(length[2]), .A3(length[3]),
+	     .Q(dout[6]));
+   SRL16E s8(.CLK(clock), .CE(ce), .D(din[7]),
+	     .A0(length[0]), .A1(length[1]), 
+	     .A2(length[2]), .A3(length[3]),
+	     .Q(dout[7]));
+   SRL16E s9(.CLK(clock), .CE(ce), .D(din[8]),
+	     .A0(length[0]), .A1(length[1]), 
+	     .A2(length[2]), .A3(length[3]),
+	     .Q(dout[8]));
+   SRL16E s10(.CLK(clock), .CE(ce), .D(din[9]),
+	      .A0(length[0]), .A1(length[1]), 
+	      .A2(length[2]), .A3(length[3]),
+	      .Q(dout[9]));
+   SRL16E s11(.CLK(clock), .CE(ce), .D(din[10]),
+	      .A0(length[0]), .A1(length[1]), 
+	      .A2(length[2]), .A3(length[3]),
+	      .Q(dout[10]));
+   SRL16E s12(.CLK(clock), .CE(ce), .D(din[11]),
+	      .A0(length[0]), .A1(length[1]), 
+	      .A2(length[2]), .A3(length[3]),
+	      .Q(dout[11]));
+   SRL16E s13(.CLK(clock), .CE(ce), .D(din[12]),
+	      .A0(length[0]), .A1(length[1]), 
+	      .A2(length[2]), .A3(length[3]),
+	      .Q(dout[12]));
+   SRL16E s14(.CLK(clock), .CE(ce), .D(din[13]),
+	      .A0(length[0]), .A1(length[1]), 
+	      .A2(length[2]), .A3(length[3]),
+	      .Q(dout[13]));
+   SRL16E s15(.CLK(clock), .CE(ce), .D(din[14]),
+	      .A0(length[0]), .A1(length[1]), 
+	      .A2(length[2]), .A3(length[3]),
+	      .Q(dout[14]));
+   SRL16E s16(.CLK(clock), .CE(ce), .D(din[15]),
+	      .A0(length[0]), .A1(length[1]), 
+	      .A2(length[2]), .A3(length[3]),
+	      .Q(dout[15]));
+   SRL16E s17(.CLK(clock), .CE(ce), .D(din[16]),
+	      .A0(length[0]), .A1(length[1]), 
+	      .A2(length[2]), .A3(length[3]),
+	      .Q(dout[16]));
+   SRL16E s18(.CLK(clock), .CE(ce), .D(din[17]),
+	      .A0(length[0]), .A1(length[1]), 
+	      .A2(length[2]), .A3(length[3]),
+	      .Q(dout[17]));
+   
+endmodule // shift18

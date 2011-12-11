@@ -297,12 +297,12 @@ module memory_interface
 		// LPF's turn in the queue
 		if (mem0_next_read == LPF) lpf_pixel_read <= mem0_read;
 		else if (mem1_next_read == LPF) lpf_pixel_read <= mem1_read;
-		else lpf_pixel_read <= prev_lpf_pixel_read;
+		//else lpf_pixel_read <= prev_lpf_pixel_read;
 
 		// VGA's turn
 		if (mem0_next_read == VGA) vga_pixel <= mem0_read;
 		else if (mem1_next_read == VGA) vga_pixel <= mem1_read;
-		else vga_pixel <= prev_vga_pixel;
+		//else vga_pixel <= prev_vga_pixel;
 		// this should be it
 	end
 

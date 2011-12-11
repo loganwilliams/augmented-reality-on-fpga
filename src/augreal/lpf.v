@@ -43,11 +43,11 @@ module dumb_lpf(
 			x = 0;
 			y = 0;
 		end
-		else if (!pixel_flag) begin
+		else if (!advanced_pixel_flag) begin
 			x = lpf_x;
 			y = lpf_y;
 		end
-		else if (lpf_x > `IMAGE_WIDTH-2) begin
+		else if (lpf_x == `IMAGE_WIDTH-1) begin
 			x = `LOG_WIDTH'd0;
 			y = lpf_y+1;
 		end
@@ -61,7 +61,7 @@ module dumb_lpf(
 		// update lpf_x and lpf_y
 		lpf_x <= x;
 		lpf_y <= y;
-		pixel_flag_odd <= request & lpf_x[0];
+		pixel_flag_odd <= (request & (done_lpf | lpf_x[0]));
 	end
 
 	// delay lpf_x, lpf_y | module is located in vga_write_new.v
@@ -73,6 +73,6 @@ module dumb_lpf(
 		if (!testing)
 			pixel = (x_out[0] == 1'b0) ? lpf_pixel_read[`LOG_MEM-1:`LOG_TRUNC] : lpf_pixel_read[`LOG_TRUNC-1:0];
 		else
-			pixel = { {8{x_out[3]}}, 10'd0};
+			pixel = {18{x_out[3]}};
 	end
 endmodule

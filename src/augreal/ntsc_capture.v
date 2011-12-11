@@ -347,13 +347,14 @@ wire 					orange_match, green_match, pink_match, blue_match;
    
    // Synchronize outputs to main system clock
    always @ (posedge clock_65mhz) begin
+		ntsc_will_request <= 0;
+	
       // if the FIFO is not empty
       if (rd_en) begin
 	 read_state <= 1;
 	 ntsc_will_request <= 1;
       end else begin
 	 read_state <= 0;
-	 ntsc_will_request <= 0;
       end
       // we have data
       if (read_state) begin
@@ -364,6 +365,7 @@ wire 					orange_match, green_match, pink_match, blue_match;
 	 o_y <= dout[15:7];
 	 o_color <= dout[6:5];
 	 o_i_flag <= dout[4];
+	 ntsc_will_request <= 1;
 	 
       end else begin
 	 ntsc_pixels <= 0;
