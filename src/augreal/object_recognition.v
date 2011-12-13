@@ -144,32 +144,31 @@ module object_recognition(
 	   if (delayed_interesting_flag) begin
 	      // weight this pixel based on its distance from the previously calculated center of mass
 	      
-	      if (dif_x[delayed_color] < 16 || dif_y[delayed_color] < 16) begin
+	      if (dif_x[delayed_color] < 16 && dif_y[delayed_color] < 16) begin
 		 sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x, 5'b0};
 		 sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y, 5'b0};
 		 num[delayed_color] <= num[delayed_color] + 32;
 	      end
-	      else
-		if (dif_x[delayed_color] < 32 || dif_y[delayed_color] < 32) begin
-		   sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x,3'b0};
-		   sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y,3'b0};
-		   num[delayed_color] <= num[delayed_color] + 8;
-		end
-		else if (dif_x[delayed_color] < 64 || dif_y[delayed_color] < 64) begin
-		   sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x,2'b0};
-		   sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y,2'b0};
-		   num[delayed_color] <= num[delayed_color] + 4;
-		end
-		else if (dif_x[delayed_color] < 128 || dif_y[delayed_color] < 128) begin
-		   sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x, 1'b0};
-		   sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y, 1'b0};
-		       num[delayed_color] <= num[delayed_color] + 2;
-		end 
-		else begin 
-		   sumx[delayed_color] <= sumx[delayed_color] + delayed_interesting_x;
-		   sumy[delayed_color] <= sumy[delayed_color] + delayed_interesting_y;
-		   num[delayed_color] <= num[delayed_color] + 1;
-		end
+	      else if (dif_x[delayed_color] < 32 && dif_y[delayed_color] < 32) begin
+		 sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x,3'b0};
+		 sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y,3'b0};
+		 num[delayed_color] <= num[delayed_color] + 8;
+	      end
+	      else if (dif_x[delayed_color] < 64 && dif_y[delayed_color] < 64) begin
+		 sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x,2'b0};
+		 sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y,2'b0};
+		 num[delayed_color] <= num[delayed_color] + 4;
+	      end
+	      else if (dif_x[delayed_color] < 128 && dif_y[delayed_color] < 128) begin
+		 sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x, 1'b0};
+		 sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y, 1'b0};
+		 num[delayed_color] <= num[delayed_color] + 2;
+	      end 
+	      else begin 
+		 sumx[delayed_color] <= sumx[delayed_color] + delayed_interesting_x;
+		 sumy[delayed_color] <= sumy[delayed_color] + delayed_interesting_y;
+		 num[delayed_color] <= num[delayed_color] + 1;
+	      end
 	   end
 
 	   // if the frame is over, begin calculating the new center of mass
@@ -193,6 +192,7 @@ module object_recognition(
 	      d_y <= (averagey[3] >> 2) + (d_y >> 1) + (d_y >> 2);
 
 	      // calculate distances squared
+	      // sqrt does not begin here because of multiplier delay
 	      top <= (averagex[1] - averagex[0]) * (averagex[1] - averagex[0]) + (averagey[1] - averagey[0]) * (averagey[1] - averagey[0]);
 	      bottom <= (averagex[2] - averagex[3]) * (averagex[2] - averagex[3]) + (averagey[2] - averagey[3]) * (averagey[2] - averagey[3]);
 	      left <= (averagex[3] - averagex[0]) * (averagex[3] - averagex[0]) + (averagey[3] - averagey[0]) * (averagey[3] - averagey[0]);
@@ -204,6 +204,7 @@ module object_recognition(
 	end // case: WAITING_FOR_DIVS
 
 	STARTSQRTS: begin
+	   // start the square rooters
 	   sqrtstart <= 1;
 	   state <= WAITING_FOR_SQRT;
 	end
@@ -223,21 +224,23 @@ module object_recognition(
 	   // if the vsync is over
 	   if (~frame_flag) begin
 	      state <= COUNTING;
-			sumx[0] <= 0;
-        sumy[0] <= 0;
-        num[0] <= 0;
-        sumx[1] <= 0;
-        sumy[1] <= 0;
-        num[1] <= 0;
-        sumx[2] <= 0;
-        sumy[2] <= 0;
-        num[2] <= 0;
-        sumx[3] <= 0;
-        sumy[3] <= 0;
-        num[3] <= 0;
+
+	      // reset accumulators
+	      sumx[0] <= 0;
+              sumy[0] <= 0;
+              num[0] <= 0;
+              sumx[1] <= 0;
+              sumy[1] <= 0;
+              num[1] <= 0;
+              sumx[2] <= 0;
+              sumy[2] <= 0;
+              num[2] <= 0;
+              sumx[3] <= 0;
+              sumy[3] <= 0;
+              num[3] <= 0;
 	   end
 	end // case: WAITING_FOR_SQRT
-	   
+	
       endcase // case state
    end // always @ (posedge clk)
 endmodule // object_recognition
