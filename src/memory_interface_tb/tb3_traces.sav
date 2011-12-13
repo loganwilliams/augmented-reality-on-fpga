@@ -1,0 +1,21 @@
+[timestart] 99580
+[size] 1680 998
+[pos] -184 -184
+*-6.000000 80085 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb3.
+@28
+tb3.clock
+tb3.reset
+@29
+tb3.frame_flag
+@28
+tb3.ntsc_flag
+tb3.vga_flag
+@24
+tb3.ntsc_pixel[35:0]
+tb3.vga_pixel[23:0]
+@28
+tb3.done_ntsc
+tb3.done_vga
+[pattern_trace] 1
+[pattern_trace] 0

@@ -1,0 +1,490 @@
+$date
+	Tue Nov 29 16:43:20 2011
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module tb4 $end
+$var wire 1 ! done_lpf $end
+$var wire 1 " done_ntsc $end
+$var wire 1 # done_pt $end
+$var wire 1 $ done_vga $end
+$var wire 36 % lpf_pixel_read [35:0] $end
+$var wire 19 & mem0_addr [18:0] $end
+$var wire 36 ' mem0_read [35:0] $end
+$var wire 1 ( mem0_wr $end
+$var wire 36 ) mem0_write [35:0] $end
+$var wire 19 * mem1_addr [18:0] $end
+$var wire 36 + mem1_read [35:0] $end
+$var wire 1 , mem1_wr $end
+$var wire 36 - mem1_write [35:0] $end
+$var wire 1 . ntsc_flag $end
+$var wire 36 / ntsc_pixel [35:0] $end
+$var wire 1 0 pt_flag $end
+$var wire 18 1 pt_pixel_write [17:0] $end
+$var wire 10 2 pt_x [9:0] $end
+$var wire 9 3 pt_y [8:0] $end
+$var wire 1 4 vga_flag $end
+$var wire 36 5 vga_pixel [35:0] $end
+$var reg 1 6 clock $end
+$var reg 1 7 frame_flag $end
+$var reg 1 8 lpf_flag $end
+$var reg 36 9 lpf_pixel_write [35:0] $end
+$var reg 1 : lpf_wr $end
+$var reg 10 ; lpf_x [9:0] $end
+$var reg 9 < lpf_y [8:0] $end
+$var reg 1 = pt_wr $end
+$var reg 1 > reset $end
+$var reg 1 ? start $end
+$var reg 1 @ vclock $end
+$scope module mem_int $end
+$var wire 1 A clock $end
+$var wire 4 B debug_blocks [3:0] $end
+$var wire 8 C debug_locs [7:0] $end
+$var wire 1 # done_pt $end
+$var wire 1 D frame_flag $end
+$var wire 1 E lpf_flag $end
+$var wire 36 F lpf_pixel_write [35:0] $end
+$var wire 1 G lpf_wr $end
+$var wire 10 H lpf_x [9:0] $end
+$var wire 9 I lpf_y [8:0] $end
+$var wire 36 J mem0_read [35:0] $end
+$var wire 36 K mem1_read [35:0] $end
+$var wire 1 . ntsc_flag $end
+$var wire 36 L ntsc_pixel [35:0] $end
+$var wire 1 0 pt_flag $end
+$var wire 18 M pt_pixel [17:0] $end
+$var wire 10 N pt_x [9:0] $end
+$var wire 9 O pt_y [8:0] $end
+$var wire 1 P ptf_flag $end
+$var wire 36 Q ptf_pixel_write [35:0] $end
+$var wire 1 R ptf_wr $end
+$var wire 10 S ptf_x [9:0] $end
+$var wire 9 T ptf_y [8:0] $end
+$var wire 1 U reset $end
+$var wire 1 4 vga_flag $end
+$var reg 1 V capt_mem_block $end
+$var reg 2 W capt_mem_loc [1:0] $end
+$var reg 1 X disp_mem_block $end
+$var reg 2 Y disp_mem_loc [1:0] $end
+$var reg 1 Z done_lpf $end
+$var reg 1 [ done_ntsc $end
+$var reg 1 \ done_ptf $end
+$var reg 1 ] done_vga $end
+$var reg 19 ^ lpf_addr [18:0] $end
+$var reg 36 _ lpf_pixel_read [35:0] $end
+$var reg 19 ` mem0_addr [18:0] $end
+$var reg 4 a mem0_done [3:0] $end
+$var reg 4 b mem0_next_read [3:0] $end
+$var reg 8 c mem0_read_queue [7:0] $end
+$var reg 1 d mem0_wr $end
+$var reg 36 e mem0_write [35:0] $end
+$var reg 19 f mem1_addr [18:0] $end
+$var reg 4 g mem1_done [3:0] $end
+$var reg 4 h mem1_next_read [3:0] $end
+$var reg 8 i mem1_read_queue [7:0] $end
+$var reg 1 j mem1_wr $end
+$var reg 36 k mem1_write [35:0] $end
+$var reg 1 l nexd_mem_block $end
+$var reg 2 m nexd_mem_loc [1:0] $end
+$var reg 4 n next_blocks [3:0] $end
+$var reg 1 o next_capt_mem_block $end
+$var reg 2 p next_capt_mem_loc [1:0] $end
+$var reg 1 q next_disp_mem_block $end
+$var reg 2 r next_disp_mem_loc [1:0] $end
+$var reg 8 s next_locs [7:0] $end
+$var reg 8 t next_mem0_read_queue [7:0] $end
+$var reg 8 u next_mem1_read_queue [7:0] $end
+$var reg 1 v next_nexd_mem_block $end
+$var reg 2 w next_nexd_mem_loc [1:0] $end
+$var reg 19 x next_ntsc_addr [18:0] $end
+$var reg 1 y next_proc_mem_block $end
+$var reg 2 z next_proc_mem_loc [1:0] $end
+$var reg 19 { next_vga_addr [18:0] $end
+$var reg 19 | ntsc_addr [18:0] $end
+$var reg 36 } prev_lpf_pixel_read [35:0] $end
+$var reg 36 ~ prev_ptf_pixel_read [35:0] $end
+$var reg 36 !" prev_vga_pixel [35:0] $end
+$var reg 1 "" proc_mem_block $end
+$var reg 2 #" proc_mem_loc [1:0] $end
+$var reg 19 $" ptf_addr [18:0] $end
+$var reg 36 %" ptf_pixel_read [35:0] $end
+$var reg 19 &" vga_addr [18:0] $end
+$var reg 36 '" vga_pixel [35:0] $end
+$upscope $end
+$scope module mem0 $end
+$var wire 19 (" addr [18:0] $end
+$var wire 1 A clock $end
+$var wire 1 U reset $end
+$var wire 1 ( wr $end
+$var wire 36 )" write [35:0] $end
+$var reg 19 *" addr_queue [18:0] $end
+$var reg 36 +" data [35:0] $end
+$var integer 32 ," i [31:0] $end
+$var reg 1 -" wr_queue $end
+$var reg 36 ." write_queue [35:0] $end
+$upscope $end
+$scope module mem1 $end
+$var wire 19 /" addr [18:0] $end
+$var wire 1 A clock $end
+$var wire 1 U reset $end
+$var wire 1 , wr $end
+$var wire 36 0" write [35:0] $end
+$var reg 19 1" addr_queue [18:0] $end
+$var reg 36 2" data [35:0] $end
+$var integer 32 3" i [31:0] $end
+$var reg 1 4" wr_queue $end
+$var reg 36 5" write_queue [35:0] $end
+$upscope $end
+$scope module ntsc $end
+$var wire 1 A clock $end
+$var wire 1 " done $end
+$var wire 1 U reset $end
+$var wire 1 6" start $end
+$var reg 32 7" count [31:0] $end
+$var reg 1 8" flag $end
+$var reg 36 9" pixel [35:0] $end
+$var reg 32 :" rep_count [31:0] $end
+$var reg 3 ;" state [2:0] $end
+$var reg 10 <" x [9:0] $end
+$var reg 9 =" y [8:0] $end
+$upscope $end
+$scope module vga $end
+$var wire 1 >" blank $end
+$var wire 10 ?" chcount [9:0] $end
+$var wire 1 A clock $end
+$var wire 10 @" cvcount [9:0] $end
+$var wire 1 $ done_vga $end
+$var wire 1 D frame_flag $end
+$var wire 10 A" hcount [9:0] $end
+$var wire 1 B" hsync $end
+$var wire 8 C" iblanks [7:0] $end
+$var wire 80 D" ihcounts [79:0] $end
+$var wire 8 E" ihsyncs [7:0] $end
+$var wire 144 F" ipixels [143:0] $end
+$var wire 80 G" ivcounts [79:0] $end
+$var wire 8 H" ivsyncs [7:0] $end
+$var wire 18 I" pixel_out [17:0] $end
+$var wire 36 J" pixel_tuple [35:0] $end
+$var wire 1 U reset $end
+$var wire 2 K" trunc_cindex [1:0] $end
+$var wire 2 L" trunc_vindex [1:0] $end
+$var wire 1 M" vclock $end
+$var wire 10 N" vcount [9:0] $end
+$var wire 8 O" vga_out_blue [7:0] $end
+$var wire 8 P" vga_out_green [7:0] $end
+$var wire 8 Q" vga_out_red [7:0] $end
+$var wire 36 R" vga_pixel [35:0] $end
+$var wire 1 S" vsync $end
+$var reg 8 T" blanks [7:0] $end
+$var reg 3 U" cindex [2:0] $end
+$var reg 80 V" hcounts [79:0] $end
+$var reg 8 W" hsyncs [7:0] $end
+$var reg 36 X" next_pixel [35:0] $end
+$var reg 1 Y" out_of_bounds $end
+$var reg 144 Z" pixels [143:0] $end
+$var reg 2 [" state [1:0] $end
+$var reg 80 \" vcounts [79:0] $end
+$var reg 1 ]" vga_flag $end
+$var reg 1 ^" vga_out_blank_b $end
+$var reg 1 _" vga_out_hsync $end
+$var reg 1 `" vga_out_pixel_clock $end
+$var reg 1 a" vga_out_sync_b $end
+$var reg 1 b" vga_out_vsync $end
+$var reg 3 c" vindex [2:0] $end
+$var reg 1 d" vstate $end
+$var reg 8 e" vsyncs [7:0] $end
+$scope module xvga1 $end
+$var wire 1 f" frame_flag $end
+$var wire 1 g" hblankon $end
+$var wire 1 h" hreset $end
+$var wire 1 i" hsyncoff $end
+$var wire 1 j" hsyncon $end
+$var wire 1 k" next_hblank $end
+$var wire 1 l" next_vblank $end
+$var wire 1 U reset $end
+$var wire 1 m" vblankon $end
+$var wire 1 M" vclock $end
+$var wire 1 n" vreset $end
+$var wire 1 o" vsyncoff $end
+$var wire 1 p" vsyncon $end
+$var reg 1 q" blank $end
+$var reg 1 r" hblank $end
+$var reg 10 s" hcount [9:0] $end
+$var reg 1 t" hsync $end
+$var reg 1 u" vblank $end
+$var reg 10 v" vcount [9:0] $end
+$var reg 1 w" vsync $end
+$upscope $end
+$scope module insert_hsyncs $end
+$var wire 1 B" e $end
+$var wire 3 x" i [2:0] $end
+$var wire 8 y" x [7:0] $end
+$var reg 8 z" y [7:0] $end
+$upscope $end
+$scope module insert_vsyncs $end
+$var wire 1 S" e $end
+$var wire 3 {" i [2:0] $end
+$var wire 8 |" x [7:0] $end
+$var reg 8 }" y [7:0] $end
+$upscope $end
+$scope module insert_blanks $end
+$var wire 1 >" e $end
+$var wire 3 ~" i [2:0] $end
+$var wire 8 !# x [7:0] $end
+$var reg 8 "# y [7:0] $end
+$upscope $end
+$scope module insert_hcounts $end
+$var wire 10 ## e [9:0] $end
+$var wire 3 $# i [2:0] $end
+$var wire 80 %# x [79:0] $end
+$var reg 80 &# y [79:0] $end
+$upscope $end
+$scope module insert_vcounts $end
+$var wire 10 '# e [9:0] $end
+$var wire 3 (# i [2:0] $end
+$var wire 80 )# x [79:0] $end
+$var reg 80 *# y [79:0] $end
+$upscope $end
+$scope module insert_pixels $end
+$var wire 36 +# e [35:0] $end
+$var wire 2 ,# i [1:0] $end
+$var wire 144 -# x [143:0] $end
+$var reg 144 .# y [143:0] $end
+$upscope $end
+$scope module exth $end
+$var wire 3 /# i [2:0] $end
+$var wire 80 0# x [79:0] $end
+$var reg 10 1# y [9:0] $end
+$upscope $end
+$scope module extv $end
+$var wire 3 2# i [2:0] $end
+$var wire 80 3# x [79:0] $end
+$var reg 10 4# y [9:0] $end
+$upscope $end
+$scope module tuple $end
+$var wire 2 5# i [1:0] $end
+$var wire 144 6# x [143:0] $end
+$var reg 36 7# y [35:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx 7#
+bx 6#
+bx 5#
+bx 4#
+bx 3#
+bx 2#
+bx 1#
+bx 0#
+bx /#
+bx .#
+bx -#
+bx ,#
+bx +#
+bx *#
+bx )#
+bx (#
+bx '#
+bx &#
+bx %#
+bx $#
+bx ##
+bx "#
+bx !#
+bx ~"
+bx }"
+bx |"
+bx {"
+bx z"
+bx y"
+bx x"
+xw"
+bx v"
+xu"
+xt"
+bx s"
+xr"
+xq"
+xp"
+xo"
+xn"
+xm"
+xl"
+xk"
+xj"
+xi"
+xh"
+xg"
+zf"
+bx e"
+xd"
+bx c"
+xb"
+xa"
+0`"
+x_"
+x^"
+0]"
+bx \"
+bx ["
+bx Z"
+xY"
+bx X"
+bx W"
+bx V"
+bx U"
+bx T"
+xS"
+bx R"
+bx00 Q"
+bx00 P"
+bx00 O"
+bx N"
+0M"
+bx L"
+bx K"
+bx J"
+bx I"
+bx H"
+bx G"
+bx F"
+bx E"
+bx D"
+bx C"
+xB"
+bx A"
+bx @"
+bx ?"
+x>"
+bx ="
+bx <"
+bx ;"
+bx :"
+bx 9"
+x8"
+bx 7"
+x6"
+bx 5"
+x4"
+bx 3"
+bx 2"
+bx 1"
+b0 0"
+b0 /"
+bx ."
+x-"
+bx ,"
+bx +"
+bx *"
+b0 )"
+b0 ("
+bx '"
+bx &"
+bx %"
+bx $"
+bx #"
+x""
+bx !"
+bx ~
+bx }
+bx |
+b100101100000000000 {
+b1 z
+0y
+b0 x
+b0 w
+1v
+bx0000 u
+bx0000 t
+b10001 s
+b1 r
+1q
+b0 p
+0o
+b11 n
+bx m
+xl
+b0 k
+0j
+bx i
+bx h
+b0 g
+b0 f
+b0 e
+0d
+bx c
+bx b
+b0 a
+b0 `
+bx _
+bx ^
+0]
+0\
+0[
+0Z
+bx Y
+xX
+bx W
+xV
+1U
+bz T
+bz S
+zR
+bz Q
+zP
+bz O
+bz N
+bz M
+bx L
+bx K
+bx J
+bx I
+bx H
+xG
+bx F
+0E
+0D
+b0xxxx00 C
+bx00 B
+0A
+0@
+x?
+1>
+1=
+bx <
+bx ;
+x:
+bx 9
+08
+07
+06
+bx 5
+04
+bz 3
+bz 2
+bz 1
+z0
+bx /
+x.
+b0 -
+0,
+bx +
+b0 *
+b0 )
+0(
+bx '
+b0 &
+bx %
+0$
+z#
+0"
+0!
+$end
+#5
