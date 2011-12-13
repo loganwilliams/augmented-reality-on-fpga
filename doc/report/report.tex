@@ -123,19 +123,25 @@ The {\tt LPF} module, which sends pixel data to the {\tt projective\_transform} 
 
 \subsubsection{{\tt vga\_write} (Jos\'{e})}
 % Jose
-This module reads data from {\tt memory\_interface} and displays this data on the screen. Housed inside this module are (1) {\tt xvga}, which generates the VGA control signals necessary to display data on the screen, and (2) {\tt ycrcb2rgb}, which converts the fetched 18-bit YCrCb values to 24-bit RGB values suitable for display.
+This module reads data from {\tt memory\_interface} and displays this data on the screen. Housed inside this module are (1) {\tt xvga}, which generates the VGA control signals necessary to display data on the screen, and (2) {\tt ycrcb2rgb\_lut}, which converts the fetched 18-bit YCrCb values to 24-bit RGB values suitable for display.
 
 {\tt vga\_write} ``flags'' {\tt memory\_interface} and provides the interface the $(x,y)$ coordinates of the pixel to be displayed, which correspond to the hcount and vcount variables being output from the {\tt xvga} submodule. Because the {\tt xvga} module is clocked at 25MHz and {\tt memory\_interface} is clocked at 50MHz, care must be taken when requesting and reading pixels. Due to the implicit four-cycle delay of {\tt memory\_interface}, the outputs of {\tt xvga} must be delayed by two video clock cycles, so that the pixels that are output to the monitor correspond the control signals at the moment of ``flagging''. 
 
 The fetched data consists of 36 bits, totalling two pixels. Every vclock cycle, the bits converted using {\tt ycrcb2rgb} are alternated between the higher-order 18 bits and the lower order 18 bits. The higher order 18 bits correspond to even pixels and the lower order 18 bits correspond to odd pixels. This set of control signals and pixel values is then pipelined, so that on the next rising edge these values are fed to the vga chip. The clock assigned to the vga chip (vga\_out\_clock) is an inverted copy of the onboard 25MHz clock, due to the high path propagation delay from the FPGA to the video DAC.
 
 \paragraph{{\tt xvga}}
-This submodule is an adapted version of the submodule used in the 6.111 Pong Lab. The adaptations include changing when the vsync, hsync, blank, and reset signals trigger based on the change of resolution from 1024x768 to 640x480. Operation involves a few basic steps\cite{xvga}: (1) Increment hcount by one every clock cycle, modulo 800. (2) Increment vcount by 1 when hcount has reached 800, modulo 524. (3) Pulse blank when either hcount $\geq 640$ or vcount $\geq 480$. (4) Pulse hsync when $656 \leq \text{hcount} \leq 752$. (5) Pulse vsync when $491 \leq \text{vcount} \leq 493$.
+This submodule is an adapted version of the submodule used in the 6.111 Pong Lab. The adaptations include changing when the vsync, hsync, blank, and reset signals trigger based on the change of resolution from 1024x768 to 640x480. Operation involves a few basic steps\cite{xvga}: (1) Increment hcount by one every clock cycle, modulo 800. (2) Increment vcount by 1 when hcount has reached 799, modulo 524. (3) Pulse blank when either hcount $\geq 640$ or vcount $\geq 480$. (4) Pulse hsync when $656 \leq \text{hcount} \leq 752$. (5) Pulse vsync when $491 \leq \text{vcount} \leq 493$.
 
-\paragraph{{\tt ycrcb2rgb}}
+\paragraph{{\tt ycrcb2rgb\_lut}}
+This submodule maps a YCrCb pixel to an RGB pixel. The mapping from YCrCb to RGB is summarized by the following set of equations\cite{ycrcb}:
 
+\begin{align*}
+R' & = 1.164(Y'-16) + 1.596(Cr-128) \\
+G' & = 1.164(Y'-16) - 0.813(Cr-128) - 0.392(Cb-128) \\
+B' & = 1.164(Y'-16) + 2.017(Cb-128)
+\end{align*}
 
-The {\tt vga\_write} section is straightforward and will basically be a clone of the VGA code used in Lab 2 (Pong). Essentially, the output will be refreshed at a rate of 60Hz and output at a resolution of 640x480 pixels. This module will read the pixel values from displayed image and assign it based on the {\it hcount} and {\tt vcount} variables, which will be incremented accordingly. The clock signal used for this module will be synthesized with the ISE's toolkit. This module will be tested by loading a standardized image to memory and verifying whether {\tt vga\_write} displays this image properly on the monitor.
+The luminance and chrominances have bitwidths of 8, 5, and 5, respectively. Initially, an approach with multipliers and adders was attempted. However, even with single and dual stage pipelining, we observed setup time violations due to the comparisons necessary to account for overflow and underflow caused by rounding error. As such, we opted to use look-up-tables to weigh Y, Cr, and Cb values and then to sum these weighted values to form the three different pixels. Because the contribution from luminance is identical for all colors, one lookup table with \( 2^8 \) entries was used for this factor. Lookup tables with \( 2^5 \) entries were used for the contributions from the chrominance values. Finally, adders were instantiated for adding all of these weighted factors. In the Appendix, you will find the code used to synthesize these LUTs, as well as the code for this module.
 
 \section{Debugging and Testing}
 
@@ -162,6 +168,12 @@ To test {\tt projective\_transform}, a test jig was developed that provided the 
   2002.
   \emph{Division algorithms.}
   Available: \\ \begin{url} http://devel-rok.informatik.hu-berlin.de/svn/TI2/2006/folien/pdf/eng\_ca12.pdf \end{url}
+
+\bibitem{xvga}
+  http://web.mit.edu/6.111/www/f2011/index.html [REFORMAT ME]
+
+\bibitem{ycrcb}
+  XAPP283: Color Space Converter (http://www-mtl.mit.edu/Courses/6.111/labkit/appnotes/xapp283.pdf) [REFORMAT ME]
 
 \end{thebibliography}
 
