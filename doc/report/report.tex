@@ -88,13 +88,15 @@ This function maps the original rectangular image to any convex quadrilateral, p
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.65\textwidth]{images/arbiskew_graphic.png}
+\includegraphics[width=0.85\textwidth]{images/arbiskew_graphic.png}
 \caption{\emph{A visual representation of the result of the {\tt projective\_transform} module. Input is on the left, a possible output, for four coordinates $A\prime$, $B\prime$, $C\prime$, and $D\prime$ is on the right.}}
 \end{figure}
 
 Mathematically, the algorithm works as follows:
 \begin{enumerate*}
-\item Calculate the distance of line $\overline{A\prime D\prime}$ and assign it to $d_{ad}$.
+\item Calculate the normalized incrementor value, {\tt Delta\_a\_x} $\displaystyle= \frac{\delta_{ax}}{480}$.
+\item Calculate the normalized incrementor value, {\tt Delta\_a\_y} $\displaystyle= \frac{\delta_{ay}}{480}$.
+\item Repeat steps 1 and 2 for {\tt delta\_b\_x} and {\tt delta\_b\_y}.
 \item Do the same for $\overline{B\prime C\prime}$ and assign it to $d_{bc}$.
 \item Create two ``iterator points,'' point $I_A$ and $I_B$ initially located at $A\prime$ and $B\prime$.
 \item Let $o_x = 0$ and $o_y = 0$
@@ -120,6 +122,10 @@ The {\tt LPF} module, which sends pixel data to the {\tt projective\_transform} 
 \includegraphics[width=\textwidth]{images/srl16.png}
 \caption{\emph{The {\tt SRL16E} primitive shift register element. By setting {\tt A[3:0]}, the length of the buffer can be adjusted dynamically.}}
 \end{figure}
+
+The {\tt projective\_transform} module itself is a state machine with three states, {\tt WAIT\_FOR\_CORNERS}, {\tt WAIT\_FOR\_DIVIDERS}, and {\tt WAIT\_FOR\_PIXEL}. The module initializes itself to the {\tt WAIT\_FOR\_CORNERS} state, where it stays until {\tt object\_recognition} indicates with {\tt corners\_flag} that it has finished calculating the location of the four corners of the frame in the image. When this flag is recieved, it initializes the divisors and dividends of each of the six dividers, and sends a signal for the dividers to begin their operation. Then, the machine advances to the {\tt WAIT\_FOR\_DIVIDERS} state.
+
+In this state, the module waits until all of the dividers have finished their computation. When this occurs, the results of each computation are saved in the delta registers. This corresponds to steps 1, 2, and 3 of the algorithm outlined above. Then the module advances to the {\tt WAIT\_FOR\_PIXEL} state, where the bulk of the algorithm is implemented.
 
 \subsubsection{{\tt vga\_write} (Jos\'{e})}
 % Jose
