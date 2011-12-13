@@ -13,7 +13,7 @@
 \usepackage{verbatim}
 
 \begin{document}
-\lstset{language=Verilog,numbers=left, numberstyle=\tiny, stepnumber=2, numbersep=5pt,basicstyle=\footnotesize,frame=Tl}	
+\lstset{language=Verilog,numbers=left, numberstyle=\tiny, stepnumber=2, numbersep=5pt,basicstyle=\small,frame=Tl,breaklines=true,breakautoindent=true}	
 \title{Recursive Augmented Reality Image Processing System}
 \author{Logan P. Williams \& Jos\'{e} E. Cruz Serrall\'{e}s}
 \date{December 10, 2011}
@@ -84,7 +84,7 @@ The inputs to {\tt memory\_interface} are (1) {\tt frame\_flag}, which signals w
 \begin{figure}[h!]
 \centering
 \includegraphics[width=0.75\textwidth]{images/buffers.png}
-\caption{The progression seen in memory locations as {\tt frame\_flag} is asserted.}
+\caption{{\emph The progression seen in memory locations as {\tt frame\_flag} is asserted. Two complete pathways from image capture to image display are highlighted.}}
 \end{figure}
 
 Due to the two-cycle latency of the ZBT RAM, care was taken in {\tt memory\_interface} to wait two cycles before assigning an output to the module that made a request. Additionally, {\tt zbt\_map} was used to delay the write data to the RAM by two cycles. Additionally, {\tt zbt\_map} allows for {\tt memory\_interface} to request partial bit write enables, which proved to be necessary for the operation of {\tt projective\_transform}. {zbt\_map} was adapted from the {\tt zbt\_6111} module.
@@ -273,7 +273,7 @@ Overall, we were very pleased with the smoothness of the frame rate, the reliabi
   Pillai, Latha.
   2001.
   \emph{XAPP283: Color Space Converter}
-  \url{http://www-mtl.mit.edu/Courses/6.111/labkit/appnotes/xapp283.pdf}`:w
+  \url{http://www-mtl.mit.edu/Courses/6.111/labkit/appnotes/xapp283.pdf}
 
 \end{thebibliography}
 
@@ -294,6 +294,10 @@ Overall, we were very pleased with the smoothness of the frame rate, the reliabi
 \subsection{{\tt object\_recognition.v}}
 	  	
 \lstinputlisting{../../src/augreal/object_recognition.v}
+
+\subsection{{\tt test\_object\_recognition.v}}
+
+\lstinputlisting{../../src/test_object_recognition.v}
 	  	
 \subsection{{\tt lpf.v}}
 	  	
@@ -302,6 +306,10 @@ Overall, we were very pleased with the smoothness of the frame rate, the reliabi
 \subsection{{\tt projective\_transform.v}}
 	  	
 \lstinputlisting{../../src/augreal/projective_transform_srl.v}
+
+\subsection{{\tt projective\_transform\_testbench.v}}
+
+\lstinputlisting{../../src/test_projective_transform/test_projective_transform/projective_transform_testbench.v}
 	  	
 \subsection{{\tt divider.v}}
 	  	
