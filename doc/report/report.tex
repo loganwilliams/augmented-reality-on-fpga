@@ -29,14 +29,16 @@ We have implement an augmented reality system that can overlay a digital image o
 \section{Overview}
 % needs non-technical overview of project goals/motivations/methods
 
+The augmented reality image processing system, or {\tt augreal}, was inspired by the recursive feedback effects created by pointing a video source at its own display. Unfortunately, in doing this in the real world, there is significant loss in image quality in each successive generation. Performing the same operation in digital logic provided the opportunity to achieve the same effect with minimal image quality loss. We also choose to implement object tracking functionality, to simulate the effect of moving the video monitor around within the camera's field of view. The final output of {\tt augreal} is shown in Figure 1.
+
 \begin{figure}[h!]
 \centering
-\includegraphics[width=\textwidth]{images/IMG_0113.jpg}
+\includegraphics[width=0.75\textwidth]{images/IMG_0113.jpg}
 \caption{\emph{A screen capture of the video output of the augmented reality image processing system.}}
 \end{figure}
 
 
-The augmented reality image processing system, or {\tt augreal}, uses a four stage buffered image processing pipeline. Images from a video camera are captured into a memory buffer, which on the next frame, is partially overwritten by skewed, scaled, and rotated pixels from the last image buffer that was displayed on the VGA output. On the next frame, this overwritten buffer becomes the video output. There are seven primary modules of this system.
+The {\tt augreal} system uses a four stage buffered image processing pipeline. Images from a video camera are captured into a memory buffer, which on the next frame, is partially overwritten by skewed, scaled, and rotated pixels from the last image buffer that was displayed on the VGA output. On the next frame, this overwritten buffer becomes the video output. There are seven primary modules of this system.
 
 The {\tt clock\_gen} module is responsible for creating and phase synchronizing the clocks used by the rest of the system. Because we require a specific video clock frequency, and the amount of computation and memory accesses we must perform, it is necessary for {\tt augreal} to use three distinct clock domains: a video capture clock, at approximately 27 mhz, generated externally by the video camera, a memory clock at 50 mhz, and a video output clock at 25 mhz.
 
@@ -55,11 +57,17 @@ Raw video is read from the video camera by the {\tt ntsc\_capture} module, which
 \subsection{Submodules}
 
 \subsubsection{{\tt ntsc\_capture} (Logan)}
-The {\tt ntsc\_capture} module decodes NTSC Composite video using an Analog Devices ADV7185 video ADC and sends pixels in luminance/chrominance color space to {\tt memory\_interface} to be written into a ZBT memory frame buffer.
+The {\tt ntsc\_capture} module decodes NTSC Composite video using an Analog Devices ADV7185 video ADC and sends pixels in luminance/chrominance color space to {\tt memory\_interface} to be written into a ZBT memory frame buffer. Additionally, {\tt ntsc\_capture} is responsible for recognizing colors that matches the corner targets (blue, green, pink, and orange).
 
-Additionally, when the {\tt ntsc\_capture} module sees a color that matches the target (blue, green, red, and yellow), it sends the color and the X/Y location of the pixel to the {\tt object\_recognition} module. It also sends a flag that goes high when the entire frame has been captured, and a new one is beginning. The exact names of these outputs, and of every input/output described below can be seen on the block diagram above.
+{\tt ntsc\_capture} has three submodules, none of which were written by our team. They are described here with specific attention to their relation to the primary {\tt ntsc\_capture} module.
 
-This module can be tested by connecting it to the {\tt vga\_write} module and ensuring that the video output is the image seen by the video camera.
+\paragraph{{\tt adv7185init}} This module initializes the ADV7185 video ADC. It selects the video source (in our case, the composite video input), and wires the data streams to the {\tt labkit} module. This module was written by the 6.111 staff.
+
+\paragraph{{\tt ntsc\_decode}} This module takes the incoming data stream from the ADV7185, and decodes it into individual pixels. It also generates flags that indicate when its data output is valid, when the NTSC stream is in horizontal sync, when the NTSC stream is in vertical sync, and whether the current frame is an odd or even field. (Because NTSC video data is interlaced, each frame alternates even and odd lines of video.) This module was written by the 6.111 staff.
+
+\paragraph{{\tt ntf}} The {\tt ntsc\_capture} module generates data at the speed of the external video clock, which is ~27 Mhz. This creates problems with processing that data in modules that operate at the RAM clock speed of 50 Mhz. To solve this problem, {\tt ntf} is a dual clock domain FIFO register, generated by the Xilinx Core Generator utility. Data is written to it on the video clock domain, and read from it on the RAM clock domain. In this way, flags and pixels are synchronized correctly before being processed by {\tt memory\_interface}.
+
+{\tt ntsc\_capture} itself uses x and y iterator registers to tell {\tt memory\_interface} where to write the incoming pixels to. The x iterator variable increments every time the data valid output of {\tt ntsc\_decode} goes high. When x is even, the incoming pixel is stored in a buffer, and when it is odd, both the incoming pixel and the previously buffered pixel are sent to {\tt memory\_interface}. When a horizontal sync is detected, the y iterator variable increments by two, because of the interlacing of the video stream. When a vertical sync is detected, the x iterator variable resets to 0, but the y iterator variable resets to  the current field value, in order to ``seed'' the y iterator as even or odd. In both states, comparisons are also made with threshold parameters in luminance and chrominance to check for ``interesting'' colors, and when detected, a flag and the color detected are sent to {\tt object\_recognition} through the {\tt ntf} FIFO memory. {\tt ntsc\_capture} is also made to ignore the first 23 lines of video input, and the first 10 pixels of each line, as it was found in testing that those pixels are always blanked.
 
 \subsubsection{{\tt memory\_interface} (Jos\'{e})}
 % Jose
