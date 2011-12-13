@@ -290,29 +290,3 @@ module memory_interface
 		prev_ptf_pixel_read <= ptf_pixel_read;
 	end
 endmodule
-
-// TODO:
-// - interface with memory
-
-/* FOR REFERENCE
-	// SRAMs
-   assign ram0_data = 36'hZ;
-   assign ram0_address = 19'h0;
-   assign ram0_adv_ld = 1'b0;
-   assign ram0_clk = 1'b0;
-   assign ram0_cen_b = 1'b1;
-   assign ram0_ce_b = 1'b1;
-   assign ram0_oe_b = 1'b1;
-   assign ram0_we_b = 1'b1;
-   assign ram0_bwe_b = 4'hF;
-   assign ram1_data = 36'hZ; 
-   assign ram1_address = 19'h0;
-   assign ram1_adv_ld = 1'b0;
-   assign ram1_clk = 1'b0;
-   assign ram1_cen_b = 1'b1;
-   assign ram1_ce_b = 1'b1;
-   assign ram1_oe_b = 1'b1;
-   assign ram1_we_b = 1'b1;
-   assign ram1_bwe_b = 4'hF;
-   assign clock_feedback_out = 1'b0;
-*/
