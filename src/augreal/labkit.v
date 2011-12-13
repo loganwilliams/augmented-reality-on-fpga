@@ -186,27 +186,25 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		 analyzer4_data;
    output analyzer1_clock, analyzer2_clock, analyzer3_clock, analyzer4_clock;
 
-	////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 	//
 	// Clock Assignments
 	//
-	//////////////////////////////////////////////////////////////////////////// 
-  
-	// TODO: change global clock_65mhz to clock_50mhz
-	wire clock_65mhz, clock_50mhz_90, clock_50mhz_270, clock_25mhz, locked_ram, locked_25mhz;
+	/////////////////////////////////////////////////////////////////////////// 
+	wire clock_50mhz, clock_50mhz_90, clock_50mhz_270, clock_25mhz, locked_ram, locked_25mhz;
 	clock_gen cgen(.reset_button(button0), .clock_27mhz(clock_27mhz),
 	.clock_feedback_in(clock_feedback_in), .clock_feedback_out(clock_feedback_out),
-	.clock_50mhz(clock_65mhz), .clock_25mhz(clock_25mhz), .clock_50mhz_90(clock_50mhz_90),
+	.clock_50mhz(clock_50mhz), .clock_25mhz(clock_25mhz), .clock_50mhz_90(clock_50mhz_90),
 	.clock_50mhz_270(clock_50mhz_270),
 	.ram0_clk(ram0_clk), .ram1_clk(ram1_clk), .locked_ram(locked_ram), .locked_25mhz(locked_25mhz));
 	assign led[0] = ~locked_ram;
 	assign led[1] = ~locked_25mhz;
 	
-	////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 	//
 	// I/O Assignments
 	//
-	////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 
 	// Audio Input and Output
 	assign beep= 1'b0;
@@ -248,15 +246,6 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	// PS/2 Ports
 	// mouse_clock, mouse_data, keyboard_clock, and keyboard_data are inputs
 
-	// LED Displays
-	/*
-	assign disp_blank = 1'b1;
-	assign disp_clock = 1'b0;
-	assign disp_rs = 1'b0;
-	assign disp_ce_b = 1'b1;
-	assign disp_reset_b = 1'b0;
-	assign disp_data_out = 1'b0;*/
-	// disp_data_in is an input
 
 	// Buttons, Switches, and Individual LEDs
 	assign led[7:2] = 6'b111111;
@@ -294,9 +283,9 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		 		   .A0(1'b1), .A1(1'b1), .A2(1'b1), .A3(1'b1));
 	defparam reset_sr.INIT = 16'hFFFF;
 	
-   //////////////////////////////////////////////////////////////////////////
+   	//////////////////////////////////////////////////////////////////////////
 	//
-	// OUR MODULES: 		ntsc_capture
+	// OUR MODULES: ntsc_capture
 	// 				memory_interface
 	// 				lpf
 	// 				projective_transform,
@@ -315,27 +304,11 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire [35:0] ntsc_pixels;
 	wire [35:0] vga_pixel;
 	wire vwr;
-
-
-  
+ 
 	/*************************************
 	******* NTSC BLOCK *******************
 	**************************************/
 
-	// tv_in_ycrcb, tv_in_data_valid, tv_in_line_clock1, tv_in_line_clock2, 
-	// tv_in_aef, tv_in_hff, and tv_in_aff are inputs
-	
-	// use below if NOT using nt
-	/*assign tv_in_i2c_clock = 1'b0;
-	assign tv_in_fifo_read = 1'b0;
-	assign tv_in_fifo_clock = 1'b0;
-	assign tv_in_iso = 1'b0;
-	assign tv_in_reset_b = 1'b0;
-	assign tv_in_clock = 1'b0;
-	assign tv_in_i2c_data = 1'bZ;*/
-	// use above if NOT using ntsc_capture
-
-   	// use below if using ntsc_capture	
 	assign tv_in_fifo_read = 1'b0;
 	assign tv_in_fifo_clock = 1'b0;
 	assign tv_in_iso = 1'b0;
@@ -353,332 +326,164 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire [9:0] ntsc_x;
 	wire [8:0] ntsc_y;
 
-        // This dummy module should generate a train of pixels with linearly increasing luminosities
-        // in the x direction, and a frame_flag every 640*480 pixels
-   
-	/*
-	dummy_ntsc_capture ntsc(.clk(clock_27mhz), .clock_27mhz(clock_27mhz), .reset(reset), 
-					  .tv_in_reset_b(tv_in_reset_b),.tv_in_i2c_clock(tv_in_i2c_clock), 
-					  .tv_in_i2c_data(tv_in_i2c_data),.tv_in_line_clock1(tv_in_line_clock1),
-					  .tv_in_ycrcb(tv_in_ycrcb),.ntsc_pixels(ntsc_pixels), 
-					  .ntsc_flag(ntsc_flag),.frame_flag(frame_flag), .x(ntsc_x), .y(ntsc_y));
-	*/
-
-	wire empty, wr_ack, wr_en;
 	wire [3:0] nr;
 	wire [9:0] midcr, midcb, midy;
 	wire [1:0] color;
 	wire i_flag;
 	wire nwr;
+
+	// PARAMETER SELECTION AND SETTING
+	wire [9:0] GREEN_LUM_MAX;
+	wire [9:0] GREEN_LUM_MIN;
+	wire [9:0] GREEN_CR_MAX;
+	wire [9:0] GREEN_CR_MIN;
+	wire [9:0] GREEN_CB_MAX;
+	wire [9:0] GREEN_CB_MIN;
 	
-	//counter #(.PERIOD(833332)) ffg(.clock(clock_25mhz), .reset(reset),
-	//	.enable(frame_flag_cleaned));
-
-	reg [9:0] GREEN_LUM_MAX;
-	reg [9:0] GREEN_LUM_MIN;
-	reg [9:0] GREEN_CR_MAX;
-	reg [9:0] GREEN_CR_MIN;
-	reg [9:0] GREEN_CB_MAX;
-	reg [9:0] GREEN_CB_MIN;
+	wire [9:0] ORANGE_LUM_MAX;
+	wire [9:0] ORANGE_LUM_MIN;
+	wire [9:0] ORANGE_CR_MAX;
+	wire [9:0] ORANGE_CR_MIN;
+	wire [9:0] ORANGE_CB_MAX;
+	wire [9:0] ORANGE_CB_MIN;
 	
-	reg [9:0] ORANGE_LUM_MAX;
-	reg [9:0] ORANGE_LUM_MIN;
-	reg [9:0] ORANGE_CR_MAX;
-	reg [9:0] ORANGE_CR_MIN;
-	reg [9:0] ORANGE_CB_MAX;
-	reg [9:0] ORANGE_CB_MIN;
+	wire [9:0] PINK_LUM_MAX;
+	wire [9:0] PINK_LUM_MIN;
+	wire [9:0] PINK_CR_MAX;
+	wire [9:0] PINK_CR_MIN;
+	wire [9:0] PINK_CB_MAX;
+	wire [9:0] PINK_CB_MIN;
 	
-	reg [9:0] PINK_LUM_MAX;
-	reg [9:0] PINK_LUM_MIN;
-	reg [9:0] PINK_CR_MAX;
-	reg [9:0] PINK_CR_MIN;
-	reg [9:0] PINK_CB_MAX;
-	reg [9:0] PINK_CB_MIN;
-	
-	reg [9:0] BLUE_LUM_MAX;
-	reg [9:0] BLUE_LUM_MIN;
-	reg [9:0] BLUE_CR_MAX;
-	reg [9:0] BLUE_CR_MIN;
-	reg [9:0] BLUE_CB_MAX;
-	reg [9:0] BLUE_CB_MIN;
+	wire [9:0] BLUE_LUM_MAX;
+	wire [9:0] BLUE_LUM_MIN;
+	wire [9:0] BLUE_CR_MAX;
+	wire [9:0] BLUE_CR_MIN;
+	wire [9:0] BLUE_CB_MAX;
+	wire [9:0] BLUE_CB_MIN;
 
-	wire SELECT_LUM_MAX;
-	wire SELECT_LUM_MIN;
-	wire SELECT_CR_MAX;
-	wire SELECT_CR_MIN;
-	wire SELECT_CB_MAX;
-	wire SELECT_CB_MIN;
+	wire [63:0] hex_output;
 
-	wire [2:0] SELECT;
-	reg [9:0] selected_parameter;
-	wire [1:0] selected_color;
+	parameter_set pset(
+		.clock(clock_50mhz), .reset(reset), 
+		.switch(switch[7:3]),.hex_output(hex_output),
+		.GREEN_LUM_MAX(GREEN_LUM_MAX),
+		.GREEN_LUM_MIN(GREEN_LUM_MIN), 
+		.GREEN_CR_MAX(GREEN_CR_MAX), 
+		.GREEN_CR_MIN(GREEN_CR_MIN), 
+		.GREEN_CB_MAX(GREEN_CB_MAX), 
+		.GREEN_CB_MIN(GREEN_CB_MIN),
 
-	debounce dbc1(.clock(clock_65mhz), .reset(reset), .noisy(switch[7]), .clean(SELECT[2]));
-	debounce dbc2(.clock(clock_65mhz), .reset(reset), .noisy(switch[6]), .clean(SELECT[1]));
-	debounce dbc3(.clock(clock_65mhz), .reset(reset), .noisy(switch[5]), .clean(SELECT[0]));
+		.ORANGE_LUM_MAX(ORANGE_LUM_MAX),
+		.ORANGE_LUM_MIN(ORANGE_LUM_MIN), 
+		.ORANGE_CR_MAX(ORANGE_CR_MAX), 
+		.ORANGE_CR_MIN(ORANGE_CR_MIN), 
+		.ORANGE_CB_MAX(ORANGE_CB_MAX), 
+		.ORANGE_CB_MIN(ORANGE_CB_MIN),
 
-	debounce dbc4(.clock(clock_65mhz), .reset(reset), .noisy(switch[4]), .clean(selected_color[1]));
-	debounce dbc5(.clock(clock_65mhz), .reset(reset), .noisy(switch[3]), .clean(selected_color[0]));
+		.PINK_LUM_MAX(PINK_LUM_MAX),
+		.PINK_LUM_MIN(PINK_LUM_MIN), 
+		.PINK_CR_MAX(PINK_CR_MAX), 
+		.PINK_CR_MIN(PINK_CR_MIN), 
+		.PINK_CB_MAX(PINK_CB_MAX), 
+		.PINK_CB_MIN(PINK_CB_MIN),
 
-	wire b_clock;
-	counter #(.PERIOD(2000000)) bclk(.clock(clock_25mhz), .reset(reset),
-		.enable(b_clock));
+		.BLUE_LUM_MAX(BLUE_LUM_MAX),
+		.BLUE_LUM_MIN(BLUE_LUM_MIN), 
+		.BLUE_CR_MAX(BLUE_CR_MAX), 
+		.BLUE_CR_MIN(BLUE_CR_MIN), 
+		.BLUE_CB_MAX(BLUE_CB_MAX), 
+		.BLUE_CB_MIN(BLUE_CB_MIN));
 
-	display_16hex ds(reset, clock_27mhz, {2'd0, selected_color, 4'd0, 5'd0, SELECT, 6'd0, selected_parameter, 32'h0}, 
+	display_16hex ds(reset, clock_27mhz, hex_output,
 		disp_blank, disp_clock, disp_rs, disp_ce_b,
 		disp_reset_b, disp_data_out);
-
-	reg [9:0] LUM_MAX;
-	reg [9:0] LUM_MIN;
-	reg [9:0] CR_MAX;
-	reg [9:0] CR_MIN;
-	reg [9:0] CB_MAX;
-	reg [9:0] CB_MIN;
-	always @(*) begin
-		case (selected_color)
-		2'd0: begin
-			LUM_MAX = GREEN_LUM_MAX;
-			LUM_MIN = GREEN_LUM_MIN;
-			CR_MAX = GREEN_CR_MAX;
-			CR_MIN = GREEN_CR_MIN;
-			CB_MAX = GREEN_CB_MAX;
-			CB_MIN = GREEN_CB_MIN;
-		end
-		2'd1: begin
-			LUM_MAX = ORANGE_LUM_MAX;
-			LUM_MIN = ORANGE_LUM_MIN;
-			CR_MAX = ORANGE_CR_MAX;
-			CR_MIN = ORANGE_CR_MIN;
-			CB_MAX = ORANGE_CB_MAX;
-			CB_MIN = ORANGE_CB_MIN;
-		end
-		2'd2: begin
-			LUM_MAX = PINK_LUM_MAX;
-			LUM_MIN = PINK_LUM_MIN;
-			CR_MAX = PINK_CR_MAX;
-			CR_MIN = PINK_CR_MIN;
-			CB_MAX = PINK_CB_MAX;
-			CB_MIN = PINK_CB_MIN;
-		end
-		2'd3: begin
-			LUM_MAX = BLUE_LUM_MAX;
-			LUM_MIN = BLUE_LUM_MIN;
-			CR_MAX = BLUE_CR_MAX;
-			CR_MIN = BLUE_CR_MIN;
-			CB_MAX = BLUE_CB_MAX;
-			CB_MIN = BLUE_CB_MIN;
-		end
-		endcase
-
-		case (SELECT)
-		3'd7: selected_parameter = LUM_MAX;
-		3'd6: selected_parameter = LUM_MIN;
-		3'd5: selected_parameter = CR_MAX;
-		3'd4: selected_parameter = CR_MIN;
-		3'd3: selected_parameter = CB_MAX;
-		3'd2: selected_parameter = CB_MIN;
-		default: selected_parameter = 10'd0;
-		endcase
-	end
-
-	always @(posedge b_clock) begin
-		if (reset) begin
-			GREEN_LUM_MAX <= `GREEN_LUM_MAX;
-			GREEN_LUM_MIN <= `GREEN_LUM_MIN;
-			GREEN_CR_MAX <= `GREEN_CR_MAX;
-			GREEN_CR_MIN <= `GREEN_CR_MIN;
-			GREEN_CB_MAX <= `GREEN_CB_MAX;
-			GREEN_CB_MIN <= `GREEN_CB_MIN;
-	
-			ORANGE_LUM_MAX <= `ORANGE_LUM_MAX;
-			ORANGE_LUM_MIN <= `ORANGE_LUM_MIN;
-			ORANGE_CR_MAX <= `ORANGE_CR_MAX;
-			ORANGE_CR_MIN <= `ORANGE_CR_MIN;
-			ORANGE_CB_MAX <= `ORANGE_CB_MAX;
-			ORANGE_CB_MIN <= `ORANGE_CB_MIN;
-			
-			PINK_LUM_MAX <= `PINK_LUM_MAX;
-			PINK_LUM_MIN <= `PINK_LUM_MIN;
-			PINK_CR_MAX <= `PINK_CR_MAX;
-			PINK_CR_MIN <= `PINK_CR_MIN;
-			PINK_CB_MAX <= `PINK_CB_MAX;
-			PINK_CB_MIN <= `PINK_CB_MIN;
-
-			BLUE_LUM_MAX <= `BLUE_LUM_MAX;
-			BLUE_LUM_MIN <= `BLUE_LUM_MIN;
-			BLUE_CR_MAX <= `BLUE_CR_MAX;
-			BLUE_CR_MIN <= `BLUE_CR_MIN;
-			BLUE_CB_MAX <= `BLUE_CB_MAX;
-			BLUE_CB_MIN <= `BLUE_CB_MIN;
-		end
-		else if(~button_up) begin
-			case (selected_color)
-			2'd0:
-				case (SELECT)
-				3'd7: GREEN_LUM_MAX <= GREEN_LUM_MAX+4'b1000;
-				3'd6: GREEN_LUM_MIN <= GREEN_LUM_MIN+4'b1000;
-				3'd5: GREEN_CR_MAX <= GREEN_CR_MAX+4'b1000;
-				3'd4: GREEN_CR_MIN <= GREEN_CR_MIN+4'b1000;
-				3'd3: GREEN_CB_MAX <= GREEN_CB_MAX+4'b1000;
-				3'd2: GREEN_CB_MIN <= GREEN_CB_MIN+4'b1000;
-				endcase
-			2'd1:
-				case (SELECT)
-				3'd7: ORANGE_LUM_MAX <= ORANGE_LUM_MAX+4'b1000;
-				3'd6: ORANGE_LUM_MIN <= ORANGE_LUM_MIN+4'b1000;
-				3'd5: ORANGE_CR_MAX <= ORANGE_CR_MAX+4'b1000;
-				3'd4: ORANGE_CR_MIN <= ORANGE_CR_MIN+4'b1000;
-				3'd3: ORANGE_CB_MAX <= ORANGE_CB_MAX+4'b1000;
-				3'd2: ORANGE_CB_MIN <= ORANGE_CB_MIN+4'b1000;
-				endcase
-			2'd2:	
-				case (SELECT)
-				3'd7: PINK_LUM_MAX <= PINK_LUM_MAX+4'b1000;
-				3'd6: PINK_LUM_MIN <= PINK_LUM_MIN+4'b1000;
-				3'd5: PINK_CR_MAX <= PINK_CR_MAX+4'b1000;
-				3'd4: PINK_CR_MIN <= PINK_CR_MIN+4'b1000;
-				3'd3: PINK_CB_MAX <= PINK_CB_MAX+4'b1000;
-				3'd2: PINK_CB_MIN <= PINK_CB_MIN+4'b1000;
-				endcase
-			2'd3:
-				case (SELECT)
-				3'd7: BLUE_LUM_MAX <= BLUE_LUM_MAX+4'b1000;
-				3'd6: BLUE_LUM_MIN <= BLUE_LUM_MIN+4'b1000;
-				3'd5: BLUE_CR_MAX <= BLUE_CR_MAX+4'b1000;
-				3'd4: BLUE_CR_MIN <= BLUE_CR_MIN+4'b1000;
-				3'd3: BLUE_CB_MAX <= BLUE_CB_MAX+4'b1000;
-				3'd2: BLUE_CB_MIN <= BLUE_CB_MIN+4'b1000;
-				endcase
-			endcase
-		end
-		else if(~button_down) begin
-			case (selected_color)
-			2'd0:
-				case (SELECT)
-				3'd7: GREEN_LUM_MAX <= GREEN_LUM_MAX-4'b1000;
-				3'd6: GREEN_LUM_MIN <= GREEN_LUM_MIN-4'b1000;
-				3'd5: GREEN_CR_MAX <= GREEN_CR_MAX-4'b1000;
-				3'd4: GREEN_CR_MIN <= GREEN_CR_MIN-4'b1000;
-				3'd3: GREEN_CB_MAX <= GREEN_CB_MAX-4'b1000;
-				3'd2: GREEN_CB_MIN <= GREEN_CB_MIN-4'b1000;
-				endcase
-			2'd1:
-				case (SELECT)
-				3'd7: ORANGE_LUM_MAX <= ORANGE_LUM_MAX-4'b1000;
-				3'd6: ORANGE_LUM_MIN <= ORANGE_LUM_MIN-4'b1000;
-				3'd5: ORANGE_CR_MAX <= ORANGE_CR_MAX-4'b1000;
-				3'd4: ORANGE_CR_MIN <= ORANGE_CR_MIN-4'b1000;
-				3'd3: ORANGE_CB_MAX <= ORANGE_CB_MAX-4'b1000;
-				3'd2: ORANGE_CB_MIN <= ORANGE_CB_MIN-4'b1000;
-				endcase
-			2'd2:	
-				case (SELECT)
-				3'd7: PINK_LUM_MAX <= PINK_LUM_MAX-4'b1000;
-				3'd6: PINK_LUM_MIN <= PINK_LUM_MIN-4'b1000;
-				3'd5: PINK_CR_MAX <= PINK_CR_MAX-4'b1000;
-				3'd4: PINK_CR_MIN <= PINK_CR_MIN-4'b1000;
-				3'd3: PINK_CB_MAX <= PINK_CB_MAX-4'b1000;
-				3'd2: PINK_CB_MIN <= PINK_CB_MIN-4'b1000;
-				endcase
-			2'd3:
-				case (SELECT)
-				3'd7: BLUE_LUM_MAX <= BLUE_LUM_MAX-4'b1000;
-				3'd6: BLUE_LUM_MIN <= BLUE_LUM_MIN-4'b1000;
-				3'd5: BLUE_CR_MAX <= BLUE_CR_MAX-4'b1000;
-				3'd4: BLUE_CR_MIN <= BLUE_CR_MIN-4'b1000;
-				3'd3: BLUE_CB_MAX <= BLUE_CB_MAX-4'b1000;
-				3'd2: BLUE_CB_MIN <= BLUE_CB_MIN-4'b1000;
-				endcase
-			endcase
-		end
-	end
+	// END PARAMETER_SET
 	
 	wire enable_highlighting_and_xhairs;
 	debounce db6(
-	.clock(clock_65mhz), .reset(reset), .noisy(switch[2]),
+	.clock(clock_50mhz), .reset(reset), .noisy(switch[2]),
 	.clean(enable_highlighting_and_xhairs));
 		
 	
-	ntsc_capture ntsc(.clock_65mhz(clock_50mhz_90),
-			  .clock_27mhz(clock_27mhz),
-			  .reset(reset), 
-			  .tv_in_reset_b(tv_in_reset_b),
-			  .tv_in_i2c_clock(tv_in_i2c_clock), 
-			  .tv_in_i2c_data(tv_in_i2c_data),
-			  .tv_in_line_clock1(tv_in_line_clock1),
-			  .tv_in_ycrcb(tv_in_ycrcb),
-			  .ntsc_pixels(ntsc_pixels), 
-			  .ntsc_flag(ntsc_flag_cleaned),
-			  .o_frame_flag(frame_flag_cleaned), 
-			  .o_x(ntsc_x), 
-			  .o_y(ntsc_y),
-			  .read_state_out(wr_ack),
-			  .wr_en(wr_en),
-			  .empty(empty),
-			  .ntsc_raw(nr),
-			  .midcr(midcr),
-			  .midcb(midcb),
-			  .midy(midy),
-			  .o_i_flag(i_flag),
-			  .o_color(color),
-			  .ntsc_will_request(nwr),
-			  //.enable_highlighting(enable_highlighting_and_xhairs),
-			  .GREEN_LUM_MAX(GREEN_LUM_MAX),
-			  .GREEN_LUM_MIN(GREEN_LUM_MIN), 
-			  .GREEN_CR_MAX(GREEN_CR_MAX), 
-			  .GREEN_CR_MIN(GREEN_CR_MIN), 
-			  .GREEN_CB_MAX(GREEN_CB_MAX), 
-			  .GREEN_CB_MIN(GREEN_CB_MIN),
+	ntsc_capture ntsc(
+		.clock_50mhz(clock_50mhz_90),
+		.clock_27mhz(clock_27mhz),
+		.reset(reset), 
+		.tv_in_reset_b(tv_in_reset_b),
+		.tv_in_i2c_clock(tv_in_i2c_clock), 
+		.tv_in_i2c_data(tv_in_i2c_data),
+		.tv_in_line_clock1(tv_in_line_clock1),
+		.tv_in_ycrcb(tv_in_ycrcb),
+		.ntsc_pixels(ntsc_pixels), 
+		.ntsc_flag(ntsc_flag_cleaned),
+		.o_frame_flag(frame_flag_cleaned), 
+		.o_x(ntsc_x), 
+		.o_y(ntsc_y),
+		.read_state_out(wr_ack),
+		.wr_en(wr_en),
+		.empty(empty),
+		.ntsc_raw(nr),
+		.midcr(midcr),
+		.midcb(midcb),
+		.midy(midy),
+		.o_i_flag(i_flag),
+		.o_color(color),
+		.ntsc_will_request(nwr),
+		.GREEN_LUM_MAX(GREEN_LUM_MAX),
+		.GREEN_LUM_MIN(GREEN_LUM_MIN), 
+		.GREEN_CR_MAX(GREEN_CR_MAX), 
+		.GREEN_CR_MIN(GREEN_CR_MIN), 
+		.GREEN_CB_MAX(GREEN_CB_MAX), 
+		.GREEN_CB_MIN(GREEN_CB_MIN),
 
-			  .ORANGE_LUM_MAX(ORANGE_LUM_MAX),
-			  .ORANGE_LUM_MIN(ORANGE_LUM_MIN), 
-			  .ORANGE_CR_MAX(ORANGE_CR_MAX), 
-			  .ORANGE_CR_MIN(ORANGE_CR_MIN), 
-			  .ORANGE_CB_MAX(ORANGE_CB_MAX), 
-			  .ORANGE_CB_MIN(ORANGE_CB_MIN),
-			  
-			  .PINK_LUM_MAX(PINK_LUM_MAX),
-			  .PINK_LUM_MIN(PINK_LUM_MIN), 
-			  .PINK_CR_MAX(PINK_CR_MAX), 
-			  .PINK_CR_MIN(PINK_CR_MIN), 
-			  .PINK_CB_MAX(PINK_CB_MAX), 
-			  .PINK_CB_MIN(PINK_CB_MIN),
-			  
-			  .BLUE_LUM_MAX(BLUE_LUM_MAX),
-			  .BLUE_LUM_MIN(BLUE_LUM_MIN), 
-			  .BLUE_CR_MAX(BLUE_CR_MAX), 
-			  .BLUE_CR_MIN(BLUE_CR_MIN), 
-			  .BLUE_CB_MAX(BLUE_CB_MAX), 
-			  .BLUE_CB_MIN(BLUE_CB_MIN)
-);
+		.ORANGE_LUM_MAX(ORANGE_LUM_MAX),
+		.ORANGE_LUM_MIN(ORANGE_LUM_MIN), 
+		.ORANGE_CR_MAX(ORANGE_CR_MAX), 
+		.ORANGE_CR_MIN(ORANGE_CR_MIN), 
+		.ORANGE_CB_MAX(ORANGE_CB_MAX), 
+		.ORANGE_CB_MIN(ORANGE_CB_MIN),
+		
+		.PINK_LUM_MAX(PINK_LUM_MAX),
+		.PINK_LUM_MIN(PINK_LUM_MIN), 
+		.PINK_CR_MAX(PINK_CR_MAX), 
+		.PINK_CR_MIN(PINK_CR_MIN), 
+		.PINK_CB_MAX(PINK_CB_MAX), 
+		.PINK_CB_MIN(PINK_CB_MIN),
+		
+		.BLUE_LUM_MAX(BLUE_LUM_MAX),
+		.BLUE_LUM_MIN(BLUE_LUM_MIN), 
+		.BLUE_CR_MAX(BLUE_CR_MAX), 
+		.BLUE_CR_MIN(BLUE_CR_MIN), 
+		.BLUE_CB_MAX(BLUE_CB_MAX), 
+		.BLUE_CB_MIN(BLUE_CB_MIN)
+	);
 	
-	
-
+	/***************************************************
+	************ OBJECT_RECOGNITION BLOCK **************
+	****************************************************/
 		
 	wire [9:0] a_x, b_x, c_x, d_x;
 	wire [8:0] a_y, b_y, c_y, d_y;
-	//reg [9:0] c_x = 400;
-	//reg [8:0] c_y = 100;
 	wire corners_flag;
 	
-	/*display_16hex ds(reset, clock_27mhz, {6'b0, c_x, 6'b0, midy, 6'b0, midcr, 6'b0, midcb}, 
-		disp_blank, disp_clock, disp_rs, disp_ce_b,
-		disp_reset_b, disp_data_out);*/
+	object_recognition objr(
+		.clk(clock_50mhz),
+		.reset(reset),
+		.color(color),
+		.interesting_x(ntsc_x),
+		.interesting_y(ntsc_y),
+		.frame_flag(frame_flag_cleaned),
+		.interesting_flag(i_flag),
+		.a_x(a_x), .a_y(a_y),
+		.b_x(b_x), .b_y(b_y),
+		.c_x(c_x), .c_y(c_y),
+		.d_x(d_x), .d_y(d_y), 
+		.corners_flag(corners_flag));
 	
-	
-	object_recognition objr(.clk(clock_65mhz),
-									 .reset(reset),
-									 .color(color),
-									 .interesting_x(ntsc_x),
-									 .interesting_y(ntsc_y),
-									 .frame_flag(frame_flag_cleaned),
-									 .interesting_flag(i_flag),
-									 .a_x(a_x), .a_y(a_y),
-									 .b_x(b_x), .b_y(b_y),
-									 .c_x(c_x), .c_y(c_y),
-									 .d_x(d_x), .d_y(d_y), 
-									 .corners_flag(corners_flag));
-	
+	/******************************************
+	 ************ LPF & PT BLOCK **************
+	 ******************************************/
+
 	wire lpf_wr;
 	wire [`LOG_WIDTH-1:0] lpf_x;
 	wire [`LOG_HEIGHT-1:0] lpf_y;
@@ -693,79 +498,50 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire [`LOG_HEIGHT-1:0] pt_y;
 	wire pt_wr;
 	wire ready_pt;
-	
+
+	// for writing the test pattern	
 	wire lpf_testing;
 	debounce db4(
-		.clock(clock_65mhz), .reset(reset), .noisy(~switch[0]),
+		.clock(clock_50mhz), .reset(reset), .noisy(~switch[0]),
 		.clean(lpf_testing));
 	
-	dumb_lpf dlpf(.clock(clock_65mhz),
-				.reset(reset),
-				.frame_flag(frame_flag_cleaned),
-				.done_lpf(done_lpf),
-				.lpf_flag(lpf_flag),
-				.lpf_wr(lpf_wr),
-				.lpf_x(lpf_x),
-				.lpf_y(lpf_y),
-				.lpf_pixel_write(lpf_pixel_write),
-				.lpf_pixel_read(lpf_pixel_read),
-				.request(request),
-				.pixel(pixel_out_lpf),
-				.pixel_flag(pixel_flag),
-				.testing(lpf_testing));
+	lpf dlpf(
+		.clock(clock_50mhz),
+		.reset(reset),
+		.frame_flag(frame_flag_cleaned),
+		.done_lpf(done_lpf),
+		.lpf_flag(lpf_flag),
+		.lpf_wr(lpf_wr),
+		.lpf_x(lpf_x),
+		.lpf_y(lpf_y),
+		.lpf_pixel_write(lpf_pixel_write),
+		.lpf_pixel_read(lpf_pixel_read),
+		.request(request),
+		.pixel(pixel_out_lpf),
+		.pixel_flag(pixel_flag),
+		.testing(lpf_testing));
 	
-	projective_transform_srl pt(.clk(clock_65mhz),
-				.frame_flag(frame_flag_cleaned),
-				.pixel(pixel_out_lpf),
-				.pixel_flag(pixel_flag),
-				.done_pt(done_pt),
-				.a_x(a_x), .a_y(a_y),
-				.b_x(b_x), .b_y(b_y),
-				.c_x(c_x), .c_y(c_y),
-				.d_x(d_x), .d_y(d_y),
-				.corners_flag(corners_flag),
-				.ptflag(ready_pt),
-				.pt_pixel_write(pt_pixel),
-				.pt_x(pt_x), .pt_y(pt_y),
-				.pt_wr(pt_wr),
-				.request_pixel(request));
+	projective_transform_srl pt(
+		.clk(clock_50mhz),
+		.frame_flag(frame_flag_cleaned),
+		.pixel(pixel_out_lpf),
+		.pixel_flag(pixel_flag),
+		.done_pt(done_pt),
+		.a_x(a_x), .a_y(a_y),
+		.b_x(b_x), .b_y(b_y),
+		.c_x(c_x), .c_y(c_y),
+		.d_x(d_x), .d_y(d_y),
+		.corners_flag(corners_flag),
+		.ptflag(ready_pt),
+		.pt_pixel_write(pt_pixel),
+		.pt_x(pt_x), .pt_y(pt_y),
+		.pt_wr(pt_wr),
+		.request_pixel(request));
 				
-	//wire b_clock;
-	
-	/*always @(posedge b_clock) begin
-		if (~button_left) c_x <= c_x - 1;
-		if (~button_right) c_x <= c_x + 1;
-		if (~button_up) c_y <= c_y - 1;
-		if (~button_down) c_y <= c_y + 1;
-	end*/
-    
-	// use above if using ntsc_capture
 
-	/*************************************
-	******* SRAM BLOCK *******************
-	**************************************/
-	// use below if not using memory_interface
-	/*
-	assign ram0_data = 36'hZ;
-	assign ram0_address = 19'h0;
-	assign ram0_adv_ld = 1'b0;
-	assign ram0_cen_b = 1'b1;
-	assign ram0_ce_b = 1'b1;
-	assign ram0_oe_b = 1'b1;
-	assign ram0_we_b = 1'b1;
-	assign ram0_bwe_b = 4'hF;
-	assign ram1_data = 36'hZ; 
-	assign ram1_address = 19'h0;
-	assign ram1_adv_ld = 1'b0;
-	assign ram1_cen_b = 1'b1;
-	assign ram1_ce_b = 1'b1;
-	assign ram1_oe_b = 1'b1;
-	assign ram1_we_b = 1'b1;
-	assign ram1_bwe_b = 4'hF;   
-	*/
-	// use above if not using memory_interface
-
-	// use below if using memory_interface
+	/*****************************************************
+	*********** MEMORY_INTERFACE BLOCK *******************
+	******************************************************/
 
 	// default values	
 	assign ram0_ce_b = 1'b0;
@@ -801,11 +577,11 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	
 	wire enable_lpf_pt;
 		debounce db5(
-		.clock(clock_65mhz), .reset(reset), .noisy(~switch[1]),
+		.clock(clock_50mhz), .reset(reset), .noisy(~switch[1]),
 		.clean(enable_lpf_pt));
 
 	memory_interface mi(
-		.clock(clock_65mhz), .reset(reset), 
+		.clock(clock_50mhz), .reset(reset), 
 		.frame_flag(frame_flag_cleaned), .ntsc_flag(ntsc_flag_cleaned),
 		.ntsc_pixel(ntsc_pixels),.done_ntsc(done_ntsc), 
 		.vga_flag(vga_flag),.done_vga(done_vga),.vga_pixel(vga_pixel),
@@ -828,11 +604,12 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
 	wire enter_clean;
 	debounce db3(
-		.clock(clock_65mhz), .reset(reset), .noisy(~button_enter),
+		.clock(clock_50mhz), .reset(reset), .noisy(~button_enter),
 		.clean(enter_clean));
    	
+	// TEST PATTERN FOR TESTING MEMORY_INTERFACE AND OTHER MODULES
 	zbt_test_pattern ztp(
-			.clock(clock_65mhz), .reset(reset), .start(enter_clean),
+			.clock(clock_50mhz), .reset(reset), .start(enter_clean),
 			.mem0_addr(mem0_addrt), .mem1_addr(mem1_addrt),
 			.mem0_write(mem0_writet), .mem1_write(mem1_writet),
 			.mem0_wr(mem0_wrt), .mem1_wr(mem1_wrt));
@@ -847,7 +624,7 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	assign mem1_write = (enter_clean) ? mem1_writet : mem1_writer;
 	
 	zbt_map mem0(
-		.clock(clock_65mhz), .cen(1'b1), 
+		.clock(clock_50mhz), .cen(1'b1), 
 		.we(mem0_wr), .bwe(mem0_bwe), .addr(mem0_addr),
 		.write_data(mem0_write), .read_data(mem0_read), 
 		.ram_we_b(ram0_we_b), .ram_bwe_b(ram0_bwe_b),
@@ -855,46 +632,18 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.ram_cen_b(ram0_cen_b));
 	
 	zbt_map mem1(
-		.clock(clock_65mhz), .cen(1'b1), 
+		.clock(clock_50mhz), .cen(1'b1), 
 		.we(mem1_wr), .bwe(mem1_bwe), .addr(mem1_addr),
 		.write_data(mem1_write), .read_data(mem1_read), 
 		.ram_we_b(ram1_we_b), .ram_bwe_b(ram1_bwe_b),
 		.ram_address(ram1_address), .ram_data(ram1_data), 
 		.ram_cen_b(ram1_cen_b));
 	
-	// use above if using memory_interface
-	/*
-
-   wire [13:0] addra;
-   wire [13:0] addrb;
-   wire        wea;
-   
-   
-   
-	bram_interface bi(.clk(clock_65mhz), .ntsc_flag(ntsc_flag_cleaned), .frame_flag(frame_flag_cleaned),
-		.ntsc_pixels(ntsc_pixels), .vga_flag(vga_flag), .vsync(vga_out_vsync), .done_vga(done_vga),
-		.vga_pixels(vga_pixel), .addra(addra), .addrb(addrb), .wea(wea));
-*/
 	/*************************************
 	*******  VGA BLOCK *******************
 	**************************************/
-   	// use below if not using vga
-		/*
-	assign vga_out_red = 8'h0;
-	assign vga_out_green = 8'h0;
-	assign vga_out_blue = 8'h0;
-	assign vga_out_sync_b = 1'b1;
-	assign vga_out_blank_b = 1'b1;
-	assign vga_out_pixel_clock = 1'b0;
-	assign vga_out_hsync = 1'b0;
-	assign vga_out_vsync = 1'b0;*/
-	// use above if not using vga
-	
-	// use below if using vga
-
-   
-	stupid_vga_write vga(
-		.clock(clock_65mhz), .vclock(clock_25mhz), 
+	vga_write vga(
+		.clock(clock_50mhz), .vclock(clock_25mhz), 
 		.reset(reset), .frame_flag(frame_flag_cleaned), 
 		.vga_pixel(vga_pixel), 
 		.done_vga(done_vga), .vga_flag(vga_flag), 
@@ -914,17 +663,11 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.d_x(d_x), .d_y(d_y),
 		.vga_will_request(vwr),
 		.enable_xhairs(enable_highlighting_and_xhairs)); 
-	// use above if using vga
-	
-	// use below if testing vga
-	//dummy_mem_int dummy(.clock(clock_65mhz), .reset(reset), .frame_flag(frame_flag), .vga_pixel(vga_pixel), .done_vga(done_vga), .vga_flag(vga_flag), .hcount(hcount));
-	// use above if testing vga
-
 
 	/*************************************
 	******* LOGIC_ANALYZER ***************
 	**************************************/
-	// comment & uncomment below as necessary if not used
+	
 	assign analyzer1_clock = 1'b1;
 	assign analyzer2_clock = 1'b1;
 	assign analyzer3_clock = 1'b1;
@@ -933,32 +676,6 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	assign analyzer2_data = 16'h0;
 	assign analyzer3_data = 16'h0;
 	assign analyzer4_data = 16'h0;
-
-	// user-defined analyzers
-
-	//	assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, vga_flag, done_vga, done_ntsc, fvh, 7'b0};
-	//	assign analyzer3_data = {nx[9:0], ntsc_flag, debug_state, 4'b0};
-	
-	//assign analyzer1_data = {pt_x[9:0], pt_flag, 5'b0};
-	//assign analyzer2_data = {pt_y[8:0], 7'b0};
-	
-	//assign analyzer1_data = {pixel_flag, pixel_out_lpf[14:0]};
-	
-/*
-   assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, done_vga, done_ntsc, vga_flag, fvh, lpf_x[6:0]};
-   //assign analyzer2_data = {ntsc_x[2:0], ntsc_y[8:0], empty, wr_en, wr_ack, i_flag};
-	//assign analyzer3_data = {ntsc_pixels[15:0]};
-	
-	assign analyzer3_data = {pt_pixel[5:0], pt_x[9:0]};
-	assign analyzer2_data = {request, pixel_flag, corners_flag, done_pt, 12'b0};
-	assign analyzer4_data = {pt_y[8:0], pt_wr, done_lpf, ready_pt, mem0_bwe[3], mem0_bwe[1], mem1_bwe[3], mem1_bwe[1]};
-  */
-
-  // assign analyzer3_clock = tv_in_line_clock1;
-  // assign analyzer1_clock = clock_27mhz;
-   //assign analyzer2_clock = clock_65mhz;
-  // assign analyzer4_clock = clock_25mhz;
-
 endmodule
 
 module debounce (input reset, clock, noisy,
