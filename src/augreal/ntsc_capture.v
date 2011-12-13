@@ -3,7 +3,7 @@
 `include "params.v"
 
   module ntsc_capture(
-		      input 		clock_65mhz, // the main system clock
+		      input 		clock_50mhz, // the main system clock
 		      input 		clock_27mhz,
 		      input 		reset, // reset line
 		      output 		tv_in_reset_b, // these are all labkit wires
@@ -18,57 +18,57 @@
 		      output reg 	o_frame_flag,
 		      output reg [9:0] 	o_x,
 		      output reg [8:0] 	o_y,
-		      output 		empty,
-		      output reg 	wr_en,
-		      output 		read_state_out,
-		      output [3:0] 	ntsc_raw,
-		      output reg [9:0] 	midcr,
-		      output reg [9:0] 	midcb,
-		      output reg [9:0] 	midy,
-				output reg ntsc_will_request,
+		      
+		      output reg 	ntsc_will_request,
                 
-		      input [9:0] GREEN_LUM_MAX,
-		      input [9:0] GREEN_LUM_MIN,
-		      input [9:0] GREEN_CR_MAX,
-		      input [9:0] GREEN_CR_MIN,
-		      input [9:0] GREEN_CB_MAX,
-		      input [9:0] GREEN_CB_MIN,
+		      input [9:0] 	GREEN_LUM_MAX,
+		      input [9:0] 	GREEN_LUM_MIN,
+		      input [9:0] 	GREEN_CR_MAX,
+		      input [9:0] 	GREEN_CR_MIN,
+		      input [9:0] 	GREEN_CB_MAX,
+		      input [9:0] 	GREEN_CB_MIN,
 
-			
-                      input [9:0] ORANGE_LUM_MAX,
-		      input [9:0] ORANGE_LUM_MIN,
-		      input [9:0] ORANGE_CR_MAX,
-		      input [9:0] ORANGE_CR_MIN,
-		      input [9:0] ORANGE_CB_MAX,
-		      input [9:0] ORANGE_CB_MIN,
+                      input [9:0] 	ORANGE_LUM_MAX,
+		      input [9:0] 	ORANGE_LUM_MIN,
+		      input [9:0] 	ORANGE_CR_MAX,
+		      input [9:0] 	ORANGE_CR_MIN,
+		      input [9:0] 	ORANGE_CB_MAX,
+		      input [9:0] 	ORANGE_CB_MIN,
 
-                      input [9:0] PINK_LUM_MAX,
-		      input [9:0] PINK_LUM_MIN,
-		      input [9:0] PINK_CR_MAX,
-		      input [9:0] PINK_CR_MIN,
-		      input [9:0] PINK_CB_MAX,
-		      input [9:0] PINK_CB_MIN,
+                      input [9:0] 	PINK_LUM_MAX,
+		      input [9:0] 	PINK_LUM_MIN,
+		      input [9:0] 	PINK_CR_MAX,
+		      input [9:0] 	PINK_CR_MIN,
+		      input [9:0] 	PINK_CB_MAX,
+		      input [9:0] 	PINK_CB_MIN,
 
-                      input [9:0] BLUE_LUM_MAX,
-		      input [9:0] BLUE_LUM_MIN,
-		      input [9:0] BLUE_CR_MAX,
-		      input [9:0] BLUE_CR_MIN,
-		      input [9:0] BLUE_CB_MAX,
-		      input [9:0] BLUE_CB_MIN
+                      input [9:0] 	BLUE_LUM_MAX,
+		      input [9:0] 	BLUE_LUM_MIN,
+		      input [9:0] 	BLUE_CR_MAX,
+		      input [9:0] 	BLUE_CR_MIN,
+		      input [9:0] 	BLUE_CB_MAX,
+		      input [9:0] 	BLUE_CB_MIN
 		); // a flag that indicates when a new frame begins
 
    // initialize the adv7185 video ADC
    adv7185init adv7185(.reset(reset), .clock_27mhz(clock_27mhz), .source(1'b0),
-		       .tv_in_reset_b(tv_in_reset_b), .tv_in_i2c_clock(tv_in_i2c_clock),
+		       .tv_in_reset_b(tv_in_reset_b), 
+		       .tv_in_i2c_clock(tv_in_i2c_clock),
 		       .tv_in_i2c_data(tv_in_i2c_data));
 
+   // this module decodes the data and outputs the ycrcb pair
+   ntsc_decode decode(.clk(tv_in_line_clock1), .reset(reset),
+		      .tv_in_ycrcb(tv_in_ycrcb[19:10]), .ycrcb(ycrcb),
+		      .v(fvh[1]), .h(fvh[0]), .data_valid(dv), .f(fvh[2]));
+
+   // variables for communicating with ntsc decode
    wire [29:0] 				ycrcb;
    wire [2:0] 				fvh;
-   
    wire 				dv;
 
+   // variables for communicating with the fifo
    reg [63:0] 				din;
-   //reg 				     wr_en = 0;
+   reg 					wr_en = 0;
    wire 				rd_en;
    wire [63:0] 				dout;
    wire 				full, valid;
@@ -76,24 +76,14 @@
    reg [17:0] 				pixel_buffer;
 
    reg 					read_state;
-   assign read_state_out = read_state;
    
-   //wire 			     bufclock;
-   
-   
-   //BUFG invclock(.I(clock_65mhz), .O(bufclock));
-
-   ntf n2f(.din(din), .rd_clk(clock_65mhz), .rd_en(rd_en),
+   // this is a FIFO module for sending data between the 27 mhz video
+   // clock domain and the 50 mhz ram clock domain
+   ntf n2f(.din(din), .rd_clk(clock_50mhz), .rd_en(rd_en),
 	   .rst(reset), .wr_clk(tv_in_line_clock1), .wr_en(wr_en),
 	   .dout(dout), .empty(empty), .full(full), .valid(valid)
 	   );
    
-   
-
-   // this module decodes the data and outputs the ycrcb pair
-   ntsc_decode decode(.clk(tv_in_line_clock1), .reset(reset),
-		      .tv_in_ycrcb(tv_in_ycrcb[19:10]), .ycrcb(ycrcb),
-		      .v(fvh[1]), .h(fvh[0]), .data_valid(dv), .f(fvh[2]));
 
    reg 					state = 0;
    reg [9:0] 				x = 0;
@@ -103,7 +93,7 @@
    reg 					sh;
    reg 					rh;
    reg 					rv;
-   
+
    reg 					pulseonce;
 
    // create some convenience variables
@@ -119,29 +109,24 @@
    assign h = fvh[0];
 
    wire [8:0] 				corrected_y;
-	wire [9:0] corrected_x;
+   wire [9:0] 				corrected_x;
 
+   // create some corrected variables for output coordinates
    assign corrected_y = y - 23;
-	assign corrected_x = x - 10;
+   assign corrected_x = x - 10;
    
-   assign ntsc_raw = din[28:25];
+   reg 					orange_match, green_match, pink_match, blue_match;
 
-
-reg 					orange_match, green_match, pink_match, blue_match;
-//   assign orange_match = 0;
-//	assign green_match = 0;
-//	assign pink_match = 0;
-//	assign blue_match = 0;
-
+   // latches very short hsync and vsync flags
    always @(*) begin
       sh <= (~rh & sh) | h;
       sv <= (~rv & sv) | v;
    end
 
-	
-
    always @(posedge tv_in_line_clock1) begin
       if (dv) begin
+	 // assign match variables based on current chrominance
+	 // and luminance data
 	 orange_match <= ((cb < ORANGE_CB_MAX) & 
 			  (cr > ORANGE_CR_MIN) & 
 			  (lum > ORANGE_LUM_MIN));
@@ -170,20 +155,21 @@ reg 					orange_match, green_match, pink_match, blue_match;
       end // else: !if(dv)
    end // always @ (posedge tv_in_line_clock1)
 	
-	
-	
-   
    // synchronize to the external video line clock
    always @ (posedge tv_in_line_clock1) begin
-      
+
+      // on hsync, increment y by two (because of interlacing) and reset
+      // the x variable
       if (sh) begin
 	 y <= y + 2;
 	 x <= 0;
-	 rh <= 1;
+	 rh <= 1; // reset the latch
       end else if (x > 1) begin
 	 rh <= 0;
       end
-      
+
+      // on vsync, set the seed y value to the current field (even or odd)
+      // reset x
       if (sv) begin
 	 y <= f;
 	 x <= 0;
@@ -192,7 +178,7 @@ reg 					orange_match, green_match, pink_match, blue_match;
 	 rv <= 0;
       end
       
-      
+      // at the end of every other frame (interlacing), send a frame_flag
       if (((y > 502) | sv) & f & ~pulseonce) begin
 	 din[26] <= 1;
 	 din[27] <= 0;
@@ -201,103 +187,72 @@ reg 					orange_match, green_match, pink_match, blue_match;
 	 
 	 pulseonce <= 1;
       end else begin
-	 wr_en <= 0;
-	 
+	 wr_en <= 0;	 
       end
-      
+
+      // set a state variable so that we don't send multiple frame flags
       if (~f) begin
 	 pulseonce <= 0;
       end
       
       if (dv) begin
 	 if (y >= 23 && y < 503 && x < 650 && x > 9) begin // above 480 lines are blanked
-	    
-	    if (x == 330 && y == 265) begin
-	       midcr <= cr;
-	       midcb <= cb;
-	       midy <= ycrcb[29:20];
-	    end
-	    
 	    if (state == 0) begin
 	       
 	       // ORANGE
 	       if (orange_match) begin
-		  
-		 // pixel_buffer[17:10] <= 8'b11111111;
-		 // pixel_buffer[9:5]<= 5'b11111;
-		 // pixel_buffer[4:0] <= 5'b00000;
-
 		  // we have detected a pixel, so spit out an interesting flag, and
 		  // the current coordinates
-		  din[27] <= 0;
-		  
-		  din[4] <= 1;
-		  din[6:5] <= 2'b00;
+		  din[27] <= 0; // ntsc_flag
+		  din[4] <= 1; // interesting_flag
+		  din[6:5] <= 2'b00; // color
 		  din[25:16] <= corrected_x;
 		  din[15:7] <= corrected_y;
+		  wr_en <= 1; // and write it into the FIFO
 		  
-		  wr_en <= 1;
-		  
-		  // GREEN
+	       // GREEN (same as above)
 	       end else if (green_match)  begin
-
-		//  pixel_buffer[17:10] <= 8'b11111111;
-		 // pixel_buffer[9:5] <= 5'b00000;
-		// pixel_buffer[4:0] <= 5'b00000;
 		  din[27] <= 0;
-		  
 		  din[4] <= 1;
 		  din[6:5] <= 2'b11;
 		  din[25:16] <= corrected_x;
 		  din[15:7] <= corrected_y;
-		  
 		  wr_en <= 1;
 
-		  
-		  // PINK
+	       // PINK (same as above)
 	       end else if (pink_match) begin
-		  
-		 // pixel_buffer[17:10] <= 8'b11111111;
-		 // pixel_buffer[9:5] <= 5'b11111;
-		 //pixel_buffer[4:0] <= 5'b11111;
 		  din[27] <= 0;
-		  
 		  din[4] <= 1;
 		  din[6:5] <= 2'b01;
 		  din[25:16] <= corrected_x;
 		  din[15:7] <= corrected_y;
 		  wr_en <= 1;
 
-		  
-		  // BLUE
-	       end else if (blue_match)  begin
-		  
-		  //pixel_buffer[17:10] <= 8'b11111111;
-		  //pixel_buffer[9:5] <= 5'b00000;
-		  //pixel_buffer[4:0] <= 5'b11111;
+	       // BLUE (same as above)
+	       end else if (blue_match) begin
 		  din[27] <= 0;
-		  
 		  din[4] <= 1;
 		  din[6:5] <=2'b10;
 		  din[25:16] <= corrected_x;
 		  din[15:7] <= corrected_y;
 		  wr_en <= 1;
 
+	       end else begin
+		  // we only output on state 0 if interesting pixels have been
+		  // detected
 		  
-	       end else begin 
-			 
-
 		  wr_en <= 0;
+		  
+		  // if we didn't detect a pixel, don't write anything
+		  // in this state
 	       end
 	       
-	       
-		  pixel_buffer[17:10] <= ycrcb[29:22];
-		  pixel_buffer[9:5] <= ycrcb[19:15];
-		  pixel_buffer[4:0] <= ycrcb[9:5];
-	       state <= 1;
+	       // save this pixel to be written in the next state
+	       pixel_buffer[17:10] <= ycrcb[29:22];
+	       pixel_buffer[9:5] <= ycrcb[19:15];
+	       pixel_buffer[4:0] <= ycrcb[9:5];
+	       state <= 1; // advance the state
 
-	       // we only output on state 0 if interesting pixels have been
-	       // detected
 	       
 	    end else begin
 	       state <= 0;
@@ -307,54 +262,34 @@ reg 					orange_match, green_match, pink_match, blue_match;
 
 	       // ORANGE
 	       if (orange_match) begin
-		  //din[45:38] <= 8'b11111111;
-		  //din[37:33] <= 5'b11111;
-		  //din[32:28] <= 5'b00000;
-		  din[4] <= 1;
-		  din[6:5] <= 2'b00;
+		  din[4] <= 1; // output an interesting flag if an interesting
+		  din[6:5] <= 2'b00; // color is detected
 
-		  // GREEN
+	       // GREEN
 	       end else if (green_match) begin
-		  
-		  //din[45:38] <= 8'b11111111;
-		  //din[37:33] <= 5'b10000;
-		  //din[32:28] <= 5'b10000;
 		  din[4] <= 1;
 		  din[6:5] <= 2'b11;
 
-
-		  // PINK
+	       // PINK
 	       end else if (pink_match)  begin
-		  
-		  
-		  //din[45:38] <= 8'b11111111;
-		  //din[37:33] <= 5'b11111;
-		  //din[32:28] <= 5'b11111;
 		  din[4] <= 1;
 		  din[6:5] <= 2'b01;
-
-
-		  // BLUE
-	       end else if (blue_match) begin
 		  
-		  //din[45:38] <= 8'b11111111;
-		  //din[37:33] <= 5'b00000;
-		  //din[32:28] <= 5'b11111;	
+	       // BLUE
+	       end else if (blue_match) begin	
 		  din[4] <= 1;
 		  din[6:5] <= 2'b10;
 		  
 	       end else begin // if ((cb > BLUE_CB_MIN) &...
-		  
-
 		  din[6:5] <= 2'b00;
 		  din[4] <= 1'b0;
 		  
 	       end // else: !if((cb > BLUE_CB_MIN) &...
 	       
-		  din[45:38] <= ycrcb[29:22];
-		  din[37:33] <= ycrcb[19:15];
-		  din[32:28] <= ycrcb[9:5];
-	       din[27] <= 1;
+	       din[45:38] <= ycrcb[29:22];
+	       din[37:33] <= ycrcb[19:15];
+	       din[32:28] <= ycrcb[9:5];
+	       din[27] <= 1; // ntsc_flag
 	       din[26] <= 0;
 	       din[25:16] <= corrected_x;
 	       din[15:7] <= corrected_y;
@@ -364,24 +299,26 @@ reg 					orange_match, green_match, pink_match, blue_match;
 	    end // else: !if(state == 0)
 
 	 end // if (y < 480 && x < 640)
-	 x <= x + 1;
+	 
+	 x <= x + 1; // increment the x variable
 	 
       end // if (dv)
       
 
-      if (reset) begin
-	 state <= 0;
+      if (reset) begin // on reset
+	 state <= 0; // reset everything
 	 x<= 0;
 	 y <= 0;
       end   
    end // always @ (posedge tv_in_line_clock1)
 
+   // read from the FIFO whenever it is not empty
    assign rd_en = ~empty;
    
    // Synchronize outputs to main system clock
-   always @ (posedge clock_65mhz) begin
-		ntsc_will_request <= 0;
-	
+   always @ (posedge clock_50mhz) begin
+      ntsc_will_request <= 0;
+      
       // if the FIFO is not empty
       if (rd_en) begin
 	 read_state <= 1;
@@ -389,6 +326,7 @@ reg 					orange_match, green_match, pink_match, blue_match;
       end else begin
 	 read_state <= 0;
       end
+      
       // we have data
       if (read_state) begin
 	 ntsc_pixels <= dout[63: 28];
@@ -409,26 +347,9 @@ reg 					orange_match, green_match, pink_match, blue_match;
 	 o_color <= 0;
 	 o_i_flag <= 0;
       end
-      
-   end   
-
-endmodule // ntsc_capture
-
-
-// This module takes an input (sig), and produces an output (syncsig),
-// that goes high as soon as sig does, and stays high until reset goes high.
-module synchronize(
-		   input      sig,
-		   input      reset,
-		   output reg syncsig);
+   end // always @ (posedge clock_50mhz)
    
-   always @(*) begin
-      if (sig) syncsig <= 1;
-
-      if (reset) syncsig <= 0;
-   end
-endmodule
-
+endmodule // ntsc_capture
 
 // These modules are used to grab input NTSC video data from the RCA
 // phono jack on the right hand side of the 6.111 labkit (connect
