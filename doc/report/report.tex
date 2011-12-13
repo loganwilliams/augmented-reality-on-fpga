@@ -5,7 +5,8 @@
 \usepackage{mathtools}
 \usepackage{setspace}
 \usepackage{mdwlist}
-\usepackage[center]{caption}
+\usepackage[center,font=singlespacing]{caption}
+\usepackage{subfig}
 \onehalfspacing
 
 \begin{document}
@@ -122,10 +123,7 @@ This module reads data from {\tt memory\_interface} and displays this data on th
 
 The fetched data consists of 36 bits, totalling two pixels. Every vclock cycle, the bits converted using {\tt ycrcb2rgb} are alternated between the higher-order 18 bits and the lower order 18 bits. The higher order 18 bits correspond to even pixels and the lower order 18 bits correspond to odd pixels. This set of control signals and pixel values is then pipelined, so that on the next rising edge these values are fed to the vga chip. The clock assigned to the vga chip (vga\_out\_clock) is an inverted copy of the onboard 25MHz clock, due to the high path propagation delay from the FPGA to the video DAC.
 
-\subsubsubsection{{\tt xvga}}
-
-
-
+\paragraph{{\tt xvga}}
 
 
 The {\tt vga\_write} section is straightforward and will basically be a clone of the VGA code used in Lab 2 (Pong). Essentially, the output will be refreshed at a rate of 60Hz and output at a resolution of 640x480 pixels. This module will read the pixel values from displayed image and assign it based on the {\it hcount} and {\tt vcount} variables, which will be incremented accordingly. The clock signal used for this module will be synthesized with the ISE's toolkit. This module will be tested by loading a standardized image to memory and verifying whether {\tt vga\_write} displays this image properly on the monitor.
