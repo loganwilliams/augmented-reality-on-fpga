@@ -5,7 +5,8 @@
 \usepackage{mathtools}
 \usepackage{setspace}
 \usepackage{mdwlist}
-\usepackage[center]{caption}
+\usepackage[center,font=singlespacing]{caption}
+\usepackage{subfig}
 \onehalfspacing
 
 \begin{document}
@@ -121,6 +122,15 @@ The {\tt LPF} module, which sends pixel data to the {\tt projective\_transform} 
 
 \subsubsection{{\tt vga\_write} (Jos\'{e})}
 % Jose
+This module reads data from {\tt memory\_interface} and displays this data on the screen. Housed inside this module are (1) {\tt xvga}, which generates the VGA control signals necessary to display data on the screen, and (2) {\tt ycrcb2rgb}, which converts the fetched 18-bit YCrCb values to 24-bit RGB values suitable for display.
+
+{\tt vga\_write} ``flags'' {\tt memory\_interface} and provides the interface the (x,y) coordinates of the pixel to be displayed, which correspond to the hcount and vcount variables being output from the {\tt xvga} submodule. Because the {\tt xvga} module is clocked at 25MHz and {\tt memory\_interface} is clocked at 50MHz, care must be taken when requesting and reading pixels. Due to the implicit four-cycle delay of {\tt memory\_interface}, the outputs of {\tt xvga} must be delayed by two video clock cycles, so that the pixels that are output to the monitor correspond the control signals at the moment of ``flagging''. 
+
+The fetched data consists of 36 bits, totalling two pixels. Every vclock cycle, the bits converted using {\tt ycrcb2rgb} are alternated between the higher-order 18 bits and the lower order 18 bits. The higher order 18 bits correspond to even pixels and the lower order 18 bits correspond to odd pixels. This set of control signals and pixel values is then pipelined, so that on the next rising edge these values are fed to the vga chip. The clock assigned to the vga chip (vga\_out\_clock) is an inverted copy of the onboard 25MHz clock, due to the high path propagation delay from the FPGA to the video DAC.
+
+\paragraph{{\tt xvga}}
+
+
 The {\tt vga\_write} section is straightforward and will basically be a clone of the VGA code used in Lab 2 (Pong). Essentially, the output will be refreshed at a rate of 60Hz and output at a resolution of 640x480 pixels. This module will read the pixel values from displayed image and assign it based on the {\it hcount} and {\tt vcount} variables, which will be incremented accordingly. The clock signal used for this module will be synthesized with the ISE's toolkit. This module will be tested by loading a standardized image to memory and verifying whether {\tt vga\_write} displays this image properly on the monitor.
 
 \section{Debugging and Testing}
@@ -153,4 +163,3 @@ To test {\tt projective\_transform}, a test jig was developed that provided the 
 
 
 \end{document}
-
