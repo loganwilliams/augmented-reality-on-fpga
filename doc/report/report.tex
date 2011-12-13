@@ -11,13 +11,13 @@
 \onehalfspacing
 
 \begin{document}
-\title{Augmented Reality Image Processing System}
+\title{Recursive Augmented Reality Image Processing System}
 \author{Logan P. Williams \& Jos\'{e} E. Cruz Serrall\'{e}s}
 \date{December 10, 2011}
 \maketitle
 
 \section*{Abstract}
-We have implement an augmented reality system that can overlay a digital image on video of a real world environment. We read NTSC video from a video camera and store it in ZBT SRAM. A picture frame with colored markers on the corners is held in front of the camera. We then perform chroma-based object recognition to locate the coordinates of the corners. Using these coordinates, we apply a low-pass filter and a projective transformation to project an image onto the dimensions of the picture frame. We then output VGA video of the original captured image, with the processed image overlayed on top of the frame.
+We have implemented an augmented reality system that can overlay a digital image on video of a real world environment. We read NTSC video from a video camera and store it in ZBT SRAM. A picture frame with colored markers on the corners is held in front of the camera. We then perform chroma-based object recognition to locate the coordinates of the corners. Using these coordinates, we apply a projective transformation to project an image onto the dimensions of the picture frame. We then output VGA video of the original captured image, with the processed image overlayed on top of the frame. By using the previously displayed video frame as the image to be projected, the system becomes ``recursive.''
 
 \newpage
 
@@ -177,6 +177,18 @@ The luminance and chrominances have bitwidths of 8, 5, and 5, respectively. Init
 
 Debugging and testing Verilog-defined hardware is complicated by extremely lengthy synthesis and implementation times. Because of this, we performed as much testing as possible in the ModelSim simulation environment. While ModelSim proved very fast and effective for ensuring that behavior logic was correct, it failed to help us determine the source of many physical timing bugs, such as setup and hold time violations on communications with the external ZBT memories.
 
+\subsection{Testing the corner recognition}
+
+Initially, the behavior of {\tt object\_recognition} was tested in a simulated testbench in ModelSim. This was a straightforward process, as most of the problems found were due to mistakes in the behavior logic. Once synthesized, the majority of the modifications that needed to be made to corner recognition involved adjusting the thresholding values used in {\tt ntsc\_capture} to detect colors. To facilitate this process, we implemented several features.
+
+The module {\tt parameter\_set} allows the thresholding parameters to be adjusted in real time, without recompiling the verilog. Color highlighting was added to {\tt ntsc\_recognition} so that pixels identified as a certain color would stand out from the rest of the image, and parameters could be tuned to balance the amount of extraneous detection with the intensity of intended detections. Finally, a crosshair display was added to {\tt vga\_write}, showing in real time the calculated corner positions on the video output.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.75\textwidth]{images/IMG_0131.JPG}
+\caption{\emph{Highlighting recognized colors, and displaying crosshairs on corners, so that color detection thresholds could be set more precisely.}}
+\end{figure}
+
 \subsection{Testing {\tt projective\_transform}}
 
 To test {\tt projective\_transform}, a test jig was developed that provided the module with a list of input pixels, of linearly increasing luminance. The test jig also took the output of {\tt projective\_transform}, and saved it into an external file, along with the x and y coordinates of each output pixel. A MATLAB script was then used to display the results of {\tt projective\_transform}, along with the original image. The result of this MATLAB script is shown below. In this way, the algorithm used by {\tt projective\_transform} to distort the image was known to be correct.
@@ -188,8 +200,19 @@ To test {\tt projective\_transform}, a test jig was developed that provided the 
 \caption{\emph{On the left, the sample input image used to test {\tt projective\_transform}. On the right, the output image from the testbench.}}
 \end{figure}
 
+However, this behavior simulation did not locate several problems that we had with setup and hold times on the signals that {\tt projective\_transform} transmits to {\tt memory\_interface}. In order to more easily diagnose these issues, we created a mode where {\tt lpf} sent a test pattern to {\tt projective\_transform} instead of real image data. With this mode enabled, it became very clear what the pattern of misplaced and miswritten pixels was.
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.75\textwidth]{images/IMG_0121.JPG}
+\caption{\emph{Processing a test pattern instead of real image data, to decouple {\tt lpf} from {\tt memory\_interface}, and to make bugs in {\tt projecting\_transform} easier to recognize and diagnose.}}
+\end{figure}
+
+The logic analyzer also proved quite helpful for discovering these timing violations. However, we occasionally noticed that connecting a wire to the logic analyzer outputs was sufficient to change the behavior of the synthesized hardware, as it changed the synthesized routing path, and thus the routing delay. For this reason, using techniques such as the test pattern above for inferring the sources of bugs was necessary.
+
 \subsection{Testing {\tt memory\_interface}}
 {\tt memory\_interface} will be tested in stages. Initially, basic read and write functionality will be assessed in simulation and then on the FPGA. Once we have written and read information from the ZBT RAM successfully, we will attempt to write, read, and display an image. Finally, all of the logic pertaining to handling read and write requests from all the modules simulatenously will be written, tested using extensive testbenches, and finally tested on an FPGA with dummy modules. All of this testing should avoid help us avoid headaches during final integration.
+
 
 \section{Conclusion}
 
@@ -209,5 +232,10 @@ To test {\tt projective\_transform}, a test jig was developed that provided the 
 
 \end{thebibliography}
 
+
+\appendix
+
+\section{Project Source Code}
+\subsection{{\tt labkit.v}}
 
 \end{document}
