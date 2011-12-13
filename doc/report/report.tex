@@ -227,7 +227,7 @@ The logic analyzer also proved quite helpful for discovering these timing violat
 
 In lab, {\tt memory\_interface} was debugged by inputting test sequences into the RAM, placing requests on the (x,y) coordinates corresponding to the locations that were directly writtent to, and viewing the result on the logic analyzer. Once adequate functionality was ensured, this module was tested in conjunction with {\tt vga\_display} and {\tt ntsc\_capture}. Undesired behavior was seen in the output of {\tt memory\_interface} through {\tt vga\_display} until the clocks were synthesized correctly and the timing constraints were added to the constraints file. When the constraints were added, the ISE informed us of several critical pathways in {\tt memory\_interface}, which we then pipelined, resulting in a delay of four cycles, instead of the original two. However, this new {\tt memory\_interface} could now be run at frequencies much higher than the intended 50MHz.
 
-A very sutble bug was introduced when we edited {\tt zbt\_6111} and changed it into {\tt zbt\_map}: When writing to the RAM, the data was being delayed by one clock cycle, instead of two. This problem manifested itself in very minor distortions in the video output, which we were able to ignore until the end of the development process. Once that typo was corrected, the pathway from {\tt ntsc\_capture} to {\tt vga\_display} was flawless (to a reasonable approximation).
+A very sutble bug was introduced when we edited {\tt zbt\_6111} and changed it into {\tt zbt\_map}: When writing to the RAM, the data was being delayed by one clock cycle, instead of two. This problem manifested itself in very minor distortions in the video output, which we were able to ignore until the end of the development process. Once that typo was corrected, the pathway from {\tt ntsc\_capture} to {\tt vga\_display} was nearly perfect.
 
 \subsection{Testing {\tt vga\_display}}
 {\tt vga\_display} went through many iterations, as the needs and structure of the project changed. When we settled on using 25MHz and 50MHz clocks, the structure of {\tt vga\_display} matured to its current state. When we were considering clocks whose positive edges were not in phase, FIFOs were considered. However, writing a {\tt vga\_display} with two FIFOs proved to be very difficult, especially in guaranteeing constant throughput that is required by the video IC.
@@ -252,10 +252,16 @@ Overall, we were very pleased with the smoothness of the frame rate, the reliabi
   Available: \\ \url{http://devel-rok.informatik.hu-berlin.de/svn/TI2/2006/folien/pdf/eng\_ca12.pdf}
 
 \bibitem{xvga}
-  \url{http://web.mit.edu/6.111/www/f2011/index.html} [REFORMAT ME]
+  Ickes, Nathan.
+  2007.
+  \emph{VGA Video Output}
+  \url{http://www-mtl.mit.edu/Courses/6.111/labkit/vga.shtml}
 
 \bibitem{ycrcb}
-  XAPP283: Color Space Converter (\url{http://www-mtl.mit.edu/Courses/6.111/labkit/appnotes/xapp283.pdf}) [REFORMAT ME]
+  Pillai, Latha.
+  2001.
+  \emph{XAPP283: Color Space Converter}
+  \url{http://www-mtl.mit.edu/Courses/6.111/labkit/appnotes/xapp283.pdf}`:w
 
 \end{thebibliography}
 
