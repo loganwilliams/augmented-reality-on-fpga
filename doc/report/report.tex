@@ -9,8 +9,11 @@
 \usepackage{subfig}
 \usepackage{hyperref}
 \onehalfspacing
+\usepackage{listings}	  	
+\usepackage{verbatim}
 
 \begin{document}
+\lstset{language=Verilog,numbers=left, numberstyle=\tiny, stepnumber=2, numbersep=5pt,basicstyle=\footnotesize,frame=Tl}	
 \title{Recursive Augmented Reality Image Processing System}
 \author{Logan P. Williams \& Jos\'{e} E. Cruz Serrall\'{e}s}
 \date{December 10, 2011}
@@ -191,6 +194,15 @@ Debugging and testing Verilog-defined hardware is complicated by extremely lengt
 
 \subsection{Testing the video pathway}
 Our testing and integration procedures began by testing that pixels could be read by {\tt ntsc\_capture}, written into memory by {\tt memory\_interface}, and finally displayed by {\tt vga\_write}.
+
+Because the operation of {\tt ntsc\_capture} depends greatly on external input (the video camera), our testing procedure for this module began on the labkit. Initially, the logic analyzer was simply set to probe the generated pixel values and ensure that they were generating output that seemed reasonable. When the camera lens was covered for example, the magnitude of pixels generated decreased, which seemed reasonable.
+
+After connecting {\tt ntsc\_capture} to {\tt memory\_interface} and to {\tt vga\_write} however, we noticed severe distortion in the output video. This was ultimately caused by the aforementioned setup and hold time violation issues, both in writing and reading from ZBT memory, and in writing to the VGA output DAC. Through extensive amounts of timing analysis on the logic analyzer, pipelining of modules, and replacing multipliers by lookup ROMs, these timing problems were ultimately eliminated. As described in {\tt clock\_gen} above, learning to add timing constraints on our clock signals to the Xilinx UCF file helped significantly, as it told Xilinx to generate useful timing reports for finding critical paths through our logic.
+
+After the black and white video output was displayed cleanly, other features, such as color processing and color recognition, were added incrementally, as it was often difficult to be certain what effects significant changes would have on the timing of the synthesized logic.
+
+\subsection{Testing the corner recognition}
+
 Initially, the behavior of {\tt object\_recognition} was tested in a simulated testbench in ModelSim. This was a straightforward process, as most of the problems found were due to mistakes in the behavior logic. Once synthesized, the majority of the modifications that needed to be made to corner recognition involved adjusting the thresholding values used in {\tt ntsc\_capture} to detect colors. To facilitate this process, we implemented several features.
 
 The module {\tt parameter\_set} allows the thresholding parameters to be adjusted in real time, without recompiling the verilog. Color highlighting was added to {\tt ntsc\_recognition} so that pixels identified as a certain color would stand out from the rest of the image, and parameters could be tuned to balance the amount of extraneous detection with the intensity of intended detections. Finally, a crosshair display was added to {\tt vga\_write}, showing in real time the calculated corner positions on the video output.
@@ -265,10 +277,52 @@ Overall, we were very pleased with the smoothness of the frame rate, the reliabi
 
 \end{thebibliography}
 
-
+\newpage
 \appendix
-
 \section{Project Source Code}
 \subsection{{\tt labkit.v}}
+
+\lstinputlisting{../../src/augreal/labkit.v}
+	  	
+\subsection{{\tt ntsc\_capture.v}}
+	  	
+\lstinputlisting{../../src/augreal/ntsc_capture.v}
+\subsection{{\tt memory\_interface.}}
+	  	
+\lstinputlisting{../../src/augreal/memory_interface.v}
+	  	
+\subsection{{\tt object\_recognition.v}}
+	  	
+\lstinputlisting{../../src/augreal/object_recognition.v}
+	  	
+\subsection{{\tt lpf.v}}
+	  	
+\lstinputlisting{../../src/augreal/lpf.v}
+	  	
+\subsection{{\tt projective\_transform.v}}
+	  	
+\lstinputlisting{../../src/augreal/projective_transform_srl.v}
+	  	
+\subsection{{\tt divider.v}}
+	  	
+\lstinputlisting{../../src/augreal/divider.v}
+	  	
+\subsection{{\tt clock\_gen.v}}
+\lstinputlisting{../../src/augreal/clock_gen.v}
+	  	
+\subsection{{\tt vga\_write.v}}
+	  	
+\lstinputlisting{../../src/augreal/vga_write_new.v}
+	  	
+\subsection{{\tt ycbcr2rgb.v}}
+	  	
+\lstinputlisting{../../src/augreal/ycbcr2rgb.v}
+	  	
+\subsection{{\tt parameter\_set.v}}	  	
+\lstinputlisting{../../src/augreal/parameter_set.v}
+\subsection{{\tt params.v}}	  	
+\lstinputlisting{../../src/augreal/params.v}	  	
+\subsection{{\tt zbt\_test\_pattern.v}}  	
+\lstinputlisting{../../src/augreal/zbt_test_pattern.v}
 
 \end{document}
