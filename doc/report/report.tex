@@ -237,7 +237,11 @@ The {\tt xvga} module was not tested because it had been written and tested by 6
 \section{Conclusion}
 % The conclusion of a project report typically summarizes the most important or innovative design features. The conclusion also often suggests ways in which the design could be improved. In your 6.111 report you should also make a point of summarizing the test results. If these were not fully satisfactory, they provide a natural basis for suggesting improvements. As a guide to others, it is very helpful to include some discussion of the problems you met in your initial design and what you did to overcome these problems. 
 
+The Augmented Reality Image Processing System used digital logic to scale, skew, rotate, and translate a video image to specific coordinates in real time. It was also able to precisely locate the corners of a frame in the image by looking for specific hues. While we did not have time to implement the planned low pass filter, the output of {\tt augreal} was already of an acceptably high quality.
 
+Possible improvements include adding the aforementioned low pass filter, allowing arbitrary image files to be displayed, and improving object recognition to use algorithms that do not rely on hue markers. However, because {\tt augreal} already has a very high throughput of 79 MiB of data per second, and a relatively fast clock frequency of 50 Mhz, adding these modification would require extending the length of the image processing pipeline beyond four frame buffers, which would require additional RAM hardware.
+
+Overall, we were very pleased with the smoothness of the frame rate, the reliability of the corner recognition, the success of our use of ZBT memory, the appearance of the image projection, and the overall ``wow'' and ``fun'' of the system.
 
 \begin{thebibliography}{9}
 
