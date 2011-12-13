@@ -31,7 +31,7 @@ We have implement an augmented reality system that can overlay a digital image o
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=\textwidth]{images/IMG_0113.jpg}
+\includegraphics[width=\textwidth]{images/IMG_0113.JPG}
 \caption{\emph{A screen capture of the video output of the augmented reality image processing system.}}
 \end{figure}
 
@@ -63,13 +63,11 @@ This module can be tested by connecting it to the {\tt vga\_write} module and en
 
 \subsubsection{{\tt memory\_interface} (Jos\'{e})}
 % Jose
-The {\tt memory\_interface} module handles the interaction between all of the other modules and the two ZBT Memory blocks, which house the four images that the modules use for capturing, displaying, and processing. Ideally, BRAM would have been used, but the number of pixels that we would like to store vastly exceeds BRAM capacity. Unlike BRAM, each ZBT Memory block can only handle one read or write operation per cycle, causing memory access to be the main bottleneck of our system. As such, we will store only the six most significant bits of each component of every pixel, allowing us to store two pixels per address and to reduce the number of memory accesses in our system by a factor of two. The number of required memory acceses per module and the distribution of the images in the RAM necessitates a minimum clock frequency of 50.7MHz, which is reasonable given the propagation delays of multipliers and other elements.
+The {\tt memory\_interface} module handles the interaction between all of the other modules and the two ZBT Memory blocks, which house the four images that the modules use for capturing, displaying, and processing. Ideally, BRAM would have been used, but the number of pixels that we would like to store vastly exceeds BRAM capacity. Unlike BRAM, each ZBT Memory block can only handle one read or write operation per cycle, causing memory access to be the main bottleneck of our system. As such, we store only 8 bits of luminance and 5 bits of each chrominance per pixel, allowing us to store two pixels per address and to reduce the number of memory accesses in our system by a factor of two. The number of required memory acceses per module and the distribution of the images in the RAM necessitates a minimum clock frequency of 35MHz, which is reasonable given the propagation delays of multipliers and other elements.
 
-{\tt memory\_interface} will allocate two images per memory block. These four images will be (1) {\it capture}, the image being captured from NTSC; (2) {\it display}, the image being displayed in the VGA; (3) {\it processing}, the image that will be processed by {\tt LPF}; and (4) {\it next\_display}, the image to which {\tt projective\_transform} will write and the next image that will be displayed. Every image refresh (1/30 seconds), the previous {\it next\_display}, {\it display}, {\it capture}, and {\it processing} image locations will become the next {\it display}, {\it processing}, {\it next\_display}, and {\it capture} image locations, respectively. These location shifts will be transparent to the other modules. Read and write requests from {\tt vga\_write} and {\tt ntsc\_capture} will be given priority over requests from other modules.
+{\tt memory\_interface} allocates two images per memory block. These four images are (1) {\it capture}, the image being captured from NTSC; (2) {\it display}, the image being displayed in the VGA; (3) {\it processing}, the image that is processed by {\tt LPF}; and (4) {\it next\_display}, the image to which {\tt projective\_transform} writes and the next image that will be displayed. Every image refresh (1/30 seconds), the previous {\it next\_display}, {\it display}, {\it capture}, and {\it processing} image locations become the next {\it display}, {\it processing}, {\it next\_display}, and {\it capture} image locations, respectively. These location shifts will be transparent to the other modules. Read and write requests from {\tt vga\_write} and {\tt ntsc\_capture} will be given priority over requests from other modules.
 
-The inputs to {\tt memory\_interface} are (1) frame\_flag, which signals when to shift; (2) two pixels from {\tt ntsc\_capture}; (3) two (x,y) pairs, one from {\tt LPF} and one from {\tt projective\_transform}; (4) two pixels from {\tt LPF}; (5) one pixel from {\tt projective\_transform}; and (6) request flags and (7) write flags from other submodules. The outputs from {\tt memory\_interface} are (1) done flags; (2) one pixel to {\tt vga\_write}; and (3) two pixels to {\tt LPF}.
-
-{\tt memory\_interface} will be tested in stages. Initially, basic read and write functionality will be assessed in simulation and then on the FPGA. Once we have written and read information from the ZBT RAM successfully, we will attempt to write, read, and display an image. Finally, all of the logic pertaining to handling read and write requests from all the modules simulatenously will be written, tested using extensive testbenches, and finally tested on an FPGA with dummy modules. All of this testing should avoid help us avoid headaches during final integration.
+The inputs to {\tt memory\_interface} are (1) {\tt frame\_flag}, which signals when to shift; (2) {\tt ntsc\_pixel}, the two pixels from {\tt ntsc\_capture}; (3) four (x,y) pairs; (4) one pixel from {\tt projective\_transform}; and (5) request flags. The outputs from {\tt memory\_interface} are (1) done flags; (2) a pixel pair to {\tt vga\_write}; and (3) two pixels to {\tt LPF}.
 
 \subsubsection{{\tt object\_recognition} (Logan)}
 The {\tt object\_recognition} module collects ``interesting'' pixels located by the NTSC Capture module, and calculates the center of mass of each color, to find the location of the corners of the picture frame.
@@ -178,7 +176,9 @@ To test {\tt projective\_transform}, a test jig was developed that provided the 
 \caption{\emph{On the left, the sample input image used to test {\tt projective\_transform}. On the right, the output image from the testbench.}}
 \end{figure}
 
- 
+\subsection{Testing {\tt memory\_interface}}
+{\tt memory\_interface} will be tested in stages. Initially, basic read and write functionality will be assessed in simulation and then on the FPGA. Once we have written and read information from the ZBT RAM successfully, we will attempt to write, read, and display an image. Finally, all of the logic pertaining to handling read and write requests from all the modules simulatenously will be written, tested using extensive testbenches, and finally tested on an FPGA with dummy modules. All of this testing should avoid help us avoid headaches during final integration.
+
 \section{Conclusion}
 
 \begin{thebibliography}{9}
