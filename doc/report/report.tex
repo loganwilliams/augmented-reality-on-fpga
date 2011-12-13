@@ -8,9 +8,13 @@
 \usepackage[center,font=singlespacing]{caption}
 \usepackage{subfig}
 \usepackage{hyperref}
+\usepackage{listings}
+\usepackage{verbatim}
 \onehalfspacing
 
 \begin{document}
+\lstset{language=Verilog,numbers=left, numberstyle=\tiny, stepnumber=2, numbersep=5pt,basicstyle=\footnotesize,frame=Tl}
+
 \title{Recursive Augmented Reality Image Processing System}
 \author{Logan P. Williams \& Jos\'{e} E. Cruz Serrall\'{e}s}
 \date{December 10, 2011}
@@ -78,7 +82,7 @@ The inputs to {\tt memory\_interface} are (1) {\tt frame\_flag}, which signals w
 
 Due to the two-cycle latency of the ZBT RAM, care was taken in {\tt memory\_interface} to wait two cycles before assigning an output to the module that made a request. Additionally, {\tt zbt\_map} was used to delay the write data to the RAM by two cycles. Additionally, {\tt zbt\_map} allows for {\tt memory\_interface} to request partial bit write enables, which proved to be necessary for the operation of {\tt projective\_transform}. {zbt\_map} was adapted from the {\tt zbt\_6111} module.
 
-\subsubsection{{\tt object\_recognition} (Logan)}
+\subsection{{\tt object\_recognition} (Logan)}
 The {\tt object\_recognition} module collects ``interesting'' pixels located by the NTSC Capture module, and calculates the center of mass of each color, to find the location of the corners of the picture frame.
 
 It takes as inputs (1) the color of a detected pixel, (2) a flag that goes high for one clock cycle when a pixel is detected, (3) the X/Y coordinates of the pixel, and (4) a flag that goes high when a new frame is beginning. It produces as output four sets of X/Y coordinates, one for the center of mass of each color.
@@ -181,9 +185,17 @@ The luminance and chrominances have bitwidths of 8, 5, and 5, respectively. Init
 
 Debugging and testing Verilog-defined hardware is complicated by extremely lengthy synthesis and implementation times. Because of this, we performed as much testing as possible in the ModelSim simulation environment. While ModelSim proved very fast and effective for ensuring that behavior logic was correct, it failed to help us determine the source of many physical timing bugs, such as setup and hold time violations on communications with the external ZBT memories.
 
-\subsection{Testing {\tt ntsc\_capture}}
+\subsection{Testing the video pathway}
+Our testing and integration procedures began by testing that pixels could be read by {\tt ntsc\_capture}, written into memory by {\tt memory\_interface}, and finally displayed by {\tt vga\_write}.
 
+Because the operation of {\tt ntsc\_capture} depends greatly on external input (the video camera), our testing procedure for this module began on the labkit. Initially, the logic analyzer was simply set to probe the generated pixel values and ensure that they were generating output that seemed reasonable. When the camera lens was covered for example, the magnitude of pixels generated decreased, which seemed reasonable.
 
+After connecting {\tt ntsc\_capture} to {\tt memory\_interface} and to {\tt vga\_write} however, we noticed severe distortion in the output video. This was ultimately caused by the aforementioned setup and hold time violation issues, both in writing and reading from ZBT memory, and in writing to the VGA output DAC. Through extensive amounts of timing analysis on the logic analyzer, pipelining of modules, and replacing multipliers by lookup ROMs, these timing problems were ultimately eliminated. As described in {\tt clock\_gen} above, learning to add timing constraints on our clock signals to the Xilinx UCF file helped significantly, as it told Xilinx to generate useful timing reports for finding critical paths through our logic.
+
+After the black and white video output was displayed cleanly, other features, such as color processing and color recognition, were added incrementally, as it was often difficult to be certain what effects significant changes would have on the timing of the synthesized logic.
+
+\subsection{Testing {\tt memory\_interface}}
+{\tt memory\_interface} will be tested in stages. Initially, basic read and write functionality will be assessed in simulation and then on the FPGA. Once we have written and read information from the ZBT RAM successfully, we will attempt to write, read, and display an image. Finally, all of the logic pertaining to handling read and write requests from all the modules simulatenously will be written, tested using extensive testbenches, and finally tested on an FPGA with dummy modules. All of this testing should avoid help us avoid headaches during final integration.
 
 \subsection{Testing the corner recognition}
 
@@ -218,10 +230,6 @@ However, this behavior simulation did not locate several problems that we had wi
 
 The logic analyzer also proved quite helpful for discovering these timing violations. However, we occasionally noticed that connecting a wire to the logic analyzer outputs was sufficient to change the behavior of the synthesized hardware, as it changed the synthesized routing path, and thus the routing delay. For this reason, using techniques such as the test pattern above for inferring the sources of bugs was necessary.
 
-\subsection{Testing {\tt memory\_interface}}
-{\tt memory\_interface} will be tested in stages. Initially, basic read and write functionality will be assessed in simulation and then on the FPGA. Once we have written and read information from the ZBT RAM successfully, we will attempt to write, read, and display an image. Finally, all of the logic pertaining to handling read and write requests from all the modules simulatenously will be written, tested using extensive testbenches, and finally tested on an FPGA with dummy modules. All of this testing should avoid help us avoid headaches during final integration.
-
-
 \section{Conclusion}
 % The conclusion of a project report typically summarizes the most important or innovative design features. The conclusion also often suggests ways in which the design could be improved. In your 6.111 report you should also make a point of summarizing the test results. If these were not fully satisfactory, they provide a natural basis for suggesting improvements. As a guide to others, it is very helpful to include some discussion of the problems you met in your initial design and what you did to overcome these problems. 
 
@@ -245,8 +253,33 @@ The logic analyzer also proved quite helpful for discovering these timing violat
 
 
 \appendix
-
+\begin{comment}
 \section{Project Source Code}
 \subsection{{\tt labkit.v}}
-
+\lstinputlisting{../../src/augreal/labkit.v}
+\subsection{{\tt ntsc\_capture.v}}
+\lstinputlisting{../../src/augreal/ntsc_capture.v}
+\subsection{{\tt memory\_interface.}}
+\lstinputlisting{../../src/augreal/memory_interface.v}
+\subsection{{\tt object\_recognition.v}}
+\lstinputlisting{../../src/augreal/object_recognition.v}
+\subsection{{\tt lpf.v}}
+\lstinputlisting{../../src/augreal/lpf.v}
+\subsection{{\tt projective\_transform.v}}
+\lstinputlisting{../../src/augreal/projective_transform_srl.v}
+\subsection{{\tt divider.v}}
+\lstinputlisting{../../src/augreal/divider.v}
+\subsection{{\tt clock\_gen.v}}
+\lstinputlisting{../../src/augreal/clock_gen.v}
+\subsection{{\tt vga\_write.v}}
+\lstinputlisting{../../src/augreal/vga_write_new.v}
+\subsection{{\tt ycbcr2rgb.v}}
+\lstinputlisting{../../src/augreal/ycbcr2rgb.v}
+\subsection{{\tt parameter\_set.v}}
+\lstinputlisting{../../src/augreal/parameter_set.v}
+\subsection{{\tt params.v}}
+\lstinputlisting{../../src/augreal/params.v}
+\subsection{{\tt zbt\_test\_pattern.v}}
+\lstinputlisting{../../src/augreal/zbt_test_pattern.v}
+\end{comment}
 \end{document}
