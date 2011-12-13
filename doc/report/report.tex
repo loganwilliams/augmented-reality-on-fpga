@@ -150,16 +150,12 @@ In this state, the module waits until all of the dividers have finished their co
 
 In this state, for every clock cycle in which {\tt memory\_interface} indicates that it can accept new data, {\tt projective\_transform} outputs a pixel and a coordinate from its buffer. If {\tt memory\_interface} cannot accept new data (because of a conflict with {\tt ntsc\_catpure} or {\tt vga\_display}, the module tells {\tt lpf} to stop sending new data. If {\tt projective\_transform} receives a new pixel from {\tt lpf}, it buffers it into {\tt shift18}. When $o_x = 500$, {\tt projective\_transform} begins the division operators in steps 7 and 8 for the next line of the image. In this way, the divisions are pipelined so that there is no delay due to {\tt divider}. Without this pipelining, there would be a 42 cycle delay at the beginning of each line of output. When {\tt projective\_transform} has iterated through the complete original image, it resets its iterator variables and its to {\tt WAIT\_FOR\_CORNERS}.
 
-<<<<<<< HEAD
-\subsection{{\tt vga\_write} (Jos\'{e})}
-=======
-\subsubsection{{\tt clock\_gen (Jose)}}
+\subsection{{\tt clock\_gen (Jose)}}
 Clock synthesis is carried out by this module. Initially, we assumed that clocking would not have been much of an issue. However, as we initially tested our modules, we realized that improper clock generation created persistent and pervasive setup and hold time issues. After much trial and error, we settled on using a DCM to generate a reference clock at 50MHz, using this clock to generate the {\tt ram\_clock}s and the system clock, and using the {\tt CLKDV} output to obtain a clock at half the frequency of the system clock. The parameter {\tt CLKDV\_DIVIDE} had to be set to 0, the parameter {
 
 25MHz and 50MHz were chosen are our system frequencies, because persistent 0-phase locking could be achieved, as one is an even multiple of the other. This simplified considerably the design of the {\tt vga\_display} module, which has to cross between these two clock domains.  provided {\tt ramclock} module and modifying the output DCM to generate 
 
-\subsubsection{{\tt vga\_write} (Jos\'{e})}
->>>>>>> 68783702f37e75d5ce126520fd8fbe7eb8471f93
+\subsection{{\tt vga\_write} (Jos\'{e})}
 % Jose
 This module reads data from {\tt memory\_interface} and displays this data on the screen. Housed inside this module are (1) {\tt xvga}, which generates the VGA control signals necessary to display data on the screen, and (2) {\tt ycrcb2rgb\_lut}, which converts the fetched 18-bit YCrCb values to 24-bit RGB values suitable for display.
 
