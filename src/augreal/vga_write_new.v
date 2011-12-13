@@ -28,7 +28,9 @@ module stupid_vga_write
 		input [9:0] a_x, b_x, c_x, d_x,
 		input [8:0] a_y, b_y, c_y, d_y,
 		
-		output reg vga_will_request
+		output reg vga_will_request,
+		
+		input enable_xhairs
 	);
 
 	// generate hcount, vcount, syncs, and blank
@@ -91,10 +93,10 @@ module stupid_vga_write
 	reg [3:0] pre_crosshairs;
 	reg [3:0] crosshairs;
 	always @(posedge vclock) begin
-		pre_crosshairs[0] <= (del_hcount == a_x | del_vcount == a_y);
-		pre_crosshairs[1] <= (del_hcount == b_x | del_vcount == b_y);
-		pre_crosshairs[2] <= (del_hcount == c_x | del_vcount == c_y);
-		pre_crosshairs[3] <= (del_hcount == d_x | del_vcount == d_y);
+		pre_crosshairs[0] <= enable_xhairs & (del_hcount == a_x | del_vcount == a_y);
+		pre_crosshairs[1] <= enable_xhairs & (del_hcount == b_x | del_vcount == b_y);
+		pre_crosshairs[2] <= enable_xhairs & (del_hcount == c_x | del_vcount == c_y);
+		pre_crosshairs[3] <= enable_xhairs & (del_hcount == d_x | del_vcount == d_y);
 		crosshairs <= pre_crosshairs;
 	end
 	

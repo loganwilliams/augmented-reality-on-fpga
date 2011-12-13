@@ -1,5 +1,19 @@
 `include "params.v"
 
+module address_calculator(
+	input [8:0] x,
+	input [9:0] y,
+	input [1:0] loc,
+	output [18:0] addr);
+	
+	wire [18:0] of1, of2;
+	
+	loc_lut ll(.loc(loc), .addr_off(of1));
+	y_lut yl(.y(y), .addr_off(of2));
+	
+	assign addr = of1 + of2 + x;
+endmodule
+
 module zbt_test_pattern(
 			input clock,
 			input reset,

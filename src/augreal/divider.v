@@ -26,7 +26,7 @@ module divider #(parameter WIDTH = 8) (ready, start, quotient,
                       dividend_copy[31:0] : 
                       ~dividend_copy[31:0] + 1'b1;
 
-   reg [5:0] 	      bit; 
+   reg [7:0] 	      bit; 
    reg 		      del_ready = 1;
    wire 	      ready = (!bit) & ~del_ready;
 

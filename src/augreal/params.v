@@ -48,35 +48,30 @@
 `define LOG_VCOUNT	10
 
 // hue recognition parameters
-`define ORANGE_CB_MAX 10'h190
-`define ORANGE_CR_MIN 10'h280
+`define GREEN_LUM_MAX 10'h338
+`define GREEN_LUM_MIN 10'h228
+`define GREEN_CR_MAX 10'h250
+`define GREEN_CR_MIN 10'h0B8
+`define GREEN_CB_MAX 10'h1A8
+`define GREEN_CB_MIN 10'h008
+
+`define ORANGE_LUM_MAX 10'h3FF
 `define ORANGE_LUM_MIN 10'h200
+`define ORANGE_CR_MAX 10'h3FF
+`define ORANGE_CR_MIN 10'h250
+`define ORANGE_CB_MAX 10'h190
+`define ORANGE_CB_MIN 10'h000
 
-/*
-`define GREEN_CB_MAX 10'h1E0
-`define GREEN_CB_MIN 10'h120
-`define GREEN_CR_MAX 10'h208
-`define GREEN_CR_MIN 10'h1D0
-`define GREEN_LUM_MIN 10'h190
-`define GREEN_LUM_MAX 10'h300
-*/
-
-`define GREEN_LUM_MAX 10'h300
-`define GREEN_LUM_MIN 10'h190
-
-`define GREEN_CR_MAX 10'h240
-`define GREEN_CR_MIN 10'h200
-
-`define GREEN_CB_MAX 10'h210
-`define GREEN_CB_MIN 10'h090
-
-
-
-
-`define PINK_CB_MIN 10'h1F0
-`define PINK_CR_MIN 10'h280
+`define PINK_LUM_MAX 10'h3FF
 `define PINK_LUM_MIN 10'h190
+`define PINK_CR_MAX 10'h3FF
+`define PINK_CR_MIN 10'h290
+`define PINK_CB_MAX 10'h3FF
+`define PINK_CB_MIN 10'h1E0
 
-`define BLUE_CB_MIN 10'h210
-`define BLUE_CR_MAX 10'h1E0
-`define BLUE_LUM_MIN 10'h1A0
+`define BLUE_LUM_MAX 10'h3EF
+`define BLUE_LUM_MIN 10'h1D0
+`define BLUE_CR_MAX 10'h1E8
+`define BLUE_CR_MIN 10'h000
+`define BLUE_CB_MAX 10'h3EF
+`define BLUE_CB_MIN 10'h1E0

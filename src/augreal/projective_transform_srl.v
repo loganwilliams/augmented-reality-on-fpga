@@ -51,22 +51,22 @@ module projective_transform_srl(
    // iterator coordinates for the three iterator points
    // these all have 10 extra bits of resolution to simulate decimals
    // 	(for example 1 is represented by 1 << 10)
-   reg [20:0] 				      i_a_x;
-   reg [19:0] 				      i_a_y;
-   reg [20:0] 				      i_b_x;
-   reg [19:0] 				      i_b_y;
-   reg [20:0] 				      i_c_x;
-   reg [19:0] 				      i_c_y;
+   reg [40:0] 				      i_a_x;
+   reg [40:0] 				      i_a_y;
+   reg [40:0] 				      i_b_x;
+   reg [40:0] 				      i_b_y;
+   reg [40:0] 				      i_c_x;
+   reg [40:0] 				      i_c_y;
 
    // iterator incrementors
-   reg signed [21:0] 			      delta_a_x;
-   reg signed [21:0] 			      delta_a_y;
-   reg signed [21:0] 			      delta_b_x;
-   reg signed [21:0] 			      delta_b_y;
-   reg signed [21:0] 			      delta_c_x;
-   reg signed [21:0] 			      delta_c_y;
-   reg signed [21:0] 			      delta_c_x_next;
-   reg signed [21:0] 			      delta_c_y_next;
+   reg signed [41:0] 			      delta_a_x;
+   reg signed [41:0] 			      delta_a_y;
+   reg signed [41:0] 			      delta_b_x;
+   reg signed [41:0] 			      delta_b_y;
+   reg signed [41:0] 			      delta_c_x;
+   reg signed [41:0] 			      delta_c_y;
+   reg signed [41:0] 			      delta_c_x_next;
+   reg signed [41:0] 			      delta_c_y_next;
    
    // wires/registers for diving
    wire 				      rfd_a;
@@ -76,26 +76,26 @@ module projective_transform_srl(
    wire 				      rfd_e;
    wire 				      rfd_f;
 
-   reg signed [21:0] 			      dividend_a;
-   reg signed [21:0] 			      dividend_b;
-   reg signed [21:0] 			      dividend_c;
-   reg signed [21:0] 			      dividend_d;
-   reg signed [21:0] 			      dividend_e;
-   reg signed [21:0] 			      dividend_f;
+   reg signed [41:0] 			      dividend_a;
+   reg signed [41:0] 			      dividend_b;
+   reg signed [41:0] 			      dividend_c;
+   reg signed [41:0] 			      dividend_d;
+   reg signed [41:0] 			      dividend_e;
+   reg signed [41:0] 			      dividend_f;
 
-   reg [9:0] 				      divisor_a;
-   reg [9:0] 				      divisor_b;
-   reg [9:0] 				      divisor_c;
-   reg [9:0] 				      divisor_d;
-   reg [9:0] 				      divisor_e;
-   reg [9:0] 				      divisor_f;
+   reg signed [41:0] 				      divisor_a;
+   reg signed [41:0] 				      divisor_b;
+   reg signed [41:0] 				      divisor_c;
+   reg signed [41:0] 				      divisor_d;
+   reg signed [41:0] 				      divisor_e;
+   reg signed [41:0] 				      divisor_f;
 
-   wire signed [21:0] 			      quotient_a;
-   wire signed [21:0] 			      quotient_b;
-   wire signed [21:0] 			      quotient_c;
-   wire signed [21:0] 			      quotient_d;
-   wire signed [21:0] 			      quotient_e;
-   wire signed [21:0] 			      quotient_f;
+   wire signed [41:0] 			      quotient_a;
+   wire signed [41:0] 			      quotient_b;
+   wire signed [41:0] 			      quotient_c;
+   wire signed [41:0] 			      quotient_d;
+   wire signed [41:0] 			      quotient_e;
+   wire signed [41:0] 			      quotient_f;
    
    reg 					      startdivs;
 
@@ -114,23 +114,23 @@ module projective_transform_srl(
 
    // six dividers, for parallelization. these are used to calculate
    // iteration "deltas"
-   divider #(.WIDTH(22)) diva(.clk(clk), .ready(rfd_a), .dividend(dividend_a),
-			      .divider({10'b0,divisor_a}), .quotient(quotient_a), .sign(1'b1), .start(startdivs));
+   divider #(.WIDTH(42)) diva(.clk(clk), .ready(rfd_a), .dividend(dividend_a),
+			      .divider(divisor_a), .quotient(quotient_a), .sign(1'b1), .start(startdivs));
 
-   divider #(.WIDTH(22)) divb(.clk(clk), .ready(rfd_b), .dividend(dividend_b),
-			      .divider({10'b0,divisor_b}), .quotient(quotient_b), .sign(1'b1), .start(startdivs));
+   divider #(.WIDTH(42)) divb(.clk(clk), .ready(rfd_b), .dividend(dividend_b),
+			      .divider(divisor_b), .quotient(quotient_b), .sign(1'b1), .start(startdivs));
    
-   divider #(.WIDTH(22)) divc(.clk(clk), .ready(rfd_c), .dividend(dividend_c),
-			      .divider({10'b0,divisor_c}), .quotient(quotient_c), .sign(1'b1), .start(startdivs));
+   divider #(.WIDTH(42)) divc(.clk(clk), .ready(rfd_c), .dividend(dividend_c),
+			      .divider(divisor_c), .quotient(quotient_c), .sign(1'b1), .start(startdivs));
 
-   divider #(.WIDTH(22)) divd(.clk(clk), .ready(rfd_d), .dividend(dividend_d),
-			      .divider({10'b0,divisor_d}), .quotient(quotient_d), .sign(1'b1), .start(startdivs));
+   divider #(.WIDTH(42)) divd(.clk(clk), .ready(rfd_d), .dividend(dividend_d),
+			      .divider(divisor_d), .quotient(quotient_d), .sign(1'b1), .start(startdivs));
 
-   divider #(.WIDTH(22)) dive(.clk(clk), .ready(rfd_e), .dividend(dividend_e),
-			      .divider({10'b0,divisor_e}), .quotient(quotient_e), .sign(1'b1), .start(startdivs));
+   divider #(.WIDTH(42)) dive(.clk(clk), .ready(rfd_e), .dividend(dividend_e),
+			      .divider(divisor_e), .quotient(quotient_e), .sign(1'b1), .start(startdivs));
    
-   divider #(.WIDTH(22)) divf(.clk(clk), .ready(rfd_f), .dividend(dividend_f),
-			      .divider({10'b0,divisor_f}), .quotient(quotient_f), .sign(1'b1), .start(startdivs));
+   divider #(.WIDTH(42)) divf(.clk(clk), .ready(rfd_f), .dividend(dividend_f),
+			      .divider(divisor_f), .quotient(quotient_f), .sign(1'b1), .start(startdivs));
 
    wire [17:0] 				      buffered_pixel;
    
@@ -146,20 +146,20 @@ module projective_transform_srl(
 	   
 	   if (corners_flag) begin
 	      
-	      i_a_x <= a_x << 10;
-	      i_a_y <= a_y << 10;
-	      i_b_x <= b_x << 10;
-	      i_b_y <= b_y << 10;
-	      i_c_x <= a_x << 10;
-	      i_c_y <= a_y << 10;
+	      i_a_x <= a_x << 30;
+	      i_a_y <= a_y << 30;
+	      i_b_x <= b_x << 30;
+	      i_b_y <= b_y << 30;
+	      i_c_x <= a_x << 30;
+	      i_c_y <= a_y << 30;
 	      
 	      //start dividers
-	      dividend_a <= (sd_x - sa_x) << 10;
-	      dividend_b <= (sd_y - sa_y) << 10;
-	      dividend_c <= (sc_x - sb_x) << 10;
-	      dividend_d <= (sc_y - sb_y) << 10;
-	      dividend_e <= (sb_x - sa_x) << 10;
-	      dividend_f <= (sb_y - sa_y) << 10;
+	      dividend_a <= (sd_x - sa_x) << 30;
+	      dividend_b <= (sd_y - sa_y) << 30;
+	      dividend_c <= (sc_x - sb_x) << 30;
+	      dividend_d <= (sc_y - sb_y) << 30;
+	      dividend_e <= (sb_x - sa_x) << 30;
+	      dividend_f <= (sb_y - sa_y) << 30;
 
 	      divisor_a <= 480;
 	      divisor_b <= 480;
@@ -207,20 +207,22 @@ module projective_transform_srl(
 	      if (ptflag) begin
 		 
 		 pt_pixel_write <= buffered_pixel;
-
+		 //pt_pixel_write <= {18{o_x[3]}};
+		 
+		 
 		 if (~pixel_flag) begin
 		    waiting_for_write <= waiting_for_write - 1;
 		 end
 
-		 if (waiting_for_write < 4) begin
+		 if (waiting_for_write < 5) begin
 		    request_pixel <= 1;
 		 end else begin
 		    request_pixel <= 0;
 		 end
 		 
 		 
-		 pt_x <= i_c_x >> 10;
-		 pt_y <= i_c_y >> 10;
+		 pt_x <= (i_c_x >> 30);
+		 pt_y <= (i_c_y >> 30);
 		 pt_wr <= 1;
 
 		 // increment iterators

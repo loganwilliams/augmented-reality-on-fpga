@@ -63,8 +63,7 @@ module memory_interface
 		output [3:0] debug_blocks,
 		output [7:0] debug_locs,
 		
-		output pt_conflict,
-		output vga_lpf_conflict
+		output pt_conflict
 	);
 
 	/******** PARAMETERS ********/
@@ -401,7 +400,7 @@ module zbt_map(
 	assign ram_bwe_b[3:0] = ~bwe[3:0];
 	
 	// delay write data
-	assign ram_data = delayed_we[1] ? delayed_write_data[71:36] : {36{1'bZ}};
+	assign ram_data = delayed_we ? delayed_write_data[71:36] : {36{1'bZ}};
 endmodule
 
 module offset_calculator(

@@ -33,7 +33,7 @@ module dumb_lpf(
 
 	always @(*) begin
 		// pulse lpf_flag only when x is even and a pixel is requested
-		lpf_flag = request & ~lpf_x[0];
+		lpf_flag = request & ~lpf_x[0] & ~done_lpf;
 		// pulse pixel flag when done_lpf is high and x[0] is even
 		// or 1 cycle after request when lpf_x is odd
 		advanced_pixel_flag = done_lpf | pixel_flag_odd;
@@ -61,19 +61,23 @@ module dumb_lpf(
 		// update lpf_x and lpf_y
 		lpf_x <= x;
 		lpf_y <= y;
-		pixel_flag_odd <= (request & (done_lpf | lpf_x[0]));
+		pixel_flag_odd <= (request & x[0]);
 	end
 
+	wire pixel_flag_temp;
+
 	// delay lpf_x, lpf_y | module is located in vga_write_new.v
-	delay #(.N(4), .LOG(10)) dx(.clock(clock), .reset(reset), .x(lpf_x), .y(x_out));
+	delay #(.N(3), .LOG(10)) dx(.clock(clock), .reset(reset | frame_flag), .x(lpf_x), .y(x_out));
 	delay #(.N(4), .LOG(9)) dy(.clock(clock), .reset(reset), .x(lpf_y), .y(y_out));
-	delay #(.N(3), .LOG(1)) df(.clock(clock), .reset(reset), .x(advanced_pixel_flag), .y(pixel_flag));
+	delay #(.N(3), .LOG(1)) df(.clock(clock), .reset(reset | frame_flag), .x(advanced_pixel_flag), .y(pixel_flag_temp));
+	
+	assign pixel_flag = pixel_flag_temp & !frame_flag;
 
 	always @(*) begin
-		if (!testing)
+		if (testing)
 			pixel = (x_out[0] == 1'b0) ? lpf_pixel_read[`LOG_MEM-1:`LOG_TRUNC] : lpf_pixel_read[`LOG_TRUNC-1:0];
 		else
-			pixel = {18{x_out[3]}};
+			pixel = {{8{x_out[3] & y_out[3]}}, 5'b10000, 5'b10000};
 	end
 endmodule
 

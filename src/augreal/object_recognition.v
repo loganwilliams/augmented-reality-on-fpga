@@ -25,14 +25,19 @@ module object_recognition(
    //     n = 1 / (2 ^ G)
 
    parameter G = 3;
+	
+	reg [1:0] delayed_color;
+	reg [9:0] delayed_interesting_x;
+	reg [8:0] delayed_interesting_y;
+	reg delayed_interesting_flag;
    
    reg [1:0] 				   state; 				   
 
-   reg [31:0] 				   sumx [0:3];
-   reg [31:0] 				   sumy [0:3];
-   reg [31:0] 				   num [0:3];
-   wire [31:0] 				   averagex [0:3]; 
-   wire [31:0] 				   averagey [0:3]; 
+   reg [63:0] 				   sumx [0:3];
+   reg [63:0] 				   sumy [0:3];
+   reg [63:0] 				   num [0:3];
+   wire [63:0] 				   averagex [0:3]; 
+   wire [63:0] 				   averagey [0:3]; 
 
    reg [20:0] 				   top;
    reg [20:0] 				   bottom;
@@ -49,6 +54,10 @@ module object_recognition(
    reg 					   calcdone;
    wire [3:0] 				   sqrtdone;
    reg 					   sqrtstart;
+	
+	reg [9:0] dif_x[0:3];
+	reg [8:0] dif_y[0:3];
+	
 
    // STATES
    parameter COUNTING = 2'b00;
@@ -57,21 +66,21 @@ module object_recognition(
    parameter WAITING_FOR_SQRT = 2'b11;
 
    // parallelized dividers
-   divider #(.WIDTH(32)) diva(.clk(clk), .ready(divsready[0]), .dividend(sumx[0]),
+   divider #(.WIDTH(64)) diva(.clk(clk), .ready(divsready[0]), .dividend(sumx[0]),
 			      .divider(num[0]), .quotient(averagex[0]), .sign(1'b0), .start(startdivs));
-   divider #(.WIDTH(32)) divb(.clk(clk), .ready(divsready[1]), .dividend(sumy[0]),
+   divider #(.WIDTH(64)) divb(.clk(clk), .ready(divsready[1]), .dividend(sumy[0]),
 			      .divider(num[0]), .quotient(averagey[0]), .sign(1'b0), .start(startdivs));
-   divider #(.WIDTH(32)) divc(.clk(clk), .ready(divsready[2]), .dividend(sumx[1]),
+   divider #(.WIDTH(64)) divc(.clk(clk), .ready(divsready[2]), .dividend(sumx[1]),
 			      .divider(num[1]), .quotient(averagex[1]), .sign(1'b0), .start(startdivs));
-   divider #(.WIDTH(32)) divd(.clk(clk), .ready(divsready[3]), .dividend(sumy[1]),
+   divider #(.WIDTH(64)) divd(.clk(clk), .ready(divsready[3]), .dividend(sumy[1]),
 			      .divider(num[1]), .quotient(averagey[1]), .sign(1'b0), .start(startdivs));
-   divider #(.WIDTH(32)) dive(.clk(clk), .ready(divsready[4]), .dividend(sumx[2]),
+   divider #(.WIDTH(64)) dive(.clk(clk), .ready(divsready[4]), .dividend(sumx[2]),
 			      .divider(num[2]), .quotient(averagex[2]), .sign(1'b0), .start(startdivs));
-   divider #(.WIDTH(32)) divf(.clk(clk), .ready(divsready[5]), .dividend(sumy[2]),
+   divider #(.WIDTH(64)) divf(.clk(clk), .ready(divsready[5]), .dividend(sumy[2]),
 			      .divider(num[2]), .quotient(averagey[2]), .sign(1'b0), .start(startdivs));
-   divider #(.WIDTH(32)) divg(.clk(clk), .ready(divsready[6]), .dividend(sumx[3]),
+   divider #(.WIDTH(64)) divg(.clk(clk), .ready(divsready[6]), .dividend(sumx[3]),
 			      .divider(num[3]), .quotient(averagex[3]), .sign(1'b0), .start(startdivs));
-   divider #(.WIDTH(32)) divh(.clk(clk), .ready(divsready[7]), .dividend(sumy[3]),
+   divider #(.WIDTH(64)) divh(.clk(clk), .ready(divsready[7]), .dividend(sumy[3]),
 			      .divider(num[3]), .quotient(averagey[3]), .sign(1'b0), .start(startdivs));
 
    // parallelized square rooters
@@ -109,10 +118,52 @@ module object_recognition(
       case (state)
 	COUNTING: begin
 		corners_flag <= 0;
-	   if (interesting_flag && state == COUNTING) begin
-	      sumx[color] <= sumx[color] + interesting_x;
-	      sumy[color] <= sumy[color] + interesting_y;
-	      num[color] <= num[color] + 1;
+		
+		delayed_interesting_flag <= interesting_flag;
+		delayed_interesting_x <= interesting_x;
+		delayed_interesting_y <= interesting_y;
+		delayed_color <= color;
+		
+		if (interesting_flag) begin
+			dif_x[0] <= (interesting_x > a_x) ? interesting_x-a_x : a_x - interesting_x;
+			dif_y[0] <= (interesting_y > a_y) ? interesting_y-a_y : a_y - interesting_y;
+			dif_x[1] <= (interesting_x > b_x) ? interesting_x-b_x : b_x - interesting_x;
+			dif_y[1] <= (interesting_y > b_y) ? interesting_y-b_y : b_y - interesting_y;
+			dif_x[2] <= (interesting_x > c_x) ? interesting_x-c_x : c_x - interesting_x;
+			dif_y[2] <= (interesting_y > c_y) ? interesting_y-c_y : c_y - interesting_y;
+			dif_x[3] <= (interesting_x > d_x) ? interesting_x-d_x : d_x - interesting_x;
+			dif_y[3] <= (interesting_y > d_y) ? interesting_y-d_y : d_y - interesting_y;
+		end
+	
+
+		
+	   if (delayed_interesting_flag) begin
+		  if (dif_x[delayed_color] < 16 || dif_y[delayed_color] < 16) begin
+				sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x, 5'b0};
+				sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y, 5'b0};
+				num[delayed_color] <= num[delayed_color] + 32;
+			end
+			else
+			if (dif_x[delayed_color] < 32 || dif_y[delayed_color] < 32) begin
+				sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x,3'b0};
+				sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y,3'b0};
+				num[delayed_color] <= num[delayed_color] + 8;
+			end
+			else if (dif_x[delayed_color] < 64 || dif_y[delayed_color] < 64) begin
+				sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x,2'b0};
+				sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y,2'b0};
+				num[delayed_color] <= num[delayed_color] + 4;
+			end
+			else if (dif_x[delayed_color] < 128 || dif_y[delayed_color] < 128) begin
+				sumx[delayed_color] <= sumx[delayed_color] + {delayed_interesting_x, 1'b0};
+				sumy[delayed_color] <= sumy[delayed_color] + {delayed_interesting_y, 1'b0};
+				num[delayed_color] <= num[delayed_color] + 2;
+			end 
+			else begin 
+				sumx[delayed_color] <= sumx[delayed_color] + delayed_interesting_x;
+				sumy[delayed_color] <= sumy[delayed_color] + delayed_interesting_y;
+				num[delayed_color] <= num[delayed_color] + 1;
+			end
 	   end
       
 	   if (frame_flag) begin
@@ -124,25 +175,14 @@ module object_recognition(
 	WAITING_FOR_DIVS: begin
 	   // if all of the dividers are done
 	   if (&divsready) begin
-		/*
-	      a_x <= ({a_x, {G{1'b0}}} - a_x) >> G + (averagex[0] >> G);
-	      a_y <= ({a_y, {G{1'b0}}} - a_y) >> G + (averagey[0] >> G);
-	      b_x <= ({b_x, {G{1'b0}}} - b_x) >> G + (averagex[1] >> G);
-	      b_y <= ({b_y, {G{1'b0}}} - b_y) >> G + (averagey[1] >> G);
-	      c_x <= ({c_x, {G{1'b0}}} - c_x) >> G + (averagex[2] >> G);
-	      c_y <= ({c_y, {G{1'b0}}} - c_y) >> G + (averagey[2] >> G);
-	      d_x <= ({d_x, {G{1'b0}}} - d_x) >> G + (averagex[3] >> G);
-	      d_y <= ({d_y, {G{1'b0}}} - d_y) >> G + (averagey[3] >> G);
-			*/
-			
-			a_x <= (averagex[0] >> 1) + (a_x >> 1);
-			b_x <= (averagex[1] >> 1) + (b_x >> 1);
-			c_x <= (averagex[2] >> 1) + (c_x >> 1);
-			d_x <= (averagex[3] >> 1) + (d_x >> 1);
-			a_y <= (averagey[0] >> 1) + (a_y >> 1);
-			b_y <= (averagey[1] >> 1) + (b_y >> 1);
-			c_y <= (averagey[2] >> 1) + (c_y >> 1);
-			d_y <= (averagey[3] >> 1) + (d_y >> 1);
+			a_x <= (averagex[0] >> 2) + (a_x >> 1) + (a_x >> 2);
+			b_x <= (averagex[1] >> 2) + (b_x >> 1) + (b_x >> 2);
+			c_x <= (averagex[2] >> 2) + (c_x >> 1) + (c_x >> 2);
+			d_x <= (averagex[3] >> 2) + (d_x >> 1) + (d_x >> 2);
+			a_y <= (averagey[0] >> 2) + (a_y >> 1) + (a_y >> 2);
+			b_y <= (averagey[1] >> 2) + (b_y >> 1) + (b_y >> 2);
+			c_y <= (averagey[2] >> 2) + (c_y >> 1) + (c_y >> 2);
+			d_y <= (averagey[3] >> 2) + (d_y >> 1) + (d_y >> 2);
 
 	      top <= (averagex[1] - averagex[0]) * (averagex[1] - averagex[0]) + (averagey[1] - averagey[0]) * (averagey[1] - averagey[0]);
 	      bottom <= (averagex[2] - averagex[3]) * (averagex[2] - averagex[3]) + (averagey[2] - averagey[3]) * (averagey[2] - averagey[3]);
