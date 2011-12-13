@@ -1,0 +1,14 @@
+[timestart] 0
+[size] 1000 600
+[pos] -1 -1
+*-16.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb2.
+@22
+tb2.mem_int.lpf_addr[18:0]
+@28
+tb2.mem_int.proc_mem_loc[1:0]
+tb2.mem_int.next_proc_mem_loc[1:0]
+tb2.mem_int.reset
+tb2.mem_int.clock
+[pattern_trace] 1
+[pattern_trace] 0

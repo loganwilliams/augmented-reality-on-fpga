@@ -1,0 +1,39 @@
+[timestart] 19980
+[size] 1680 998
+[pos] -159 -159
+*-5.000000 135 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb4.
+@28
+tb4.clock
+tb4.reset
+tb4.start
+tb4.frame_flag
+@24
+tb4.vga_pixel[23:0]
+@28
+tb4.vga_flag
+tb4.done_vga
+@22
+tb4.ntsc_pixel[35:0]
+@24
+tb4.pt_pixel_write[17:0]
+@28
+tb4.ntsc_flag
+tb4.pt_flag
+tb4.done_ntsc
+tb4.done_pt
+@24
+tb4.pt_x[9:0]
+tb4.pt_y[8:0]
+@22
+tb4.mem_int.vga_addr[18:0]
+tb4.mem_int.mem0_addr[18:0]
+@24
+tb4.mem0.data[35:0]
+@28
+tb4.mem_int.nexd_mem_loc[1:0]
+tb4.mem_int.capt_mem_loc[1:0]
+@25
+tb4.pt.rep_count[31:0]
+[pattern_trace] 1
+[pattern_trace] 0
