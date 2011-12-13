@@ -206,15 +206,15 @@ module projective_transform_srl(
 	   if (pixel_flag || (|waiting_for_write)) begin
 	      if (ptflag) begin
 		 
-		 //pt_pixel_write <= buffered_pixel;
-		 pt_pixel_write <= {18{o_x[3]}};
+		 pt_pixel_write <= buffered_pixel;
+		 //pt_pixel_write <= {18{o_x[3]}};
 		 
 		 
 		 if (~pixel_flag) begin
 		    waiting_for_write <= waiting_for_write - 1;
 		 end
 
-		 if (waiting_for_write < 4) begin
+		 if (waiting_for_write < 5) begin
 		    request_pixel <= 1;
 		 end else begin
 		    request_pixel <= 0;

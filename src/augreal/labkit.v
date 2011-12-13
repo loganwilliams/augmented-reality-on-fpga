@@ -373,6 +373,231 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	
 	//counter #(.PERIOD(833332)) ffg(.clock(clock_25mhz), .reset(reset),
 	//	.enable(frame_flag_cleaned));
+
+	reg [9:0] GREEN_LUM_MAX;
+	reg [9:0] GREEN_LUM_MIN;
+	reg [9:0] GREEN_CR_MAX;
+	reg [9:0] GREEN_CR_MIN;
+	reg [9:0] GREEN_CB_MAX;
+	reg [9:0] GREEN_CB_MIN;
+	
+	reg [9:0] ORANGE_LUM_MAX;
+	reg [9:0] ORANGE_LUM_MIN;
+	reg [9:0] ORANGE_CR_MAX;
+	reg [9:0] ORANGE_CR_MIN;
+	reg [9:0] ORANGE_CB_MAX;
+	reg [9:0] ORANGE_CB_MIN;
+	
+	reg [9:0] PINK_LUM_MAX;
+	reg [9:0] PINK_LUM_MIN;
+	reg [9:0] PINK_CR_MAX;
+	reg [9:0] PINK_CR_MIN;
+	reg [9:0] PINK_CB_MAX;
+	reg [9:0] PINK_CB_MIN;
+	
+	reg [9:0] BLUE_LUM_MAX;
+	reg [9:0] BLUE_LUM_MIN;
+	reg [9:0] BLUE_CR_MAX;
+	reg [9:0] BLUE_CR_MIN;
+	reg [9:0] BLUE_CB_MAX;
+	reg [9:0] BLUE_CB_MIN;
+
+	wire SELECT_LUM_MAX;
+	wire SELECT_LUM_MIN;
+	wire SELECT_CR_MAX;
+	wire SELECT_CR_MIN;
+	wire SELECT_CB_MAX;
+	wire SELECT_CB_MIN;
+
+	wire [2:0] SELECT;
+	reg [9:0] selected_parameter;
+	wire [1:0] selected_color;
+
+	debounce dbc1(.clock(clock_65mhz), .reset(reset), .noisy(switch[7]), .clean(SELECT[2]));
+	debounce dbc2(.clock(clock_65mhz), .reset(reset), .noisy(switch[6]), .clean(SELECT[1]));
+	debounce dbc3(.clock(clock_65mhz), .reset(reset), .noisy(switch[5]), .clean(SELECT[0]));
+
+	debounce dbc4(.clock(clock_65mhz), .reset(reset), .noisy(switch[4]), .clean(selected_color[1]));
+	debounce dbc5(.clock(clock_65mhz), .reset(reset), .noisy(switch[3]), .clean(selected_color[0]));
+
+	wire b_clock;
+	counter #(.PERIOD(2000000)) bclk(.clock(clock_25mhz), .reset(reset),
+		.enable(b_clock));
+
+	display_16hex ds(reset, clock_27mhz, {2'd0, selected_color, 4'd0, 5'd0, SELECT, 6'd0, selected_parameter, 32'h0}, 
+		disp_blank, disp_clock, disp_rs, disp_ce_b,
+		disp_reset_b, disp_data_out);
+
+	reg [9:0] LUM_MAX;
+	reg [9:0] LUM_MIN;
+	reg [9:0] CR_MAX;
+	reg [9:0] CR_MIN;
+	reg [9:0] CB_MAX;
+	reg [9:0] CB_MIN;
+	always @(*) begin
+		case (selected_color)
+		2'd0: begin
+			LUM_MAX = GREEN_LUM_MAX;
+			LUM_MIN = GREEN_LUM_MIN;
+			CR_MAX = GREEN_CR_MAX;
+			CR_MIN = GREEN_CR_MIN;
+			CB_MAX = GREEN_CB_MAX;
+			CB_MIN = GREEN_CB_MIN;
+		end
+		2'd1: begin
+			LUM_MAX = ORANGE_LUM_MAX;
+			LUM_MIN = ORANGE_LUM_MIN;
+			CR_MAX = ORANGE_CR_MAX;
+			CR_MIN = ORANGE_CR_MIN;
+			CB_MAX = ORANGE_CB_MAX;
+			CB_MIN = ORANGE_CB_MIN;
+		end
+		2'd2: begin
+			LUM_MAX = PINK_LUM_MAX;
+			LUM_MIN = PINK_LUM_MIN;
+			CR_MAX = PINK_CR_MAX;
+			CR_MIN = PINK_CR_MIN;
+			CB_MAX = PINK_CB_MAX;
+			CB_MIN = PINK_CB_MIN;
+		end
+		2'd3: begin
+			LUM_MAX = BLUE_LUM_MAX;
+			LUM_MIN = BLUE_LUM_MIN;
+			CR_MAX = BLUE_CR_MAX;
+			CR_MIN = BLUE_CR_MIN;
+			CB_MAX = BLUE_CB_MAX;
+			CB_MIN = BLUE_CB_MIN;
+		end
+		endcase
+
+		case (SELECT)
+		3'd7: selected_parameter = LUM_MAX;
+		3'd6: selected_parameter = LUM_MIN;
+		3'd5: selected_parameter = CR_MAX;
+		3'd4: selected_parameter = CR_MIN;
+		3'd3: selected_parameter = CB_MAX;
+		3'd2: selected_parameter = CB_MIN;
+		default: selected_parameter = 10'd0;
+		endcase
+	end
+
+	always @(posedge b_clock) begin
+		if (reset) begin
+			GREEN_LUM_MAX <= `GREEN_LUM_MAX;
+			GREEN_LUM_MIN <= `GREEN_LUM_MIN;
+			GREEN_CR_MAX <= `GREEN_CR_MAX;
+			GREEN_CR_MIN <= `GREEN_CR_MIN;
+			GREEN_CB_MAX <= `GREEN_CB_MAX;
+			GREEN_CB_MIN <= `GREEN_CB_MIN;
+	
+			ORANGE_LUM_MAX <= `ORANGE_LUM_MAX;
+			ORANGE_LUM_MIN <= `ORANGE_LUM_MIN;
+			ORANGE_CR_MAX <= `ORANGE_CR_MAX;
+			ORANGE_CR_MIN <= `ORANGE_CR_MIN;
+			ORANGE_CB_MAX <= `ORANGE_CB_MAX;
+			ORANGE_CB_MIN <= `ORANGE_CB_MIN;
+			
+			PINK_LUM_MAX <= `PINK_LUM_MAX;
+			PINK_LUM_MIN <= `PINK_LUM_MIN;
+			PINK_CR_MAX <= `PINK_CR_MAX;
+			PINK_CR_MIN <= `PINK_CR_MIN;
+			PINK_CB_MAX <= `PINK_CB_MAX;
+			PINK_CB_MIN <= `PINK_CB_MIN;
+
+			BLUE_LUM_MAX <= `BLUE_LUM_MAX;
+			BLUE_LUM_MIN <= `BLUE_LUM_MIN;
+			BLUE_CR_MAX <= `BLUE_CR_MAX;
+			BLUE_CR_MIN <= `BLUE_CR_MIN;
+			BLUE_CB_MAX <= `BLUE_CB_MAX;
+			BLUE_CB_MIN <= `BLUE_CB_MIN;
+		end
+		else if(~button_up) begin
+			case (selected_color)
+			2'd0:
+				case (SELECT)
+				3'd7: GREEN_LUM_MAX <= GREEN_LUM_MAX+4'b1000;
+				3'd6: GREEN_LUM_MIN <= GREEN_LUM_MIN+4'b1000;
+				3'd5: GREEN_CR_MAX <= GREEN_CR_MAX+4'b1000;
+				3'd4: GREEN_CR_MIN <= GREEN_CR_MIN+4'b1000;
+				3'd3: GREEN_CB_MAX <= GREEN_CB_MAX+4'b1000;
+				3'd2: GREEN_CB_MIN <= GREEN_CB_MIN+4'b1000;
+				endcase
+			2'd1:
+				case (SELECT)
+				3'd7: ORANGE_LUM_MAX <= ORANGE_LUM_MAX+4'b1000;
+				3'd6: ORANGE_LUM_MIN <= ORANGE_LUM_MIN+4'b1000;
+				3'd5: ORANGE_CR_MAX <= ORANGE_CR_MAX+4'b1000;
+				3'd4: ORANGE_CR_MIN <= ORANGE_CR_MIN+4'b1000;
+				3'd3: ORANGE_CB_MAX <= ORANGE_CB_MAX+4'b1000;
+				3'd2: ORANGE_CB_MIN <= ORANGE_CB_MIN+4'b1000;
+				endcase
+			2'd2:	
+				case (SELECT)
+				3'd7: PINK_LUM_MAX <= PINK_LUM_MAX+4'b1000;
+				3'd6: PINK_LUM_MIN <= PINK_LUM_MIN+4'b1000;
+				3'd5: PINK_CR_MAX <= PINK_CR_MAX+4'b1000;
+				3'd4: PINK_CR_MIN <= PINK_CR_MIN+4'b1000;
+				3'd3: PINK_CB_MAX <= PINK_CB_MAX+4'b1000;
+				3'd2: PINK_CB_MIN <= PINK_CB_MIN+4'b1000;
+				endcase
+			2'd3:
+				case (SELECT)
+				3'd7: BLUE_LUM_MAX <= BLUE_LUM_MAX+4'b1000;
+				3'd6: BLUE_LUM_MIN <= BLUE_LUM_MIN+4'b1000;
+				3'd5: BLUE_CR_MAX <= BLUE_CR_MAX+4'b1000;
+				3'd4: BLUE_CR_MIN <= BLUE_CR_MIN+4'b1000;
+				3'd3: BLUE_CB_MAX <= BLUE_CB_MAX+4'b1000;
+				3'd2: BLUE_CB_MIN <= BLUE_CB_MIN+4'b1000;
+				endcase
+			endcase
+		end
+		else if(~button_down) begin
+			case (selected_color)
+			2'd0:
+				case (SELECT)
+				3'd7: GREEN_LUM_MAX <= GREEN_LUM_MAX-4'b1000;
+				3'd6: GREEN_LUM_MIN <= GREEN_LUM_MIN-4'b1000;
+				3'd5: GREEN_CR_MAX <= GREEN_CR_MAX-4'b1000;
+				3'd4: GREEN_CR_MIN <= GREEN_CR_MIN-4'b1000;
+				3'd3: GREEN_CB_MAX <= GREEN_CB_MAX-4'b1000;
+				3'd2: GREEN_CB_MIN <= GREEN_CB_MIN-4'b1000;
+				endcase
+			2'd1:
+				case (SELECT)
+				3'd7: ORANGE_LUM_MAX <= ORANGE_LUM_MAX-4'b1000;
+				3'd6: ORANGE_LUM_MIN <= ORANGE_LUM_MIN-4'b1000;
+				3'd5: ORANGE_CR_MAX <= ORANGE_CR_MAX-4'b1000;
+				3'd4: ORANGE_CR_MIN <= ORANGE_CR_MIN-4'b1000;
+				3'd3: ORANGE_CB_MAX <= ORANGE_CB_MAX-4'b1000;
+				3'd2: ORANGE_CB_MIN <= ORANGE_CB_MIN-4'b1000;
+				endcase
+			2'd2:	
+				case (SELECT)
+				3'd7: PINK_LUM_MAX <= PINK_LUM_MAX-4'b1000;
+				3'd6: PINK_LUM_MIN <= PINK_LUM_MIN-4'b1000;
+				3'd5: PINK_CR_MAX <= PINK_CR_MAX-4'b1000;
+				3'd4: PINK_CR_MIN <= PINK_CR_MIN-4'b1000;
+				3'd3: PINK_CB_MAX <= PINK_CB_MAX-4'b1000;
+				3'd2: PINK_CB_MIN <= PINK_CB_MIN-4'b1000;
+				endcase
+			2'd3:
+				case (SELECT)
+				3'd7: BLUE_LUM_MAX <= BLUE_LUM_MAX-4'b1000;
+				3'd6: BLUE_LUM_MIN <= BLUE_LUM_MIN-4'b1000;
+				3'd5: BLUE_CR_MAX <= BLUE_CR_MAX-4'b1000;
+				3'd4: BLUE_CR_MIN <= BLUE_CR_MIN-4'b1000;
+				3'd3: BLUE_CB_MAX <= BLUE_CB_MAX-4'b1000;
+				3'd2: BLUE_CB_MIN <= BLUE_CB_MIN-4'b1000;
+				endcase
+			endcase
+		end
+	end
+	
+	wire enable_highlighting_and_xhairs;
+	debounce db6(
+	.clock(clock_65mhz), .reset(reset), .noisy(switch[2]),
+	.clean(enable_highlighting_and_xhairs));
+		
 	
 	ntsc_capture ntsc(.clock_65mhz(clock_50mhz_90),
 			  .clock_27mhz(clock_27mhz),
@@ -396,20 +621,49 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 			  .midy(midy),
 			  .o_i_flag(i_flag),
 			  .o_color(color),
-			  .ntsc_will_request(nwr));
+			  .ntsc_will_request(nwr),
+			  //.enable_highlighting(enable_highlighting_and_xhairs),
+			  .GREEN_LUM_MAX(GREEN_LUM_MAX),
+			  .GREEN_LUM_MIN(GREEN_LUM_MIN), 
+			  .GREEN_CR_MAX(GREEN_CR_MAX), 
+			  .GREEN_CR_MIN(GREEN_CR_MIN), 
+			  .GREEN_CB_MAX(GREEN_CB_MAX), 
+			  .GREEN_CB_MIN(GREEN_CB_MIN),
+
+			  .ORANGE_LUM_MAX(ORANGE_LUM_MAX),
+			  .ORANGE_LUM_MIN(ORANGE_LUM_MIN), 
+			  .ORANGE_CR_MAX(ORANGE_CR_MAX), 
+			  .ORANGE_CR_MIN(ORANGE_CR_MIN), 
+			  .ORANGE_CB_MAX(ORANGE_CB_MAX), 
+			  .ORANGE_CB_MIN(ORANGE_CB_MIN),
+			  
+			  .PINK_LUM_MAX(PINK_LUM_MAX),
+			  .PINK_LUM_MIN(PINK_LUM_MIN), 
+			  .PINK_CR_MAX(PINK_CR_MAX), 
+			  .PINK_CR_MIN(PINK_CR_MIN), 
+			  .PINK_CB_MAX(PINK_CB_MAX), 
+			  .PINK_CB_MIN(PINK_CB_MIN),
+			  
+			  .BLUE_LUM_MAX(BLUE_LUM_MAX),
+			  .BLUE_LUM_MIN(BLUE_LUM_MIN), 
+			  .BLUE_CR_MAX(BLUE_CR_MAX), 
+			  .BLUE_CR_MIN(BLUE_CR_MIN), 
+			  .BLUE_CB_MAX(BLUE_CB_MAX), 
+			  .BLUE_CB_MIN(BLUE_CB_MIN)
+);
 	
 	
 
 		
-	//wire [9:0] a_x, b_x, c_x, d_x;
-	//wire [8:0] a_y, b_y, c_y, d_y;
-	reg [9:0] c_x = 400;
-	reg [8:0] c_y = 100;
+	wire [9:0] a_x, b_x, c_x, d_x;
+	wire [8:0] a_y, b_y, c_y, d_y;
+	//reg [9:0] c_x = 400;
+	//reg [8:0] c_y = 100;
 	wire corners_flag;
 	
-	display_16hex ds(reset, clock_27mhz, {6'b0, c_x, 6'b0, midy, 6'b0, midcr, 6'b0, midcb}, 
+	/*display_16hex ds(reset, clock_27mhz, {6'b0, c_x, 6'b0, midy, 6'b0, midcr, 6'b0, midcb}, 
 		disp_blank, disp_clock, disp_rs, disp_ce_b,
-		disp_reset_b, disp_data_out);
+		disp_reset_b, disp_data_out);*/
 	
 	
 	object_recognition objr(.clk(clock_65mhz),
@@ -419,10 +673,10 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 									 .interesting_y(ntsc_y),
 									 .frame_flag(frame_flag_cleaned),
 									 .interesting_flag(i_flag),
-								/*	 .a_x(a_x), .a_y(a_y),
+									 .a_x(a_x), .a_y(a_y),
 									 .b_x(b_x), .b_y(b_y),
 									 .c_x(c_x), .c_y(c_y),
-									 .d_x(d_x), .d_y(d_y), */
+									 .d_x(d_x), .d_y(d_y), 
 									 .corners_flag(corners_flag));
 	
 	wire lpf_wr;
@@ -445,7 +699,7 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.clock(clock_65mhz), .reset(reset), .noisy(~switch[0]),
 		.clean(lpf_testing));
 	
-	dumb_lpf dlpf(.clock(clock_50mhz_90),
+	dumb_lpf dlpf(.clock(clock_65mhz),
 				.reset(reset),
 				.frame_flag(frame_flag_cleaned),
 				.done_lpf(done_lpf),
@@ -465,10 +719,10 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 				.pixel(pixel_out_lpf),
 				.pixel_flag(pixel_flag),
 				.done_pt(done_pt),
-				.a_x(10'd20), .a_y(10'd400),
-				.b_x(10'd40), .b_y(10'd100),
+				.a_x(a_x), .a_y(a_y),
+				.b_x(b_x), .b_y(b_y),
 				.c_x(c_x), .c_y(c_y),
-				.d_x(10'd500), .d_y(10'd300),
+				.d_x(d_x), .d_y(d_y),
 				.corners_flag(corners_flag),
 				.ptflag(ready_pt),
 				.pt_pixel_write(pt_pixel),
@@ -476,17 +730,14 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 				.pt_wr(pt_wr),
 				.request_pixel(request));
 				
-	wire b_clock;
+	//wire b_clock;
 	
-	counter #(.PERIOD(200000)) bclk(.clock(clock_25mhz), .reset(reset),
-		.enable(b_clock));
-	
-	always @(posedge b_clock) begin
+	/*always @(posedge b_clock) begin
 		if (~button_left) c_x <= c_x - 1;
 		if (~button_right) c_x <= c_x + 1;
 		if (~button_up) c_y <= c_y - 1;
 		if (~button_down) c_y <= c_y + 1;
-	end
+	end*/
     
 	// use above if using ntsc_capture
 
@@ -547,6 +798,11 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	wire [3:0] mem1_bwer;
 	wire [35:0] mem0_writet, mem1_writet, mem0_writer, mem1_writer;
 	wire [`LOG_ADDR-1:0] mem0_addrr, mem1_addrr, mem0_addrt, mem1_addrt;
+	
+	wire enable_lpf_pt;
+		debounce db5(
+		.clock(clock_65mhz), .reset(reset), .noisy(~switch[1]),
+		.clean(enable_lpf_pt));
 
 	memory_interface mi(
 		.clock(clock_65mhz), .reset(reset), 
@@ -561,13 +817,13 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.mem0_bwe(mem0_bwer),.mem1_bwe(mem1_bwer),
 		.ntsc_x(ntsc_x), .ntsc_y(ntsc_y),
 		.ready_pt(ready_pt),
-		.lpf_flag(lpf_flag), .lpf_wr(lpf_wr),
+		.lpf_flag(lpf_flag & enable_lpf_pt), .lpf_wr(lpf_wr),
 		.lpf_pixel_read(lpf_pixel_read),
 		.lpf_pixel_write(lpf_pixel_write),
 		.done_lpf(done_lpf),
 		.lpf_x(lpf_x), .lpf_y(lpf_y),
 		.pt_x(pt_x), .pt_y(pt_y),
-		.pt_flag(pt_wr), .pt_pixel(pt_pixel),
+		.pt_flag(pt_wr & enable_lpf_pt), .pt_pixel(pt_pixel),
 		.nwr(nwr), .vwr(vwr), .done_pt(done_pt));
 
 	wire enter_clean;
@@ -652,11 +908,12 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 		.vga_out_vsync(vga_out_vsync),
 		.clocked_hcount(hcount),
 		.clocked_vcount(vcount),
-/*		.a_x(a_x), .a_y(a_y),
+		.a_x(a_x), .a_y(a_y),
 		.b_x(b_x), .b_y(b_y),
 		.c_x(c_x), .c_y(c_y),
-		.d_x(d_x), .d_y(d_y),  */
-		.vga_will_request(vwr)); 
+		.d_x(d_x), .d_y(d_y),
+		.vga_will_request(vwr),
+		.enable_xhairs(enable_highlighting_and_xhairs)); 
 	// use above if using vga
 	
 	// use below if testing vga
@@ -669,10 +926,10 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	**************************************/
 	// comment & uncomment below as necessary if not used
 	assign analyzer1_clock = 1'b1;
-	//assign analyzer2_clock = 1'b1;
+	assign analyzer2_clock = 1'b1;
 	assign analyzer3_clock = 1'b1;
 	assign analyzer4_clock = 1'b1;
-	//assign analyzer1_data = 16'h0;
+	assign analyzer1_data = 16'h0;
 	assign analyzer2_data = 16'h0;
 	assign analyzer3_data = 16'h0;
 	assign analyzer4_data = 16'h0;
@@ -685,7 +942,7 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 	//assign analyzer1_data = {pt_x[9:0], pt_flag, 5'b0};
 	//assign analyzer2_data = {pt_y[8:0], 7'b0};
 	
-	assign analyzer1_data = {pixel_flag, pixel_out_lpf[14:0]};
+	//assign analyzer1_data = {pixel_flag, pixel_out_lpf[14:0]};
 	
 /*
    assign analyzer1_data = {frame_flag_cleaned, ntsc_flag_cleaned, dv, done_vga, done_ntsc, vga_flag, fvh, lpf_x[6:0]};
@@ -699,7 +956,7 @@ module labkit(beep, audio_reset_b, ac97_sdata_out, ac97_sdata_in, ac97_synch,
 
   // assign analyzer3_clock = tv_in_line_clock1;
   // assign analyzer1_clock = clock_27mhz;
-   assign analyzer2_clock = clock_65mhz;
+   //assign analyzer2_clock = clock_65mhz;
   // assign analyzer4_clock = clock_25mhz;
 
 endmodule

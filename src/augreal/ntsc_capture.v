@@ -25,8 +25,37 @@
 		      output reg [9:0] 	midcr,
 		      output reg [9:0] 	midcb,
 		      output reg [9:0] 	midy,
-				output reg ntsc_will_request
-		      ); // a flag that indicates when a new frame begins
+				output reg ntsc_will_request,
+                
+		      input [9:0] GREEN_LUM_MAX,
+		      input [9:0] GREEN_LUM_MIN,
+		      input [9:0] GREEN_CR_MAX,
+		      input [9:0] GREEN_CR_MIN,
+		      input [9:0] GREEN_CB_MAX,
+		      input [9:0] GREEN_CB_MIN,
+
+			
+                      input [9:0] ORANGE_LUM_MAX,
+		      input [9:0] ORANGE_LUM_MIN,
+		      input [9:0] ORANGE_CR_MAX,
+		      input [9:0] ORANGE_CR_MIN,
+		      input [9:0] ORANGE_CB_MAX,
+		      input [9:0] ORANGE_CB_MIN,
+
+                      input [9:0] PINK_LUM_MAX,
+		      input [9:0] PINK_LUM_MIN,
+		      input [9:0] PINK_CR_MAX,
+		      input [9:0] PINK_CR_MIN,
+		      input [9:0] PINK_CB_MAX,
+		      input [9:0] PINK_CB_MIN,
+
+                      input [9:0] BLUE_LUM_MAX,
+		      input [9:0] BLUE_LUM_MIN,
+		      input [9:0] BLUE_CR_MAX,
+		      input [9:0] BLUE_CR_MIN,
+		      input [9:0] BLUE_CB_MAX,
+		      input [9:0] BLUE_CB_MIN
+		); // a flag that indicates when a new frame begins
 
    // initialize the adv7185 video ADC
    adv7185init adv7185(.reset(reset), .clock_27mhz(clock_27mhz), .source(1'b0),
@@ -90,16 +119,19 @@
    assign h = fvh[0];
 
    wire [8:0] 				corrected_y;
+	wire [9:0] corrected_x;
 
-   assign corrected_y = y - 25;
+   assign corrected_y = y - 23;
+	assign corrected_x = x - 10;
    
    assign ntsc_raw = din[28:25];
 
-wire 					orange_match, green_match, pink_match, blue_match;
-   assign orange_match = 0;
-	assign green_match = 0;
-	assign pink_match = 0;
-	assign blue_match = 0;
+
+reg 					orange_match, green_match, pink_match, blue_match;
+//   assign orange_match = 0;
+//	assign green_match = 0;
+//	assign pink_match = 0;
+//	assign blue_match = 0;
 
    always @(*) begin
       sh <= (~rh & sh) | h;
@@ -107,28 +139,29 @@ wire 					orange_match, green_match, pink_match, blue_match;
    end
 
 	
-/*
+
    always @(posedge tv_in_line_clock1) begin
       if (dv) begin
-	 orange_match <= ((cb < `ORANGE_CB_MAX) & 
-			  (cr > `ORANGE_CR_MIN) & 
-			  (lum > `ORANGE_LUM_MIN));
+	 orange_match <= ((cb < ORANGE_CB_MAX) & 
+			  (cr > ORANGE_CR_MIN) & 
+			  (lum > ORANGE_LUM_MIN));
 
-	 green_match <= ((lum < `GREEN_LUM_MAX) & 
-			 (lum > `GREEN_LUM_MIN) &
-			 (cr > `GREEN_CR_MIN) & 
-			 (cr < `GREEN_CR_MAX) &
-			 (cb > `GREEN_CB_MIN) &
-			 (cb < `GREEN_CB_MAX) &
+	 green_match <= ((lum < GREEN_LUM_MAX) & 
+			 (lum > GREEN_LUM_MIN) &
+			 (cr > GREEN_CR_MIN) & 
+			 (cr < GREEN_CR_MAX) &
+			 (cb > GREEN_CB_MIN) &
+			 (cb < GREEN_CB_MAX) &
 			 (y < 480));
 
-	 blue_match <=  ((cb > `BLUE_CB_MIN) & 
-			 (cr < `BLUE_CR_MAX) & 
-			 (lum > `BLUE_LUM_MIN));
+	 blue_match <=  ((cb > BLUE_CB_MIN) & 
+			 (cr < BLUE_CR_MAX) & 
+			 (lum > BLUE_LUM_MIN));
 	 
-	 pink_match <= ((cb > `PINK_CB_MIN) & 
-			(cr > `PINK_CR_MIN) & 
-			(lum > `PINK_LUM_MIN));
+	 pink_match <= ((cb > PINK_CB_MIN) & 
+			(cr > PINK_CR_MIN) & 
+			(lum > PINK_LUM_MIN));
+
       end else if (sh | sv) begin // if (dv)
 	 orange_match <= 0;
 	 green_match <= 0;
@@ -136,7 +169,7 @@ wire 					orange_match, green_match, pink_match, blue_match;
 	 pink_match <= 0;
       end // else: !if(dv)
    end // always @ (posedge tv_in_line_clock1)
-	*/
+	
 	
 	
    
@@ -160,7 +193,7 @@ wire 					orange_match, green_match, pink_match, blue_match;
       end
       
       
-      if (((y > 504) | sv) & f & ~pulseonce) begin
+      if (((y > 502) | sv) & f & ~pulseonce) begin
 	 din[26] <= 1;
 	 din[27] <= 0;
 	 
@@ -177,22 +210,22 @@ wire 					orange_match, green_match, pink_match, blue_match;
       end
       
       if (dv) begin
-	 if (y >= 25 && y < 505 && x < 640) begin // above 480 lines are blanked
+	 if (y >= 23 && y < 503 && x < 650 && x > 9) begin // above 480 lines are blanked
 	    
-	    if (x == 320 && y == 265) begin
+	    if (x == 330 && y == 265) begin
 	       midcr <= cr;
 	       midcb <= cb;
 	       midy <= ycrcb[29:20];
 	    end
 	    
 	    if (state == 0) begin
-	     /*  
+	       
 	       // ORANGE
 	       if (orange_match) begin
 		  
-		  pixel_buffer[17:10] <= 8'b11111111;
-		  pixel_buffer[9:5]<= 5'b11111;
-		  pixel_buffer[4:0] <= 5'b00000;
+		 // pixel_buffer[17:10] <= 8'b11111111;
+		 // pixel_buffer[9:5]<= 5'b11111;
+		 // pixel_buffer[4:0] <= 5'b00000;
 
 		  // we have detected a pixel, so spit out an interesting flag, and
 		  // the current coordinates
@@ -200,7 +233,7 @@ wire 					orange_match, green_match, pink_match, blue_match;
 		  
 		  din[4] <= 1;
 		  din[6:5] <= 2'b00;
-		  din[25:16] <= x;
+		  din[25:16] <= corrected_x;
 		  din[15:7] <= corrected_y;
 		  
 		  wr_en <= 1;
@@ -208,14 +241,14 @@ wire 					orange_match, green_match, pink_match, blue_match;
 		  // GREEN
 	       end else if (green_match)  begin
 
-		  pixel_buffer[17:10] <= 8'b11111111;
-		  pixel_buffer[9:5] <= 5'b10000;
-		  pixel_buffer[4:0] <= 5'b10000;
+		//  pixel_buffer[17:10] <= 8'b11111111;
+		 // pixel_buffer[9:5] <= 5'b00000;
+		// pixel_buffer[4:0] <= 5'b00000;
 		  din[27] <= 0;
 		  
 		  din[4] <= 1;
 		  din[6:5] <= 2'b11;
-		  din[25:16] <= x;
+		  din[25:16] <= corrected_x;
 		  din[15:7] <= corrected_y;
 		  
 		  wr_en <= 1;
@@ -224,14 +257,14 @@ wire 					orange_match, green_match, pink_match, blue_match;
 		  // PINK
 	       end else if (pink_match) begin
 		  
-		  pixel_buffer[17:10] <= 8'b11111111;
-		  pixel_buffer[9:5] <= 5'b11111;
-		  pixel_buffer[4:0] <= 5'b11111;
+		 // pixel_buffer[17:10] <= 8'b11111111;
+		 // pixel_buffer[9:5] <= 5'b11111;
+		 //pixel_buffer[4:0] <= 5'b11111;
 		  din[27] <= 0;
 		  
 		  din[4] <= 1;
 		  din[6:5] <= 2'b01;
-		  din[25:16] <= x;
+		  din[25:16] <= corrected_x;
 		  din[15:7] <= corrected_y;
 		  wr_en <= 1;
 
@@ -239,28 +272,28 @@ wire 					orange_match, green_match, pink_match, blue_match;
 		  // BLUE
 	       end else if (blue_match)  begin
 		  
-		  pixel_buffer[17:10] <= 8'b11111111;
-		  pixel_buffer[9:5] <= 5'b00000;
-		  pixel_buffer[4:0] <= 5'b11111;
+		  //pixel_buffer[17:10] <= 8'b11111111;
+		  //pixel_buffer[9:5] <= 5'b00000;
+		  //pixel_buffer[4:0] <= 5'b11111;
 		  din[27] <= 0;
 		  
 		  din[4] <= 1;
 		  din[6:5] <=2'b10;
-		  din[25:16] <= x;
+		  din[25:16] <= corrected_x;
 		  din[15:7] <= corrected_y;
 		  wr_en <= 1;
 
 		  
 	       end else begin 
-			 */
+			 
+
+		  wr_en <= 0;
+	       end
+	       
+	       
 		  pixel_buffer[17:10] <= ycrcb[29:22];
 		  pixel_buffer[9:5] <= ycrcb[19:15];
 		  pixel_buffer[4:0] <= ycrcb[9:5];
-		  wr_en <= 0;
-	       //end
-	       
-	       
-
 	       state <= 1;
 
 	       // we only output on state 0 if interesting pixels have been
@@ -271,21 +304,21 @@ wire 					orange_match, green_match, pink_match, blue_match;
 
 	       din[63:46] <= pixel_buffer;
 
-/*
+
 	       // ORANGE
 	       if (orange_match) begin
-		  din[45:38] <= 8'b11111111;
-		  din[37:33] <= 5'b11111;
-		  din[32:28] <= 5'b00000;
+		  //din[45:38] <= 8'b11111111;
+		  //din[37:33] <= 5'b11111;
+		  //din[32:28] <= 5'b00000;
 		  din[4] <= 1;
 		  din[6:5] <= 2'b00;
 
 		  // GREEN
 	       end else if (green_match) begin
 		  
-		  din[45:38] <= 8'b11111111;
-		  din[37:33] <= 5'b10000;
-		  din[32:28] <= 5'b10000;
+		  //din[45:38] <= 8'b11111111;
+		  //din[37:33] <= 5'b10000;
+		  //din[32:28] <= 5'b10000;
 		  din[4] <= 1;
 		  din[6:5] <= 2'b11;
 
@@ -294,9 +327,9 @@ wire 					orange_match, green_match, pink_match, blue_match;
 	       end else if (pink_match)  begin
 		  
 		  
-		  din[45:38] <= 8'b11111111;
-		  din[37:33] <= 5'b11111;
-		  din[32:28] <= 5'b11111;
+		  //din[45:38] <= 8'b11111111;
+		  //din[37:33] <= 5'b11111;
+		  //din[32:28] <= 5'b11111;
 		  din[4] <= 1;
 		  din[6:5] <= 2'b01;
 
@@ -304,26 +337,26 @@ wire 					orange_match, green_match, pink_match, blue_match;
 		  // BLUE
 	       end else if (blue_match) begin
 		  
-		  din[45:38] <= 8'b11111111;
-		  din[37:33] <= 5'b00000;
-		  din[32:28] <= 5'b11111;	
+		  //din[45:38] <= 8'b11111111;
+		  //din[37:33] <= 5'b00000;
+		  //din[32:28] <= 5'b11111;	
 		  din[4] <= 1;
 		  din[6:5] <= 2'b10;
 		  
 	       end else begin // if ((cb > BLUE_CB_MIN) &...
-		  */
-		  din[45:38] <= ycrcb[29:22];
-		  din[37:33] <= ycrcb[19:15];
-		  din[32:28] <= ycrcb[9:5];
+		  
+
 		  din[6:5] <= 2'b00;
 		  din[4] <= 1'b0;
 		  
-	     //  end // else: !if((cb > BLUE_CB_MIN) &...
+	       end // else: !if((cb > BLUE_CB_MIN) &...
 	       
-
+		  din[45:38] <= ycrcb[29:22];
+		  din[37:33] <= ycrcb[19:15];
+		  din[32:28] <= ycrcb[9:5];
 	       din[27] <= 1;
 	       din[26] <= 0;
-	       din[25:16] <= x;
+	       din[25:16] <= corrected_x;
 	       din[15:7] <= corrected_y;
 
 	       wr_en <= 1;
